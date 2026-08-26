@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I AM A RECRUITER — India's Recruiter Community</title>
+<meta name="description" content="A community for working recruiters across India — peer network, career stories, live sessions and the AI-Enabled Strategic Talent Advisor cohort.">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+  .hero{ padding:64px 0 40px; border-bottom:2px solid var(--ink); }
+  .hero__id{ display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; }
+  .hero__id .small{ font-family:var(--font-mono); font-size:14px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted); }
+  .hero h1{ font-size:clamp(3rem, 11vw, 8.5rem); line-height:.92; margin-top:6px; }
+  .hero__tag{ margin-top:26px; font-size:1.2rem; max-width:560px; color:var(--text-muted); }
+  .hero__cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
+  .hero__strip{
+    margin-top:56px; border-top:2px solid var(--ink);
+    display:grid; grid-template-columns:repeat(4,1fr);
+  }
+  .hero__strip div{ padding:16px 18px; border-right:1px solid var(--border); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
+  .hero__strip div:last-child{ border-right:none; }
+  .hero__strip b{ display:block; font-family:var(--font-body); font-weight:700; font-size:15px; color:var(--text); text-transform:none; letter-spacing:0; margin-top:4px; }
+  @media (max-width:760px){ .hero__strip{ grid-template-columns:1fr 1fr; } .hero__strip div{ border-bottom:1px solid var(--border); } }
+
+  .cell h3{ font-family:var(--font-body); font-weight:800; text-transform:none; font-size:1.15rem; letter-spacing:0; }
+  .cell .tag{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); text-transform:uppercase; letter-spacing:.08em; margin-bottom:10px; display:block; }
+  :root[data-theme="dark"] .cell .tag{ color:var(--accent); }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .cell .tag{ color:var(--accent); } }
+  .cell p{ margin-top:10px; color:var(--text-muted); font-size:.95rem; }
+
+  .founders{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .founder{ background:var(--paper); padding:28px 24px; }
+  .founder .role{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--accent-ink); }
+  :root[data-theme="dark"] .founder .role{ color:var(--accent); }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .founder .role{ color:var(--accent); } }
+  .founder h3{ font-family:var(--font-body); font-weight:800; text-transform:none; font-size:1.2rem; margin-top:8px; letter-spacing:0; }
+  @media (max-width:760px){ .founders{ grid-template-columns:1fr; } }
+
+  .social-row{ display:flex; flex-wrap:wrap; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .social-row a{ flex:1 1 200px; background:var(--paper); padding:22px 20px; font-family:var(--font-mono); font-size:13px; text-transform:uppercase; letter-spacing:.05em; display:flex; justify-content:space-between; align-items:center; transition:background .15s ease; }
+  .social-row a:hover{ background:var(--surface); }
+  .social-row a span.arrow{ color:var(--accent-ink); }
+  :root[data-theme="dark"] .social-row a span.arrow{ color:var(--accent); }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]) .social-row a span.arrow{ color:var(--accent); } }
+
+  .cta-band{ text-align:center; padding:100px 24px; }
+  .cta-band h2{ font-size:clamp(2rem,5vw,3.4rem); }
+  .cta-band p{ margin-top:16px; color:inherit; opacity:.72; max-width:520px; margin-left:auto; margin-right:auto; }
+  .cta-band .hero__cta{ justify-content:center; margin-top:32px; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__links" id="navLinks">
+      <a href="/index.html" data-page="index.html">Home</a>
+      <a href="/join.html" data-page="join.html">Join</a>
+      <a href="/cohort.html" data-page="cohort.html">Cohort</a>
+      <a class="btn btn--accent" href="/join.html" style="margin-top:14px;">Join Now</a>
+    </div>
+    <div class="site-nav__cta">
+      <a class="btn btn--accent" href="/join.html">Join Now</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero">
+    <div class="container">
+      <div class="hero__id">
+        <span class="small">India's Recruiter Community</span>
+      </div>
+      <h1>I AM A<br>RECRUITER<span style="color:var(--accent);">.</span></h1>
+      <p class="hero__tag">Join our vibrant community to elevate your recruiting career — a network for working recruiters across India to learn, connect, and grow together.</p>
+      <div class="hero__cta">
+        <a class="btn btn--accent" href="/join.html">Join the Community</a>
+        <a class="btn btn--ghost" href="/cohort.html">Explore the Founding Cohort</a>
+      </div>
+      <div class="hero__strip">
+        <div>Who<b>Working recruiters, India-first</b></div>
+        <div>What<b>Network · stories · live sessions</b></div>
+        <div>Where<b>LinkedIn · Instagram · YouTube · WhatsApp</b></div>
+        <div>Started by<b>Prafulla, Niharika &amp; Bharathi</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="what-you-get">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">What you get</div>
+        <h2>A community built by recruiters, for recruiters</h2>
+      </div>
+      <div class="grid-3 reveal">
+        <div class="cell">
+          <span class="tag">Network</span>
+          <h3>A real peer network</h3>
+          <p>Connect with in-house, agency and TA-leadership recruiters across India — not a silent LinkedIn group.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Stories &amp; Podcast</span>
+          <h3>Real career journeys</h3>
+          <p>The I AM A RECRUITER podcast and story series — honest accounts of recruiters and job-seekers navigating real career moves.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Live Sessions</span>
+          <h3>Workshops that go deep</h3>
+          <p>From live hiring-case teardowns to the founding AI-Enabled Strategic Talent Advisor cohort — implementation, not just talk.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">WhatsApp</span>
+          <h3>A community that talks daily</h3>
+          <p>Ask questions, share wins, and get real answers from recruiters who've been there.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Referrals</span>
+          <h3>Warm introductions</h3>
+          <p>A community where members open doors for each other — genuinely, not transactionally.</p>
+        </div>
+        <div class="cell">
+          <span class="tag">Free to join</span>
+          <h3>No cost to be part of it</h3>
+          <p>Membership is free. Paid programs, like the founding cohort, are separate and clearly labeled.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="founders">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Who's behind it</div>
+        <h2>Built by three recruiters who wanted this to exist</h2>
+      </div>
+      <div class="founders reveal">
+        <div class="founder">
+          <span class="role">Co-Founder</span>
+          <h3>Prafulla Deori</h3>
+        </div>
+        <div class="founder">
+          <span class="role">Co-Founder</span>
+          <h3>Niharika Naidu</h3>
+        </div>
+        <div class="founder">
+          <span class="role">Co-Founder</span>
+          <h3>Bharathi "Betty" Vijayappa</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="social">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Where we show up</div>
+        <h2>Find us, wherever you scroll</h2>
+      </div>
+      <div class="social-row reveal">
+        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn <span class="arrow">&#8599;</span></a>
+        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram <span class="arrow">&#8599;</span></a>
+        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube <span class="arrow">&#8599;</span></a>
+        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook <span class="arrow">&#8599;</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band section--ink">
+    <div class="eyebrow" style="justify-content:center;">Free to join</div>
+    <h2>Ready to say it?</h2>
+    <p>Two minutes to join — name, a few details, and you're in. We'll email you straight away with your WhatsApp community invite.</p>
+    <div class="hero__cta">
+      <a class="btn btn--accent" href="/join.html">Join I AM A RECRUITER</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
+        <p class="text-muted" style="max-width:320px; font-size:.9rem;">India's community for working recruiters — network, stories, and live implementation, all in one place.</p>
+      </div>
+      <div class="site-footer__social">
+        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="site-footer__legal">
+      <span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span>
+      <span><a href="/join.html">Join the community</a> &nbsp;·&nbsp; <a href="/cohort.html">Founding Cohort</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/site.js"></script>
+</body>
+</html>

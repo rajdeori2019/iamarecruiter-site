@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI-Enabled Strategic Talent Advisor — I AM A RECRUITER</title>
+<meta name="description" content="Founding cohort of the AI-Enabled Strategic Talent Advisor program, from I AM A RECRUITER — India's community for working recruiters.">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+  .site-connect{
+    background:var(--ink,#12151C); color:var(--band-text,#F3EEE0);
+    font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:8px 24px;
+  }
+  .site-connect a{ color:inherit; text-decoration:none; opacity:.8; margin-left:18px; }
+  .site-connect a:hover{ opacity:1; text-decoration:underline; }
+  .site-connect .home{ opacity:1; font-weight:600; }
+  /* ============ TOKENS ============ */
+  :root{
+    --bg:#EAE3D2;
+    --surface:#F4EFE3;
+    --surface-alt:#DFD5B9;
+    --text:#1B1F27;
+    --text-muted:#5B6270;
+    --border:#C9BEA0;
+    --accent:#A9761E;
+    --accent-strong:#7E5A16;
+    --accent-contrast:#FFFDF7;
+    --caution:#963E29;
+    --caution-bg:rgba(150,62,41,0.09);
+    --shadow: 0 1px 0 rgba(27,31,39,0.05);
+
+    --band-bg:#12151C;
+    --band-surface:#1B202B;
+    --band-text:#F3EEE0;
+    --band-text-muted:#ABA495;
+    --band-border:rgba(243,238,224,0.16);
+    --band-accent:#CE9C4C;
+
+    --font-display:'Fraunces', Georgia, 'Times New Roman', serif;
+    --font-body:'Public Sans', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14171E;
+      --surface:#1B1F28;
+      --surface-alt:#232936;
+      --text:#ECE6D6;
+      --text-muted:#9A9FAC;
+      --border:rgba(236,230,214,0.14);
+      --accent:#CE9C4C;
+      --accent-strong:#E3B268;
+      --accent-contrast:#14171E;
+      --caution:#D9836A;
+      --caution-bg:rgba(217,131,106,0.12);
+      --shadow: 0 1px 0 rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14171E;
+    --surface:#1B1F28;
+    --surface-alt:#232936;
+    --text:#ECE6D6;
+    --text-muted:#9A9FAC;
+    --border:rgba(236,230,214,0.14);
+    --accent:#CE9C4C;
+    --accent-strong:#E3B268;
+    --accent-contrast:#14171E;
+    --caution:#D9836A;
+    --caution-bg:rgba(217,131,106,0.12);
+    --shadow: 0 1px 0 rgba(0,0,0,0.4);
+  }
+
+  /* ============ RESET / BASE ============ */
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    text-wrap:pretty;
+  }
+  h1,h2,h3,h4{
+    font-family:var(--font-display);
+    font-weight:700;
+    line-height:1.08;
+    margin:0;
+    text-wrap:balance;
+    color:var(--text);
+  }
+  p{ margin:0; }
+  a{ color:inherit; }
+  img{ max-width:100%; display:block; }
+  .container{ max-width:1080px; margin:0 auto; padding:0 24px; }
+  .container--narrow{ max-width:760px; }
+  section{ position:relative; }
+  ::selection{ background:var(--accent); color:var(--accent-contrast); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-strong);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:22px;
+    height:1px;
+    background:var(--accent-strong);
+    display:inline-block;
+  }
+  .band .eyebrow{ color:var(--band-accent); }
+  .band .eyebrow::before{ background:var(--band-accent); }
+
+  .lede{
+    font-size:1.15rem;
+    color:var(--text-muted);
+    max-width:640px;
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar{
+    position:sticky; top:0; z-index:40;
+    background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar__inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 24px;
+    max-width:1080px; margin:0 auto;
+  }
+  .wordmark{
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--text);
+    text-decoration:none;
+  }
+  .wordmark b{ color:var(--accent-strong); }
+  .btn{
+    font-family:var(--font-mono);
+    font-size:13px;
+    letter-spacing:.03em;
+    text-transform:uppercase;
+    padding:11px 20px;
+    border-radius:2px;
+    border:1px solid var(--accent);
+    background:var(--accent);
+    color:var(--accent-contrast);
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease;
+    white-space:nowrap;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 4px 14px rgba(0,0,0,.18); }
+  .btn--ghost{
+    background:transparent;
+    color:var(--text);
+    border-color:var(--border);
+  }
+  .btn--ghost:hover{ border-color:var(--accent-strong); }
+  .topbar .btn{ padding:9px 16px; font-size:12px; }
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:88px 0 72px;
+    border-bottom:1px solid var(--border);
+  }
+  .hero__grid{
+    display:grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap:56px;
+    align-items:start;
+  }
+  .stamp{
+    display:inline-flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:2px;
+    border:1.5px solid var(--accent);
+    color:var(--accent-strong);
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    padding:8px 14px;
+    transform:rotate(-3deg);
+    margin-bottom:26px;
+    border-radius:3px;
+  }
+  .stamp span{ opacity:.68; font-size:10.5px; letter-spacing:.08em; }
+  .hero h1{
+    font-size:clamp(2.3rem, 4.6vw, 3.6rem);
+    letter-spacing:-.01em;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--accent-strong);
+  }
+  .hero .lede{ margin-top:20px; font-size:1.2rem; }
+  .hero .punch{
+    font-family:var(--font-display);
+    font-style:italic;
+    font-size:1.05rem;
+    color:var(--text-muted);
+    margin-top:22px;
+    max-width:520px;
+    border-left:2px solid var(--accent);
+    padding-left:16px;
+  }
+  .hero__cta{
+    display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; align-items:center;
+  }
+  .hero__cta .fineprint{
+    font-family:var(--font-mono);
+    font-size:11.5px;
+    color:var(--text-muted);
+  }
+
+  .manifest{
+    border:1px solid var(--border);
+    background:var(--surface);
+    box-shadow:var(--shadow);
+  }
+  .manifest__head{
+    font-family:var(--font-mono);
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    padding:14px 18px;
+    border-bottom:1px dashed var(--border);
+    display:flex; justify-content:space-between;
+  }
+  .manifest dl{ margin:0; }
+  .manifest .row{
+    display:flex; justify-content:space-between; gap:12px;
+    padding:13px 18px;
+    border-bottom:1px solid var(--border);
+    font-family:var(--font-mono);
+    font-size:13px;
+  }
+  .manifest .row:last-child{ border-bottom:none; }
+  .manifest dt{ color:var(--text-muted); }
+  .manifest dd{ margin:0; font-weight:600; text-align:right; }
+
+  /* ============ GENERIC SECTION ============ */
+  .section{ padding:88px 0; }
+  .section--tight{ padding:64px 0; }
+  .band{
+    background:var(--band-bg);
+    color:var(--band-text);
+    border-bottom:1px solid var(--band-border);
+  }
+  .band .lede{ color:var(--band-text-muted); }
+  .band h2, .band h3{ color:var(--band-text); }
+
+  .section-head{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
+    margin-bottom:44px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{ font-size:clamp(1.7rem,3vw,2.35rem); }
+
+  /* ============ PROBLEM / QUOTE ============ */
+  .quote{
+    font-family:var(--font-display);
+    font-size:clamp(1.4rem, 2.6vw, 2rem);
+    font-weight:500;
+    line-height:1.4;
+    max-width:800px;
+    position:relative;
+    padding-left:36px;
+  }
+  .quote::before{
+    content:"\201C";
+    position:absolute; left:-4px; top:-18px;
+    font-size:4rem;
+    color:var(--accent);
+    font-family:var(--font-display);
+    opacity:.55;
+  }
+  .before-after{
+    margin-top:52px;
+    display:grid;
+    gap:0;
+    border-top:1px solid var(--border);
+  }
+  .ba-row{
+    display:grid;
+    grid-template-columns: 1fr 30px 1fr;
+    align-items:center;
+    gap:18px;
+    padding:20px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .ba-row .before{ color:var(--text-muted); font-size:.96rem; }
+  .ba-row .arrow{ font-family:var(--font-mono); color:var(--accent); text-align:center; }
+  .ba-row .after{ font-size:.98rem; }
+  .ba-row .after b{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-strong); display:block; margin-bottom:3px; }
+
+  /* ============ TRANSFORMATION BANNER ============ */
+  .transform{
+    text-align:center;
+    padding:76px 24px;
+  }
+  .transform__line{
+    font-family:var(--font-display);
+    font-size:clamp(1.5rem, 4vw, 2.6rem);
+    font-weight:600;
+    display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap;
+  }
+  .transform__line .arrow{ color:var(--band-accent); font-size:.8em; }
+  .transform__sub{
+    margin-top:18px;
+    color:var(--band-text-muted);
+    font-family:var(--font-mono);
+    font-size:12.5px;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+  }
+
+  /* ============ CURRICULUM ============ */
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--border);
+    border:1px solid var(--border);
+  }
+  .pillar{
+    background:var(--surface);
+    padding:26px 24px 24px;
+    display:flex; flex-direction:column; gap:12px;
+    transition:background .15s ease;
+  }
+  .pillar:hover{ background:var(--surface-alt); }
+  .pillar__top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .pillar__num{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--accent-strong);
+    border:1px solid var(--border);
+    padding:2px 7px;
+    border-radius:2px;
+  }
+  .pillar__week{
+    font-family:var(--font-mono);
+    font-size:10.5px;
+    color:var(--text-muted);
+    text-align:right;
+    white-space:nowrap;
+  }
+  .pillar h3{ font-size:1.08rem; font-weight:600; }
+  .pillar p{ color:var(--text-muted); font-size:.92rem; }
+  .pillar__out{
+    margin-top:auto;
+    padding-top:12px;
+    border-top:1px dashed var(--border);
+    font-size:.86rem;
+  }
+  .pillar__out b{
+    font-family:var(--font-mono);
+    font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent-strong); display:block; margin-bottom:4px;
+  }
+  .capstone{
+    margin-top:1px;
+    border:1px solid var(--accent);
+    background:var(--surface);
+    padding:30px 28px;
+    display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;
+  }
+  .capstone h3{ font-size:1.3rem; }
+  .capstone .capdate{
+    font-family:var(--font-mono); font-size:12px; color:var(--accent-strong);
+    letter-spacing:.06em; text-transform:uppercase;
+  }
+
+  /* ============ GOVERNANCE ============ */
+  .gov{
+    display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;
+  }
+  .gov__rule{
+    border:1px solid var(--band-border);
+    padding:22px 24px;
+    margin-top:14px;
+    font-size:.94rem;
+    color:var(--band-text-muted);
+  }
+  .gov__rule + .gov__rule{ margin-top:12px; }
+  .gov__rule b{ color:var(--band-text); }
+
+  /* ============ SALES FRAME ============ */
+  .frame{
+    display:flex; gap:40px; flex-wrap:wrap; align-items:center; justify-content:center;
+    text-align:center;
+  }
+  .frame .no{
+    font-family:var(--font-display); font-style:italic;
+    font-size:1.3rem; color:var(--text-muted);
+    text-decoration:line-through;
+    text-decoration-color:var(--caution);
+    text-decoration-thickness:1.5px;
+  }
+  .frame .yes{
+    font-family:var(--font-display); font-weight:600;
+    font-size:1.5rem;
+  }
+  .frame .divider{ font-family:var(--font-mono); color:var(--text-muted); font-size:.8rem; }
+
+  /* ============ WHO FOR ============ */
+  .qual{
+    display:grid; grid-template-columns:1fr 1fr; gap:1px;
+    background:var(--border); border:1px solid var(--border);
+  }
+  .qual__col{ background:var(--surface); padding:32px 30px; }
+  .qual__col h3{
+    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.1em; text-transform:uppercase;
+    font-weight:600; margin-bottom:18px; display:flex; align-items:center; gap:8px;
+  }
+  .qual__col.fit h3{ color:var(--accent-strong); }
+  .qual__col.notfit h3{ color:var(--caution); }
+  .qual ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .qual li{ padding-left:22px; position:relative; font-size:.95rem; }
+  .qual .fit li::before{ content:"✓"; position:absolute; left:0; color:var(--accent-strong); font-family:var(--font-mono); }
+  .qual .notfit li::before{ content:"–"; position:absolute; left:0; color:var(--caution); font-family:var(--font-mono); }
+
+  /* ============ SCHEDULE TABLE ============ */
+  .ledger{ width:100%; border-collapse:collapse; font-size:.94rem; }
+  .ledger tr{ border-bottom:1px solid var(--border); }
+  .ledger tr:first-child{ border-top:1px solid var(--border); }
+  .ledger td{ padding:14px 6px; }
+  .ledger td:first-child{ color:var(--text-muted); width:40%; }
+  .ledger td:last-child{ font-family:var(--font-mono); font-weight:600; text-align:right; }
+
+  /* ============ TERMS / PRICE ============ */
+  .terms{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .terms__col{ background:var(--surface); padding:34px 32px; }
+  .price{
+    font-family:var(--font-display); font-size:3rem; font-weight:700; color:var(--accent-strong);
+    line-height:1;
+  }
+  .price sup{ font-size:1.2rem; font-family:var(--font-mono); }
+  .price + p{ margin-top:10px; color:var(--text-muted); font-size:.9rem; }
+  .gatebox{
+    margin-top:22px; padding:14px 16px; border:1px dashed var(--border);
+    font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
+  }
+  .seal{
+    display:inline-block; border:2px solid var(--accent); border-radius:50%;
+    width:120px; height:120px; text-align:center; padding-top:26px;
+    transform:rotate(-8deg);
+    font-family:var(--font-mono); color:var(--accent-strong);
+    font-size:11px; letter-spacing:.06em; text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .seal b{ display:block; font-size:15px; margin-top:4px; }
+  .guarantee-text{ font-size:.98rem; }
+  .guarantee-text + .guarantee-text{ margin-top:10px; color:var(--text-muted); font-size:.9rem; }
+  .glist{ list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; font-size:.88rem; }
+  .glist li{ display:flex; gap:10px; }
+  .glist .dont{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--caution); }
+  .glist .do{ color:var(--text); }
+  .glist b{ font-family:var(--font-mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); flex:0 0 62px; }
+
+  /* ============ PROOF ============ */
+  .proof{
+    display:flex; gap:32px; align-items:flex-start; flex-wrap:wrap;
+    border:1px dashed var(--border);
+    padding:30px;
+  }
+  .proof__avatar{
+    width:96px; height:96px; border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
+    text-align:center; flex:0 0 96px;
+    background:var(--surface-alt);
+  }
+  .proof__body{ flex:1; min-width:240px; }
+  .pending{
+    display:inline-block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
+    text-transform:uppercase; color:var(--caution); border:1px solid var(--caution); border-radius:2px;
+    padding:3px 8px; margin-bottom:10px;
+  }
+  .proof__body p{ color:var(--text-muted); font-size:.92rem; font-style:italic; }
+
+  /* ============ FAQ ============ */
+  .faq{ border-top:1px solid var(--border); }
+  .faq details{ border-bottom:1px solid var(--border); padding:20px 0; }
+  .faq summary{
+    cursor:pointer; list-style:none; font-family:var(--font-display); font-weight:600;
+    font-size:1.06rem; display:flex; justify-content:space-between; align-items:center; gap:16px;
+  }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary::after{
+    content:"+"; font-family:var(--font-mono); color:var(--accent-strong); font-size:1.3rem; flex:0 0 auto;
+    transition:transform .18s ease;
+  }
+  .faq details[open] summary::after{ transform:rotate(45deg); }
+  .faq .a{ margin-top:12px; color:var(--text-muted); max-width:680px; font-size:.95rem; }
+
+  /* ============ FINAL CTA ============ */
+  .final{ text-align:center; padding:96px 24px; }
+  .final h2{ font-size:clamp(1.9rem,4vw,2.8rem); max-width:680px; margin:0 auto; }
+  .final .lede{ margin:18px auto 0; text-align:center; }
+  .final__cta{ display:flex; justify-content:center; gap:14px; margin-top:36px; flex-wrap:wrap; }
+  .final .fineprint{ margin-top:20px; font-family:var(--font-mono); font-size:11.5px; color:var(--band-text-muted); }
+
+  /* ============ FOOTER ============ */
+  footer{ padding:40px 24px; border-top:1px solid var(--border); }
+  .footer__inner{
+    max-width:1080px; margin:0 auto; display:flex; justify-content:space-between;
+    flex-wrap:wrap; gap:16px; align-items:center;
+  }
+  .footer__legal{ font-family:var(--font-mono); font-size:11px; color:var(--text-muted); max-width:640px; line-height:1.7; }
+  .footer__contact{ font-family:var(--font-mono); font-size:12px; }
+  .footer__contact a{ color:var(--accent-strong); text-decoration:none; }
+
+  /* ============ REVEAL ============ */
+  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.is-visible{ opacity:1; transform:none; }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+  }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 860px){
+    .hero__grid{ grid-template-columns:1fr; }
+    .pillars{ grid-template-columns:1fr 1fr; }
+    .gov{ grid-template-columns:1fr; }
+    .qual{ grid-template-columns:1fr; }
+    .terms{ grid-template-columns:1fr; }
+    .ba-row{ grid-template-columns:1fr; gap:6px; }
+    .ba-row .arrow{ display:none; }
+  }
+  @media (max-width: 560px){
+    .pillars{ grid-template-columns:1fr; }
+    .hero{ padding:64px 0 48px; }
+    .section{ padding:64px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="site-connect">
+  <span class="home">I AM A RECRUITER™</span>
+  <span>
+    <a href="/index.html">Home</a>
+    <a href="/join.html">Join</a>
+    <a href="/cohort.html">Cohort</a>
+  </span>
+</div>
+
+<div class="topbar">
+  <div class="topbar__inner">
+    <a class="wordmark" href="#hero"><b>AI·ESTA</b> — Founding Cohort</a>
+    <a class="btn" href="#apply">Apply Now</a>
+  </div>
+</div>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="hero">
+    <div class="container hero__grid">
+      <div>
+        <div class="stamp">Founding Cohort · Batch 01<span>Locked offer — 26 Aug 2026</span></div>
+        <h1>From recruiter execution to <em>AI-Enabled Strategic Talent Advisor</em></h1>
+        <p class="lede">For working recruiters who already know recruitment — and want to operate at a more strategic, AI-enabled, business-facing level.</p>
+        <p class="punch">AI can write your Boolean string. That does not make you a strategic recruiter.</p>
+        <div class="hero__cta">
+          <a class="btn" href="#apply">Apply for the Founding Cohort</a>
+          <a class="btn btn--ghost" href="#faq">Read the FAQ</a>
+        </div>
+        <p class="hero__cta fineprint" style="margin-top:14px;">Prefer LinkedIn? DM the word "ADVISOR" and I'll send details directly.</p>
+      </div>
+
+      <div class="manifest reveal">
+        <div class="manifest__head"><span>File 01 / Offer Manifest</span><span>Batch 01</span></div>
+        <dl>
+          <div class="row"><dt>Dates</dt><dd>19 Sep – 24 Oct 2026</dd></div>
+          <div class="row"><dt>Time</dt><dd>Sat, 10:30–12:30 IST</dd></div>
+          <div class="row"><dt>Format</dt><dd>Live online, 6 weeks</dd></div>
+          <div class="row"><dt>Seats</dt><dd>Maximum 10</dd></div>
+          <div class="row"><dt>Price</dt><dd>₹10,000 founding</dd></div>
+          <div class="row"><dt>Refund</dt><dd>100% thru Session 2</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="eyebrow reveal">Exhibit 01 — The Problem</div>
+      <p class="quote reveal">I know how to recruit, but much of my work is still transactional. AI is changing recruiting, and I do not have a systematic way to become more analytical, consultative, business-facing and strategically valuable.</p>
+
+      <div class="before-after reveal">
+        <div class="ba-row">
+          <div class="before">AI may make parts of my work less valuable</div>
+          <div class="arrow">→</div>
+          <div class="after"><b>Relevance</b>I know how to augment my work with AI, not compete with it</div>
+        </div>
+        <div class="ba-row">
+          <div class="before">I hesitate to challenge a hiring manager</div>
+          <div class="arrow">→</div>
+          <div class="after"><b>Confidence</b>I bring evidence and a recommendation, not just a candidate list</div>
+        </div>
+        <div class="ba-row">
+          <div class="before">I don't know if my analysis is correct</div>
+          <div class="arrow">→</div>
+          <div class="after"><b>Control</b>I know how to verify AI output and market evidence</div>
+        </div>
+        <div class="ba-row">
+          <div class="before">My profile only shows requisitions filled</div>
+          <div class="arrow">→</div>
+          <div class="after"><b>Proof</b>I can demonstrate real strategic work artifacts</div>
+        </div>
+        <div class="ba-row">
+          <div class="before">I feel like one more recruiter</div>
+          <div class="arrow">→</div>
+          <div class="after"><b>Differentiation</b>I can show stronger, evidence-backed advisory capability</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRANSFORMATION -->
+  <section class="band transform">
+    <div class="eyebrow" style="justify-content:center;">The core transformation</div>
+    <div class="transform__line reveal">
+      <span>Recruiter Execution</span><span class="arrow">→</span><span>AI-Enabled Strategic Talent Advisor</span>
+    </div>
+    <p class="transform__sub">Combination + depth + implementation — not a syllabus, not a prompt list</p>
+  </section>
+
+  <!-- CURRICULUM -->
+  <section class="section" id="curriculum">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <div class="eyebrow">Exhibit 02 — What You'll Build</div>
+          <h2>Six capabilities. Six real artifacts. One capstone.</h2>
+        </div>
+        <p class="lede">Sell strategic capability and completed work, not class hours. Every week ends with something usable on Monday morning.</p>
+      </div>
+
+      <div class="pillars reveal">
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">01</span><span class="pillar__week">Week 1 · 19 Sep</span></div>
+          <h3>AI + Talent Intelligence</h3>
+          <p>Market research, talent pools, competitors, skill adjacency, evidence validation.</p>
+          <div class="pillar__out"><b>Finishes with</b>A real talent-market intelligence report</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">02</span><span class="pillar__week">Week 2 · 26 Sep</span></div>
+          <h3>AI + Hiring Diagnosis</h3>
+          <p>JD decomposition, business context, must-have vs. trainable skills, hiring-risk questions.</p>
+          <div class="pillar__out"><b>Finishes with</b>A requirement diagnosis + feasibility assessment</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">03</span><span class="pillar__week">Week 3 · 3 Oct</span></div>
+          <h3>AI + Hiring Manager Advisory</h3>
+          <p>Stakeholder prep, intake, evidence-backed challenge, recommendation framing.</p>
+          <div class="pillar__out"><b>Finishes with</b>An intake + advisory presentation, run as role-play</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">04</span><span class="pillar__week">Week 4 · 10 Oct</span></div>
+          <h3>AI + Advanced Sourcing</h3>
+          <p>Title/skill adjacency, competitor mapping, Boolean, real result analysis.</p>
+          <div class="pillar__out"><b>Finishes with</b>A sourcing strategy + talent map, built on real searches</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">05</span><span class="pillar__week">Week 5 · 17 Oct</span></div>
+          <h3>AI + Skills-Based Assessment</h3>
+          <p>Competencies, screening evidence, scorecards, structured interview questions.</p>
+          <div class="pillar__out"><b>Finishes with</b>A competency framework + scorecard + interview architecture</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar__top"><span class="pillar__num">06</span><span class="pillar__week">Week 6 · 24 Oct</span></div>
+          <h3>AI + Recruiting Analytics &amp; Strategy</h3>
+          <p>Funnel diagnosis, ageing, conversion, source quality, executive recommendation.</p>
+          <div class="pillar__out"><b>Finishes with</b>A funnel diagnostic + leadership recommendation</div>
+        </div>
+      </div>
+
+      <div class="capstone reveal">
+        <div>
+          <h3>Capstone — Strategic Talent Advisor Portfolio</h3>
+          <p style="color:var(--text-muted); margin-top:6px; font-size:.94rem;">All six artifacts, integrated into one case you can show a hiring manager or your own manager.</p>
+        </div>
+        <div class="capdate">Target — 28 Oct 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GOVERNANCE -->
+  <section class="band section">
+    <div class="container gov">
+      <div class="reveal">
+        <div class="eyebrow">The seventh layer</div>
+        <h2>AI Governance runs underneath every pillar</h2>
+        <p class="lede" style="margin-top:16px;">Not a bonus module — a discipline applied to everything you build across all six weeks.</p>
+      </div>
+      <div class="reveal">
+        <div class="gov__rule"><b>Verify, don't trust.</b> Learners must verify AI-generated market claims, candidate conclusions and calculations before using them.</div>
+        <div class="gov__rule"><b>Privacy by default.</b> No confidential candidate or company data goes into public AI tools without authorization — anonymized or synthetic data is the default.</div>
+        <div class="gov__rule"><b>Human judgment stays final.</b> An AI recommendation is not a hiring decision. Final judgment is human-led and evidence-based, always.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALES FRAME -->
+  <section class="section--tight">
+    <div class="container">
+      <div class="frame reveal">
+        <span class="no">12 hours of classes for ₹10,000</span>
+        <span class="divider">is not what we sell</span>
+      </div>
+      <div class="frame reveal" style="margin-top:10px;">
+        <span class="yes">Six capabilities + six artifacts + live implementation + feedback + capstone</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO FOR -->
+  <section class="section" id="fit">
+    <div class="container">
+      <div class="eyebrow reveal">Exhibit 03 — Qualification</div>
+      <h2 class="reveal" style="margin-bottom:36px;">Who this founding batch is for</h2>
+      <div class="qual reveal">
+        <div class="qual__col fit">
+          <h3>Strong fit</h3>
+          <ul>
+            <li>In-house / corporate recruiter who already owns requisitions</li>
+            <li>Recruiter aiming for Senior Recruiter / Lead responsibilities</li>
+            <li>Recruiter who struggles to influence hiring managers or use data</li>
+            <li>Recruiter already using AI, but without a structured system</li>
+            <li>Strong agency recruiter moving toward corporate / advisory TA</li>
+          </ul>
+        </div>
+        <div class="qual__col notfit">
+          <h3>Not for Batch 01</h3>
+          <ul>
+            <li>HR freshers who haven't independently handled requirements — needs a beginner product</li>
+            <li>Job seekers looking for a placement or employment guarantee — wrong product</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SCHEDULE -->
+  <section class="section--tight" id="schedule">
+    <div class="container container--narrow">
+      <div class="eyebrow reveal">Exhibit 04 — Format &amp; Schedule</div>
+      <table class="ledger reveal">
+        <tr><td>Format</td><td>Live online</td></tr>
+        <tr><td>Duration</td><td>6 weeks</td></tr>
+        <tr><td>Core sessions</td><td>6 Saturdays × 2 hours</td></tr>
+        <tr><td>Timing</td><td>10:30 AM – 12:30 PM IST</td></tr>
+        <tr><td>Optional clinics</td><td>Up to 3 × 1 hour</td></tr>
+        <tr><td>Start date</td><td>Sat, 19 Sep 2026</td></tr>
+        <tr><td>Core completion</td><td>Sat, 24 Oct 2026</td></tr>
+        <tr><td>Capstone target</td><td>28 Oct 2026</td></tr>
+        <tr><td>Assignments</td><td>Weekly, required</td></tr>
+        <tr><td>Community</td><td>Small cohort group</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- TERMS -->
+  <section class="section" id="terms">
+    <div class="container">
+      <div class="eyebrow reveal">Exhibit 05 — Price &amp; Guarantee</div>
+      <div class="terms reveal">
+        <div class="terms__col">
+          <div class="price">₹10,000<sup>&nbsp;INR</sup></div>
+          <p>Founding / test price — explicitly not a claimed market benchmark.</p>
+          <div class="gatebox">
+            SEATS — Maximum 10 active participants.<br>
+            LAUNCH GATE — This batch runs once 5+ seats are fully paid.<br>
+            WAITLIST — A genuine buffer once seats fill. No fake scarcity, ever.
+          </div>
+        </div>
+        <div class="terms__col">
+          <div class="seal">Guarantee<b>100%</b>thru S2</div>
+          <p class="guarantee-text"><b>100% refund, no questions asked</b> — any time through Session 2.</p>
+          <p class="guarantee-text">No refund from Session 3 onward. If you're three sessions in, something is already working for you.</p>
+          <ul class="glist">
+            <li><b>Won't promise</b><span class="dont">Job, promotion, salary increase</span></li>
+            <li><b>Will promise</b><span class="do">Live access, feedback, templates, and the chance to finish all six artifacts</span></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF -->
+  <section class="section--tight" id="proof">
+    <div class="container container--narrow">
+      <div class="eyebrow reveal">Exhibit 06 — Instructor Proof</div>
+      <div class="proof reveal">
+        <div class="proof__avatar">PHOTO<br>PENDING</div>
+        <div class="proof__body">
+          <span class="pending">Verification pending</span>
+          <p>This is the founding cohort — there are no alumni yet, and none are claimed. Verified experience, real scope of work, and substantiated results go here before this page goes live. No unsupported "AI expert" claims, no fabricated outcomes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="container container--narrow">
+      <div class="eyebrow reveal">Clarifications</div>
+      <h2 class="reveal" style="margin-bottom:8px;">Questions worth asking before you pay</h2>
+      <p class="lede reveal" style="margin-bottom:30px;">Answered without hype — including the hard ones.</p>
+
+      <div class="faq reveal">
+        <details>
+          <summary>Is this just an AI tools course?</summary>
+          <p class="a">No. AI is embedded across talent intelligence, hiring diagnosis, hiring-manager advisory, sourcing, skills assessment and recruiting analytics — it's one operating system, not a prompt list.</p>
+        </details>
+        <details>
+          <summary>Will I get a job or a promotion from this?</summary>
+          <p class="a">No job, placement, salary or promotion guarantee. You'll build and demonstrate real capabilities and artifacts — a title or employer decision is never something this program can promise.</p>
+        </details>
+        <details>
+          <summary>Why pay ₹10,000 when free content exists?</summary>
+          <p class="a">Information is free. The paid value is live implementation, direct feedback, real cases, role-play, a capstone and accountability — not information access. If that's not valuable to you, this isn't the right fit.</p>
+        </details>
+        <details>
+          <summary>Why should I learn this here instead of LinkedIn Learning, Udemy or CHRMP?</summary>
+          <p class="a">No shade to them. The difference is a small live cohort (max 10), an integrated strategic-TA architecture across six pillars, applied artifacts, direct feedback, role-play and a capstone — not self-paced video. You decide if that's worth it.</p>
+        </details>
+        <details>
+          <summary>What exactly is the refund policy?</summary>
+          <p class="a">100% refund, no questions asked, any time through Session 2. No refund once you've attended Session 3 — full stop, published in advance, honored exactly.</p>
+        </details>
+        <details>
+          <summary>Have other recruiters already gone through this?</summary>
+          <p class="a">Not yet — this is honestly the founding cohort. No alumni, no manufactured outcomes, no fabricated testimonials. What you see here is what exists today.</p>
+        </details>
+        <details>
+          <summary>Can my company sponsor my seat?</summary>
+          <p class="a">Yes — invoice / bank-transfer payment is supported, and there's a manager sponsorship note you can forward for L&amp;D approval. Ask when you apply.</p>
+        </details>
+        <details>
+          <summary>What will actually be different in my work on Monday?</summary>
+          <p class="a">Six concrete artifacts and workflows you can apply directly — a market-intelligence report, a requirement diagnosis, a sourcing strategy, a scorecard, a funnel diagnostic, and the judgment to verify AI output before you rely on it.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section class="band final" id="apply">
+    <div class="eyebrow" style="justify-content:center;">Founding Cohort · Batch 01</div>
+    <h2>Ten seats. Six weeks. One real transformation.</h2>
+    <p class="lede">Apply below, or DM "ADVISOR" on LinkedIn. Every applicant gets a short qualification conversation before an offer is made — this isn't a checkout page.</p>
+    <div class="final__cta">
+      <a class="btn" href="mailto:prafulladeori@gmail.com?subject=Application%20%E2%80%94%20AI-Enabled%20Strategic%20Talent%20Advisor%20Founding%20Cohort&body=Hi%20Prafulla%2C%0D%0A%0D%0AI'd%20like%20to%20apply%20for%20the%20Founding%20Cohort.%0D%0A%0D%0AName%3A%0D%0ACurrent%20role%20%26%20company%3A%0D%0ALinkedIn%3A%0D%0AWhat%20feels%20most%20transactional%20in%20my%20recruiting%20work%20today%3A%0D%0A%0D%0AThanks!">Apply for the Founding Cohort</a>
+      <a class="btn btn--ghost" href="#curriculum" style="border-color:var(--band-border); color:var(--band-text);">Review the curriculum</a>
+    </div>
+    <p class="fineprint">19 Sep – 24 Oct 2026 · Saturdays 10:30–12:30 IST · ₹10,000 founding price · Max 10 seats · Runs at 5+ paid</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer__inner">
+    <p class="footer__legal">A program from I AM A RECRUITER™ · Founding Batch 01 · Offer locked 26 Aug 2026. Price, seat count, duration and conversion assumptions are test hypotheses until validated by paid, retained buyers. No job, placement, salary or promotion is guaranteed by this program.</p>
+    <p class="footer__contact"><a href="mailto:prafulladeori@gmail.com">prafulladeori@gmail.com</a> &nbsp;·&nbsp; <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1">WhatsApp community</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+      els.forEach(function(el){ el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function(el){ io.observe(el); });
+  })();
+</script>
+</body>
+</html>
