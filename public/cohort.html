@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,17 +10,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
+<link rel="stylesheet" href="/css/site.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
-  .site-connect{
-    background:var(--ink,#12151C); color:var(--band-text,#F3EEE0);
-    font-family:var(--font-mono); font-size:11.5px; letter-spacing:.06em; text-transform:uppercase;
-    display:flex; justify-content:space-between; align-items:center;
-    padding:8px 24px;
-  }
-  .site-connect a{ color:inherit; text-decoration:none; opacity:.8; margin-left:18px; }
-  .site-connect a:hover{ opacity:1; text-decoration:underline; }
-  .site-connect .home{ opacity:1; font-weight:600; }
+  /* nav sits in the shared brand font, not the page's editorial Fraunces */
+  .site-nav .site-nav__logo, .site-nav__links, .site-nav .btn{ font-family:var(--font-mono); }
   /* ============ TOKENS ============ */
   :root{
     --bg:#EAE3D2;
@@ -136,27 +130,7 @@
     max-width:640px;
   }
 
-  /* ============ TOP BAR ============ */
-  .topbar{
-    position:sticky; top:0; z-index:40;
-    background:color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter:blur(8px);
-    border-bottom:1px solid var(--border);
-  }
-  .topbar__inner{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 24px;
-    max-width:1080px; margin:0 auto;
-  }
-  .wordmark{
-    font-family:var(--font-mono);
-    font-size:12.5px;
-    letter-spacing:.08em;
-    text-transform:uppercase;
-    color:var(--text);
-    text-decoration:none;
-  }
-  .wordmark b{ color:var(--accent-strong); }
+  /* ============ BUTTONS (page-specific, sits alongside the shared .btn in site.css) ============ */
   .btn{
     font-family:var(--font-mono);
     font-size:13px;
@@ -182,9 +156,8 @@
     border-color:var(--border);
   }
   .btn--ghost:hover{ border-color:var(--accent-strong); }
-  .topbar .btn{ padding:9px 16px; font-size:12px; }
 
-  /* ============ HERO ============ */
+  /* ============ HERO — light editorial treatment + GSAP line-reveal ============ */
   .hero{
     padding:88px 0 72px;
     border-bottom:1px solid var(--border);
@@ -566,21 +539,21 @@
 </head>
 <body>
 
-<div class="site-connect">
-  <span class="home">I AM A RECRUITER™</span>
-  <span>
-    <a href="/index.html">Home</a>
-    <a href="/join.html">Join</a>
-    <a href="/cohort.html">Cohort</a>
-  </span>
-</div>
-
-<div class="topbar">
-  <div class="topbar__inner">
-    <a class="wordmark" href="#hero"><b>AI·ESTA</b> — Founding Cohort</a>
-    <a class="btn" href="#apply">Apply Now</a>
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__links" id="navLinks">
+      <a href="/index.html" data-page="index.html">Home</a>
+      <a href="/join.html" data-page="join.html">Join</a>
+      <a href="/cohort.html" data-page="cohort.html" class="is-active">Cohort</a>
+      <a class="btn" href="#apply" style="margin-top:14px;">Apply Now</a>
+    </div>
+    <div class="site-nav__cta">
+      <a class="btn" href="#apply">Apply Now</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    </div>
   </div>
-</div>
+</nav>
 
 <main>
 
@@ -588,18 +561,18 @@
   <section class="hero" id="hero">
     <div class="container hero__grid">
       <div>
-        <div class="stamp">Founding Cohort · Batch 01<span>Locked offer — 26 Aug 2026</span></div>
-        <h1>From recruiter execution to <em>AI-Enabled Strategic Talent Advisor</em></h1>
-        <p class="lede">For working recruiters who already know recruitment — and want to operate at a more strategic, AI-enabled, business-facing level.</p>
-        <p class="punch">AI can write your Boolean string. That does not make you a strategic recruiter.</p>
-        <div class="hero__cta">
+        <div class="stamp" id="coStamp">Founding Cohort · Batch 01<span>Locked offer — 26 Aug 2026</span></div>
+        <h1><span class="line-wrap"><span id="coL1">From recruiter execution to</span></span> <em><span class="line-wrap"><span id="coL2">AI-Enabled Strategic Talent Advisor</span></span></em></h1>
+        <p class="lede" id="coLede">For working recruiters who already know recruitment — and want to operate at a more strategic, AI-enabled, business-facing level.</p>
+        <p class="punch" id="coPunch">AI can write your Boolean string. That does not make you a strategic recruiter.</p>
+        <div class="hero__cta" id="coCta" style="opacity:0;">
           <a class="btn" href="#apply">Apply for the Founding Cohort</a>
           <a class="btn btn--ghost" href="#faq">Read the FAQ</a>
         </div>
         <p class="hero__cta fineprint" style="margin-top:14px;">Prefer LinkedIn? DM the word "ADVISOR" and I'll send details directly.</p>
       </div>
 
-      <div class="manifest reveal">
+      <div class="manifest reveal" id="coManifest" style="opacity:0;">
         <div class="manifest__head"><span>File 01 / Offer Manifest</span><span>Batch 01</span></div>
         <dl>
           <div class="row"><dt>Dates</dt><dd>19 Sep – 24 Oct 2026</dd></div>
@@ -899,6 +872,7 @@
   </div>
 </footer>
 
+<script src="/js/site.js"></script>
 <script>
   (function(){
     var els = document.querySelectorAll('.reveal');
@@ -916,6 +890,22 @@
     }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
     els.forEach(function(el){ io.observe(el); });
   })();
+</script>
+<script>
+(function(){
+  if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    ['coCta','coManifest'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.opacity = 1; });
+    return;
+  }
+  gsap.timeline({ defaults:{ ease:'power3.out' } })
+    .from('#coStamp', { opacity:0, y:10, duration:.5 })
+    .from('#coL1', { yPercent:110, duration:.7 }, '-=0.2')
+    .from('#coL2', { yPercent:110, duration:.7 }, '-=0.5')
+    .from('#coLede', { opacity:0, y:14, duration:.6 }, '-=0.35')
+    .from('#coPunch', { opacity:0, y:14, duration:.6 }, '-=0.4')
+    .to('#coCta', { opacity:1, duration:.5 }, '-=0.3')
+    .to('#coManifest', { opacity:1, y:0, duration:.6, from:{y:16} }, '-=0.5');
+})();
 </script>
 </body>
 </html>

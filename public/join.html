@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <style>
   .join-hero{ padding:56px 0 20px; }
   .join-hero h1{ font-size:clamp(2.4rem,6vw,4rem); }
@@ -72,11 +73,15 @@
 </nav>
 
 <main>
-  <section class="join-hero">
-    <div class="container">
+  <section class="join-hero chero">
+    <div class="bg-grid"></div>
+    <div class="container chero__inner">
       <div class="eyebrow">Free to join</div>
-      <h1>Join I AM A<br>RECRUITER<span style="color:var(--accent);">.</span></h1>
-      <p class="lede" style="margin-top:18px;">Two minutes. Seven fields. You're in the community and on WhatsApp by the time you check your inbox.</p>
+      <h1>
+        <span class="line-wrap"><span id="jL1">Join I AM A</span></span><br>
+        <span class="line-wrap"><span id="jL2">RECRUITER<span class="accent">.</span></span></span>
+      </h1>
+      <p class="lede" id="jTagline" style="margin-top:18px;">Two minutes. Seven fields. You're in the community and on WhatsApp by the time you check your inbox.</p>
     </div>
   </section>
 
@@ -168,6 +173,16 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="/js/site.js"></script>
+<script>
+(function(){
+  if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.timeline({ defaults:{ ease:'power3.out' } })
+    .from('.join-hero .eyebrow', { opacity:0, y:10, duration:.5 })
+    .from('#jL1', { yPercent:110, duration:.7 }, '-=0.25')
+    .from('#jL2', { yPercent:110, duration:.7 }, '-=0.55')
+    .from('#jTagline', { yPercent:60, opacity:0, duration:.6 }, '-=0.35');
+})();
+</script>
 <script>
   // ---- Join form submission ---------------------------------------
   // Fill in the Google Apps Script Web App URL after deploying Code.gs

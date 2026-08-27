@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,6 +11,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
   .hero{ padding:64px 0 40px; border-bottom:2px solid var(--ink); }
   .hero__id{ display:flex; align-items:baseline; gap:16px; flex-wrap:wrap; }
@@ -19,7 +21,7 @@
   .hero__tag{ margin-top:26px; font-size:1.2rem; max-width:560px; color:var(--text-muted); }
   .hero__cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; }
   .hero__strip{
-    margin-top:56px; border-top:2px solid var(--ink);
+    margin-top:56px; border-top:2px solid var(--ink); position:relative; z-index:2;
     display:grid; grid-template-columns:repeat(4,1fr);
   }
   .hero__strip div{ padding:16px 18px; border-right:1px solid var(--border); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
@@ -73,18 +75,22 @@
 </nav>
 
 <main>
-  <section class="hero">
-    <div class="container">
+  <section class="hero chero">
+    <div class="bg-grid"></div>
+    <div class="container chero__inner">
       <div class="hero__id">
-        <span class="small">India's Recruiter Community</span>
+        <span class="kicker line-wrap"><span id="hKicker">India's Recruiter Community</span></span>
       </div>
-      <h1>I AM A<br>RECRUITER<span style="color:var(--accent);">.</span></h1>
-      <p class="hero__tag">Join our vibrant community to elevate your recruiting career — a network for working recruiters across India to learn, connect, and grow together.</p>
-      <div class="hero__cta">
+      <h1>
+        <span class="line-wrap"><span id="hL1">I AM A</span></span><br>
+        <span class="line-wrap"><span id="hL2">RECRUITER<span class="accent" id="hDot">.</span></span></span>
+      </h1>
+      <p class="hero__tag" id="hTagline">Join our vibrant community to elevate your recruiting career — a network for working recruiters across India to learn, connect, and grow together.</p>
+      <div class="hero__cta" id="hCta" style="opacity:0;">
         <a class="btn btn--accent" href="/join.html">Join the Community</a>
         <a class="btn btn--ghost" href="/cohort.html">Explore the Founding Cohort</a>
       </div>
-      <div class="hero__strip">
+      <div class="hero__strip" id="hStrip" style="opacity:0;">
         <div>Who<b>Working recruiters, India-first</b></div>
         <div>What<b>Network · stories · live sessions</b></div>
         <div>Where<b>LinkedIn · Instagram · YouTube · WhatsApp</b></div>
@@ -206,5 +212,30 @@
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="/js/site.js"></script>
+<script>
+(function(){
+  // ---- GSAP entrance + scroll-linked dot-grid parallax ----
+  if (window.gsap) {
+    if (window.ScrollTrigger) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.normalizeScroll(true); }
+    var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+    tl.from('#hKicker', { yPercent:120, duration:.6 })
+      .from('#hL1', { yPercent:110, duration:.8 }, '-=0.3')
+      .from('#hL2', { yPercent:110, duration:.8 }, '-=0.65')
+      .from('#hTagline', { yPercent:60, opacity:0, duration:.7 }, '-=0.4')
+      .to('#hCta', { opacity:1, y:0, duration:.6, from:{y:14} }, '-=0.35')
+      .to('#hStrip', { opacity:1, y:0, duration:.6, from:{y:14} }, '-=0.3');
+
+    if (window.ScrollTrigger) {
+      var grid = document.querySelector('.hero .bg-grid');
+      if (grid) {
+        gsap.to(grid, {
+          backgroundPosition: '0px 120px', ease:'none',
+          scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:0.6 }
+        });
+      }
+    }
+  }
+})();
+</script>
 </body>
 </html>
