@@ -133,7 +133,9 @@ var FORM_CONFIGS = {
       'Phone - Mobile',
       'Job Title',
       'Current Company / Organisation Name',
-      'Role You Want Sourced Live'
+      'Will You Be Joining Live',
+      'Role You Want Sourced Live',
+      'JD File Link'
     ],
     requiredFields: [
       'Name',
@@ -147,12 +149,20 @@ var FORM_CONFIGS = {
       var roleLine = data['Role You Want Sourced Live']
         ? 'The role you shared — "' + data['Role You Want Sourced Live'] + '" — is in the pool we may pick from to source live on the call.'
         : '';
+      var jdLine = data['JD File Link']
+        ? 'Got your JD attachment too — thanks for sending it over.'
+        : '';
+      var notComingLine = (data['Will You Be Joining Live'] && data['Will You Be Joining Live'].indexOf('No') === 0)
+        ? 'No worries about missing it live — the recording will land in your inbox right after.'
+        : '';
 
       var plainBody =
         'Hi ' + firstName + ',\n\n' +
         'You\'re registered for "Your hardest role, sourced live." — Friday, 11 Sept, 4:00–5:00 PM IST, on Zoom.\n\n' +
         'Join here on the day: https://luma.com/nl6gkeb2\n\n' +
         (roleLine ? roleLine + '\n\n' : '') +
+        (jdLine ? jdLine + '\n\n' : '') +
+        (notComingLine ? notComingLine + '\n\n' : '') +
         'What you get:\n' +
         '- 7 days full access to LeadForce, no limitations\n' +
         '- 25% off your first paid month, exclusive to this session\n' +
@@ -165,6 +175,8 @@ var FORM_CONFIGS = {
         '<p style="margin:0 0 16px;">You\'re registered for <strong>"Your hardest role, sourced live."</strong> — ' +
         '<strong>Friday, 11 Sept, 4:00–5:00 PM IST</strong>, on Zoom.</p>' +
         (roleLine ? '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;">' + roleLine + '</p>' : '') +
+        (jdLine ? '<p style="margin:0 0 16px; color:#55565C; font-size:14px;">' + jdLine + '</p>' : '') +
+        (notComingLine ? '<p style="margin:0 0 16px; color:#55565C; font-size:14px;">' + notComingLine + '</p>' : '') +
         '<p style="margin:0 0 8px; font-weight:bold;">What you get</p>' +
         '<ul style="margin:0 0 16px; padding-left:20px;">' +
           '<li style="margin-bottom:6px;">7 days full access to LeadForce, no limitations</li>' +
@@ -206,12 +218,39 @@ function doPost(e) {
       return jsonResponse({ status: 'error', message: 'Invalid email address.' });
     }
 
+    // If a JD file was attached (base64), upload it to Drive and store the link.
+    if (data['JD File Base64']) {
+      data['JD File Link'] = uploadJdFile(data);
+    }
+
     appendToSheet(config, data);
     sendConfirmationEmail(config, data);
 
     return jsonResponse({ status: 'success' });
   } catch (err) {
     return jsonResponse({ status: 'error', message: err && err.message ? err.message : String(err) });
+  }
+}
+
+// Decodes a base64 JD file sent from the event form, saves it into a
+// "JD Uploads" Drive folder (creating it on first use), and returns a
+// shareable link. Returns '' if anything about the upload fails — a
+// failed upload should never block the registration itself.
+function uploadJdFile(data) {
+  try {
+    var fileName = data['JD File Name'] || ('JD - ' + data['Name']);
+    var mimeType = data['JD File MimeType'] || 'application/octet-stream';
+    var bytes = Utilities.base64Decode(data['JD File Base64']);
+    var blob = Utilities.newBlob(bytes, mimeType, fileName);
+
+    var folders = DriveApp.getFoldersByName('JD Uploads — I AM A RECRUITER');
+    var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('JD Uploads — I AM A RECRUITER');
+
+    var file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return file.getUrl();
+  } catch (err) {
+    return '';
   }
 }
 
