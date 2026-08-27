@@ -41,16 +41,24 @@ var FORM_CONFIGS = {
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
       return {
-        subject: 'Welcome to ' + COMMUNITY_NAME + '!',
+        subject: 'Welcome to ' + COMMUNITY_NAME + ', ' + firstName + '! 🎉',
         body:
           'Hi ' + firstName + ',\n\n' +
-          'Thank you for joining ' + COMMUNITY_NAME + ' — India\'s community for working recruiters. ' +
-          'We\'re glad to have you.\n\n' +
-          'One more step: join our WhatsApp community so you don\'t miss anything —\n' +
+          'Welcome to ' + COMMUNITY_NAME + ' — so glad to have you here! You\'re now part of India\'s ' +
+          'community for working recruiters, built by recruiters who wanted this to exist.\n\n' +
+          'One last step — hop into our WhatsApp community so you don\'t miss anything:\n' +
           WHATSAPP_LINK + '\n\n' +
-          'We share career stories, live sessions, and opportunities to connect with recruiters across India ' +
-          '— including our founding AI-Enabled Strategic Talent Advisor cohort.\n\n' +
-          'Talk soon,\n' +
+          'While you\'re at it, come say hello on our other channels too:\n' +
+          '- LinkedIn: https://www.linkedin.com/company/i-am-a-recruiter-community\n' +
+          '- Instagram: https://www.instagram.com/i.am.a.recruiter/\n' +
+          '- YouTube: https://www.youtube.com/@IAMARECRUITER\n' +
+          '- Facebook: https://www.facebook.com/I.MA.A.RECRUITER\n\n' +
+          'Inside the community, you\'ll find a real peer network, honest career stories on the ' +
+          COMMUNITY_NAME + ' podcast, live sessions, and warm introductions — plus our founding ' +
+          'AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.\n\n' +
+          'A quick heads-up: going forward, we\'ll also reach you by email and phone/SMS — not just ' +
+          'WhatsApp — so keep an eye on your inbox too.\n\n' +
+          'Glad you\'re here — talk soon,\n' +
           'The ' + COMMUNITY_NAME + ' Team'
       };
     }
