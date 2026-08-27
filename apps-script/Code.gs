@@ -13,6 +13,48 @@
 var SPREADSHEET_ID = '1T5GUZqQlIPIL_cOgiBrhJtzkzL1u4H7hK6ZB5zsAP6I';
 var WHATSAPP_LINK = 'https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1';
 var COMMUNITY_NAME = 'I AM A RECRUITER';
+var LOGO_URL = 'https://www.iamarecruiter.in/assets/logo_trimmed.png';
+var BRAND_ACCENT = '#E8A400';
+var BRAND_INK = '#0E0E10';
+
+// ---- Branded HTML email wrapper ---------------------------------------
+// bodyHtml is the inner content (already-safe HTML). buttonText/buttonUrl
+// render one accent CTA button; pass null/'' for buttonText to omit it.
+function wrapEmailHtml(bodyHtml, buttonText, buttonUrl) {
+  var button = '';
+  if (buttonText && buttonUrl) {
+    button =
+      '<tr><td style="padding:8px 40px 32px;">' +
+        '<a href="' + buttonUrl + '" style="display:inline-block; background:' + BRAND_ACCENT + '; ' +
+        'color:' + BRAND_INK + '; text-decoration:none; font-family:Arial,Helvetica,sans-serif; ' +
+        'font-weight:bold; font-size:14px; letter-spacing:0.5px; padding:14px 28px; ' +
+        'text-transform:uppercase; border-radius:2px;">' + buttonText + '</a>' +
+      '</td></tr>';
+  }
+
+  return (
+    '<div style="background:#F4F3EE; padding:32px 16px; font-family:Arial,Helvetica,sans-serif;">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px; margin:0 auto; background:#FFFFFF; border:1px solid #DAD7CC;">' +
+        '<tr><td style="background:' + BRAND_INK + '; padding:28px 40px;">' +
+          '<img src="' + LOGO_URL + '" alt="' + COMMUNITY_NAME + '" height="28" style="display:block; height:28px; width:auto;">' +
+        '</td></tr>' +
+        '<tr><td style="padding:36px 40px 8px; color:' + BRAND_INK + '; font-size:15px; line-height:1.6;">' +
+          bodyHtml +
+        '</td></tr>' +
+        button +
+        '<tr><td style="padding:24px 40px 32px; border-top:1px solid #DAD7CC;">' +
+          '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
+            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.linkedin.com/company/i-am-a-recruiter-community" style="color:' + BRAND_INK + '; text-decoration:none;">LinkedIn</a></td>' +
+            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.instagram.com/i.am.a.recruiter/" style="color:' + BRAND_INK + '; text-decoration:none;">Instagram</a></td>' +
+            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.youtube.com/@IAMARECRUITER" style="color:' + BRAND_INK + '; text-decoration:none;">YouTube</a></td>' +
+            '<td style="font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="' + WHATSAPP_LINK + '" style="color:' + BRAND_INK + '; text-decoration:none;">WhatsApp</a></td>' +
+          '</tr></table>' +
+          '<p style="margin:16px 0 0; font-family:Arial,Helvetica,sans-serif; font-size:11px; color:#8A8A8E;">' + COMMUNITY_NAME + ' — India\'s community for working recruiters.</p>' +
+        '</td></tr>' +
+      '</table>' +
+    '</div>'
+  );
+}
 
 // Each form on the site sends a "Form Type" field identifying which
 // config below to use. The Join form omits it (defaults to 'join') so
@@ -40,26 +82,45 @@ var FORM_CONFIGS = {
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
+
+      var plainBody =
+        'Hi ' + firstName + ',\n\n' +
+        'Welcome to ' + COMMUNITY_NAME + ' — so glad to have you here! You\'re now part of India\'s ' +
+        'community for working recruiters, built by recruiters who wanted this to exist.\n\n' +
+        'One last step — hop into our WhatsApp community so you don\'t miss anything:\n' +
+        WHATSAPP_LINK + '\n\n' +
+        'While you\'re at it, come say hello on our other channels too:\n' +
+        '- LinkedIn: https://www.linkedin.com/company/i-am-a-recruiter-community\n' +
+        '- Instagram: https://www.instagram.com/i.am.a.recruiter/\n' +
+        '- YouTube: https://www.youtube.com/@IAMARECRUITER\n' +
+        '- Facebook: https://www.facebook.com/I.MA.A.RECRUITER\n\n' +
+        'Inside the community, you\'ll find a real peer network, honest career stories on the ' +
+        COMMUNITY_NAME + ' podcast, live sessions, and warm introductions — plus our founding ' +
+        'AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.\n\n' +
+        'A quick heads-up: going forward, we\'ll also reach you by email and phone/SMS — not just ' +
+        'WhatsApp — so keep an eye on your inbox too.\n\n' +
+        'Glad you\'re here — talk soon,\n' +
+        'The ' + COMMUNITY_NAME + ' Team';
+
+      var htmlInner =
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Welcome, ' + firstName + '! 🎉</p>' +
+        '<p style="margin:0 0 16px;">So glad to have you here. You\'re now part of ' + COMMUNITY_NAME +
+        ' — India\'s community for working recruiters, built by recruiters who wanted this to exist.</p>' +
+        '<p style="margin:0 0 16px;">One last step — hop into our WhatsApp community so you don\'t miss anything. Tap the button below to join.</p>' +
+        '<p style="margin:0 0 16px;">While you\'re at it, come say hello on our other channels:<br>' +
+        '<a href="https://www.linkedin.com/company/i-am-a-recruiter-community" style="color:' + BRAND_INK + ';">LinkedIn</a> · ' +
+        '<a href="https://www.instagram.com/i.am.a.recruiter/" style="color:' + BRAND_INK + ';">Instagram</a> · ' +
+        '<a href="https://www.youtube.com/@IAMARECRUITER" style="color:' + BRAND_INK + ';">YouTube</a> · ' +
+        '<a href="https://www.facebook.com/I.MA.A.RECRUITER" style="color:' + BRAND_INK + ';">Facebook</a></p>' +
+        '<p style="margin:0 0 16px;">Inside the community: a real peer network, honest career stories on the ' + COMMUNITY_NAME +
+        ' podcast, live sessions, and warm introductions — plus our founding AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.</p>' +
+        '<p style="margin:0; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;">' +
+        'Heads-up: going forward we\'ll also reach you by email and phone/SMS — not just WhatsApp — so keep an eye on your inbox too.</p>';
+
       return {
         subject: 'Welcome to ' + COMMUNITY_NAME + ', ' + firstName + '! 🎉',
-        body:
-          'Hi ' + firstName + ',\n\n' +
-          'Welcome to ' + COMMUNITY_NAME + ' — so glad to have you here! You\'re now part of India\'s ' +
-          'community for working recruiters, built by recruiters who wanted this to exist.\n\n' +
-          'One last step — hop into our WhatsApp community so you don\'t miss anything:\n' +
-          WHATSAPP_LINK + '\n\n' +
-          'While you\'re at it, come say hello on our other channels too:\n' +
-          '- LinkedIn: https://www.linkedin.com/company/i-am-a-recruiter-community\n' +
-          '- Instagram: https://www.instagram.com/i.am.a.recruiter/\n' +
-          '- YouTube: https://www.youtube.com/@IAMARECRUITER\n' +
-          '- Facebook: https://www.facebook.com/I.MA.A.RECRUITER\n\n' +
-          'Inside the community, you\'ll find a real peer network, honest career stories on the ' +
-          COMMUNITY_NAME + ' podcast, live sessions, and warm introductions — plus our founding ' +
-          'AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.\n\n' +
-          'A quick heads-up: going forward, we\'ll also reach you by email and phone/SMS — not just ' +
-          'WhatsApp — so keep an eye on your inbox too.\n\n' +
-          'Glad you\'re here — talk soon,\n' +
-          'The ' + COMMUNITY_NAME + ' Team'
+        body: plainBody,
+        htmlBody: wrapEmailHtml(htmlInner, 'Join the WhatsApp Community', WHATSAPP_LINK)
       };
     }
   },
@@ -83,19 +144,39 @@ var FORM_CONFIGS = {
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
+      var roleLine = data['Role You Want Sourced Live']
+        ? 'The role you shared — "' + data['Role You Want Sourced Live'] + '" — is in the pool we may pick from to source live on the call.'
+        : '';
+
+      var plainBody =
+        'Hi ' + firstName + ',\n\n' +
+        'You\'re registered for "Your hardest role, sourced live." — Friday, 11 Sept, 4:00–5:00 PM IST, on Zoom.\n\n' +
+        'Join here on the day: https://luma.com/nl6gkeb2\n\n' +
+        (roleLine ? roleLine + '\n\n' : '') +
+        'What you get:\n' +
+        '- 7 days full access to LeadForce, no limitations\n' +
+        '- 25% off your first paid month, exclusive to this session\n' +
+        '- The recording, sent to everyone who registers — whether you make it live or not\n\n' +
+        'See you Friday,\n' +
+        'Prafulla Deori, ' + COMMUNITY_NAME;
+
+      var htmlInner =
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">You\'re in, ' + firstName + '. 🎉</p>' +
+        '<p style="margin:0 0 16px;">You\'re registered for <strong>"Your hardest role, sourced live."</strong> — ' +
+        '<strong>Friday, 11 Sept, 4:00–5:00 PM IST</strong>, on Zoom.</p>' +
+        (roleLine ? '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;">' + roleLine + '</p>' : '') +
+        '<p style="margin:0 0 8px; font-weight:bold;">What you get</p>' +
+        '<ul style="margin:0 0 16px; padding-left:20px;">' +
+          '<li style="margin-bottom:6px;">7 days full access to LeadForce, no limitations</li>' +
+          '<li style="margin-bottom:6px;">25% off your first paid month, exclusive to this session</li>' +
+          '<li>The recording, sent to everyone who registers — whether you make it live or not</li>' +
+        '</ul>' +
+        '<p style="margin:0;">See you Friday,<br>Prafulla Deori, ' + COMMUNITY_NAME + '</p>';
+
       return {
         subject: 'You\'re registered — Live Sourcing Session, Fri 11 Sept',
-        body:
-          'Hi ' + firstName + ',\n\n' +
-          'You\'re registered for "Your hardest role, sourced live." — Friday, 11 Sept, 4:00–5:00 PM IST, on Zoom.\n\n' +
-          'Join here on the day: https://luma.com/nl6gkeb2\n\n' +
-          (data['Role You Want Sourced Live'] ? 'The role you shared — "' + data['Role You Want Sourced Live'] + '" — is in the pool we may pick from to source live on the call.\n\n' : '') +
-          'What you get:\n' +
-          '- 7 days full access to LeadForce, no limitations\n' +
-          '- 25% off your first paid month, exclusive to this session\n' +
-          '- The recording, sent to everyone who registers — whether you make it live or not\n\n' +
-          'See you Friday,\n' +
-          'Prafulla Deori, ' + COMMUNITY_NAME
+        body: plainBody,
+        htmlBody: wrapEmailHtml(htmlInner, 'Join on Luma', 'https://luma.com/nl6gkeb2')
       };
     }
   }
@@ -164,11 +245,11 @@ function appendToSheet(config, data) {
 
 function sendConfirmationEmail(config, data) {
   var email = config.buildEmail(data);
-  MailApp.sendEmail({
-    to: data['Email ID'],
-    subject: email.subject,
-    body: email.body
-  });
+  var options = { to: data['Email ID'], subject: email.subject, body: email.body };
+  if (email.htmlBody) {
+    options.htmlBody = email.htmlBody;
+  }
+  MailApp.sendEmail(options);
 }
 
 // ---- Helpers ------------------------------------------------------------
