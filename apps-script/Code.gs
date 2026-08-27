@@ -18,19 +18,25 @@ var BRAND_ACCENT = '#E8A400';
 var BRAND_INK = '#0E0E10';
 
 // ---- Branded HTML email wrapper ---------------------------------------
-// bodyHtml is the inner content (already-safe HTML). buttonText/buttonUrl
-// render one accent CTA button; pass null/'' for buttonText to omit it.
-function wrapEmailHtml(bodyHtml, buttonText, buttonUrl) {
-  var button = '';
-  if (buttonText && buttonUrl) {
-    button =
-      '<tr><td style="padding:8px 40px 32px;">' +
-        '<a href="' + buttonUrl + '" style="display:inline-block; background:' + BRAND_ACCENT + '; ' +
-        'color:' + BRAND_INK + '; text-decoration:none; font-family:Arial,Helvetica,sans-serif; ' +
-        'font-weight:bold; font-size:14px; letter-spacing:0.5px; padding:14px 28px; ' +
-        'text-transform:uppercase; border-radius:2px;">' + buttonText + '</a>' +
-      '</td></tr>';
-  }
+// bodyHtml is the inner content (already-safe HTML). buttons is an array
+// of { text, url } — the first renders as a filled accent button, any
+// further ones as outlined secondary buttons. Pass [] to omit buttons.
+function wrapEmailHtml(bodyHtml, buttons) {
+  buttons = buttons || [];
+  var buttonRows = buttons.map(function (btn, idx) {
+    var isPrimary = idx === 0;
+    var style = isPrimary
+      ? ('background:' + BRAND_ACCENT + '; color:' + BRAND_INK + '; border:2px solid ' + BRAND_ACCENT + ';')
+      : ('background:transparent; color:' + BRAND_INK + '; border:2px solid ' + BRAND_INK + ';');
+    var padBottom = (idx === buttons.length - 1) ? '32px' : '10px';
+    return (
+      '<tr><td style="padding:8px 40px ' + padBottom + ';">' +
+        '<a href="' + btn.url + '" style="display:inline-block; ' + style + ' text-decoration:none; ' +
+        'font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:14px; letter-spacing:0.5px; ' +
+        'padding:14px 28px; text-transform:uppercase; border-radius:2px;">' + btn.text + '</a>' +
+      '</td></tr>'
+    );
+  }).join('');
 
   return (
     '<div style="background:#F4F3EE; padding:32px 16px; font-family:Arial,Helvetica,sans-serif;">' +
@@ -41,7 +47,7 @@ function wrapEmailHtml(bodyHtml, buttonText, buttonUrl) {
         '<tr><td style="padding:36px 40px 8px; color:' + BRAND_INK + '; font-size:15px; line-height:1.6;">' +
           bodyHtml +
         '</td></tr>' +
-        button +
+        buttonRows +
         '<tr><td style="padding:24px 40px 32px; border-top:1px solid #DAD7CC;">' +
           '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
             '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.linkedin.com/company/i-am-a-recruiter-community" style="color:' + BRAND_INK + '; text-decoration:none;">LinkedIn</a></td>' +
@@ -120,7 +126,9 @@ var FORM_CONFIGS = {
       return {
         subject: 'Welcome to ' + COMMUNITY_NAME + ', ' + firstName + '! 🎉',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, 'Join the WhatsApp Community', WHATSAPP_LINK)
+        htmlBody: wrapEmailHtml(htmlInner, [
+          { text: 'Join the WhatsApp Community', url: WHATSAPP_LINK }
+        ])
       };
     }
   },
@@ -188,7 +196,10 @@ var FORM_CONFIGS = {
       return {
         subject: 'You\'re registered — Live Sourcing Session, Fri 11 Sept',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, 'Join on Luma', 'https://luma.com/nl6gkeb2')
+        htmlBody: wrapEmailHtml(htmlInner, [
+          { text: 'Join on Luma', url: 'https://luma.com/nl6gkeb2' },
+          { text: 'Join WhatsApp Community', url: WHATSAPP_LINK }
+        ])
       };
     }
   }
