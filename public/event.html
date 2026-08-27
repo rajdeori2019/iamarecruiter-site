@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Sourcing Session — Your Hardest Role, Sourced Live | I AM A RECRUITER</title>
+<meta name="description" content="Fri 11 Sept, 4:00–5:00 PM IST on Zoom. Submit your hardest open role — we build the search live on the call and show you exactly what it returns. Free, hosted by I AM A RECRUITER with LeadForceTalent.">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  :root{ --ev-accent:#E8630C; --ev-accent-ink:#B84C09; }
+  :root[data-theme="dark"]{ --ev-accent:#F3853B; --ev-accent-ink:#F3853B; }
+  @media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){ --ev-accent:#F3853B; --ev-accent-ink:#F3853B; } }
+
+  .ev-hero{ padding:56px 0 20px; border-bottom:2px solid var(--ink); }
+  .ev-hero .eyebrow{ color:var(--ev-accent-ink); }
+  .ev-hero .eyebrow::before{ background:var(--ev-accent-ink); }
+  .ev-hero h1{ font-size:clamp(2.6rem,6.4vw,4.6rem); }
+  .ev-hero h1 em{ font-style:normal; color:var(--ev-accent-ink); }
+  .ev-hero .lede{ margin-top:20px; max-width:620px; font-size:1.15rem; }
+  .ev-hero .hero__cta{ display:flex; gap:14px; flex-wrap:wrap; margin-top:32px; }
+  .ev-hero .btn--accent{ background:var(--ev-accent); border-color:var(--ev-accent); color:#fff; }
+
+  .ev-strip{ margin-top:44px; border-top:2px solid var(--ink); display:grid; grid-template-columns:repeat(4,1fr); }
+  .ev-strip div{ padding:16px 18px; border-right:1px solid var(--border); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
+  .ev-strip div:last-child{ border-right:none; }
+  .ev-strip b{ display:block; font-family:var(--font-body); font-weight:700; font-size:15px; color:var(--text); text-transform:none; letter-spacing:0; margin-top:4px; }
+  @media (max-width:760px){ .ev-strip{ grid-template-columns:1fr 1fr; } .ev-strip div{ border-bottom:1px solid var(--border); } }
+
+  .about-copy{ max-width:680px; }
+  .about-copy p{ margin-top:16px; color:var(--text-muted); }
+  .about-copy .punch{ margin-top:22px; font-weight:600; color:var(--text); border-left:2px solid var(--ev-accent); padding-left:16px; }
+
+  .timeline{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:0; border-top:1px solid var(--border); }
+  .timeline li{ display:grid; grid-template-columns:110px 1fr; gap:20px; padding:20px 0; border-bottom:1px solid var(--border); }
+  .timeline b{ font-family:var(--font-mono); font-size:13px; color:var(--ev-accent-ink); }
+  .timeline span{ color:var(--text-muted); font-size:.95rem; }
+  @media (max-width:560px){ .timeline li{ grid-template-columns:1fr; gap:4px; } }
+
+  .get-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .get-cell{ background:var(--paper); padding:26px 22px; }
+  .get-cell .tag{ font-family:var(--font-mono); font-size:11px; color:var(--ev-accent-ink); text-transform:uppercase; letter-spacing:.08em; }
+  .get-cell p{ margin-top:10px; font-weight:700; }
+  @media (max-width:760px){ .get-grid{ grid-template-columns:1fr; } }
+
+  .host-row{ display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; }
+  .host-card{ flex:1 1 240px; border:1px solid var(--border); padding:22px; background:var(--paper); }
+  .host-card .role{ font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ev-accent-ink); }
+  .host-card h3{ font-family:var(--font-body); font-weight:800; text-transform:none; font-size:1.1rem; letter-spacing:0; margin-top:8px; }
+
+  .ev-grid{ display:grid; grid-template-columns:0.85fr 1.15fr; gap:1px; background:var(--border); border:1px solid var(--border); margin-top:44px; }
+  .ev-grid > div{ background:var(--paper); }
+  .ev-info{ padding:38px 34px; }
+  .ev-info h3{ font-family:var(--font-body); font-weight:800; text-transform:none; font-size:1.15rem; letter-spacing:0; margin-bottom:14px; }
+  .ev-note{ margin-top:24px; padding-top:20px; border-top:1px dashed var(--border); font-size:.85rem; color:var(--text-muted); }
+  .ev-form{ padding:38px 34px; }
+  .field{ margin-bottom:20px; }
+  .field label{ display:block; font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:8px; }
+  .field input, .field textarea{
+    width:100%; padding:13px 14px; font-family:var(--font-body); font-size:15px;
+    border:2px solid var(--border); background:var(--paper); color:var(--text); resize:vertical;
+  }
+  .field input:focus, .field textarea:focus{ border-color:var(--ink); outline:none; }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:520px){ .row-2{ grid-template-columns:1fr; } }
+  .ev-form .btn--accent{ background:var(--ev-accent); border-color:var(--ev-accent); color:#fff; }
+  .form-status{ margin-top:16px; font-family:var(--font-mono); font-size:12.5px; display:none; }
+  .form-status.show{ display:block; }
+  .form-status.error{ color:#B4442E; }
+  .form-status.ok{ color:var(--text); }
+  .success-card{ display:none; padding:38px 34px; }
+  .success-card.show{ display:block; }
+  .success-card h3{ font-family:var(--font-body); font-weight:800; text-transform:none; font-size:1.4rem; letter-spacing:0; }
+  .success-card p{ margin-top:12px; color:var(--text-muted); }
+  .success-card .btn{ margin-top:22px; }
+  @media (max-width:820px){ .ev-grid{ grid-template-columns:1fr; } }
+
+  .cta-band .btn--accent{ background:var(--ev-accent); border-color:var(--ev-accent); color:#fff; }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__links" id="navLinks">
+      <a href="/index.html" data-page="index.html">Home</a>
+      <a href="/join.html" data-page="join.html">Join</a>
+      <a href="/cohort.html" data-page="cohort.html">Cohort</a>
+      <a href="/event.html" data-page="event.html" class="is-active">Event</a>
+      <a class="btn btn--ghost" href="/join.html" style="margin-top:14px;">Join WhatsApp Group</a>
+      <a class="btn btn--accent" href="#register" style="margin-top:10px;">Register</a>
+    </div>
+    <div class="site-nav__cta">
+      <a class="btn btn--ghost" href="/join.html">Join WhatsApp Group</a>
+      <a class="btn btn--accent" href="#register">Register</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="ev-hero chero">
+    <div class="bg-grid"></div>
+    <div class="container chero__inner">
+      <div class="eyebrow">Live Sourcing Session</div>
+      <h1>Your hardest role,<br><em>sourced live.</em></h1>
+      <p class="lede">You submit the job description. We build the search on the call and show you the candidates it actually returns — including the searches that need a second attempt. Not a demo. Not a deck. Real roles from people on the call.</p>
+      <div class="hero__cta">
+        <a class="btn btn--accent" href="#register">Register — it's free</a>
+        <a class="btn btn--ghost" href="#agenda">See what happens</a>
+      </div>
+      <div class="ev-strip">
+        <div>Date<b>Fri, 11 Sept 2026</b></div>
+        <div>Time<b>4:00 – 5:00 PM IST</b></div>
+        <div>Where<b>Zoom · Free</b></div>
+        <div>Hosts<b>Prafulla Deori &amp; Dima Rodenko</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">About the session</div>
+        <h2>Bring your hardest role. We'll source it live.</h2>
+      </div>
+      <div class="about-copy">
+        <p>This is a live sourcing session, not a product walkthrough. Attendees submit an open role when they register — on the call, we pick a few of those roles and build the actual search in real time: criteria, search, results, and the adjustments when the first pass doesn't land.</p>
+        <p class="punch">Not a demo. Not a deck. Real roles from people on the call.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="agenda">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">What happens</div>
+        <h2>60 minutes, no filler</h2>
+      </div>
+      <ul class="timeline">
+        <li><b>4:00 PM</b><span>Intro — five minutes, not twenty.</span></li>
+        <li><b>4:05 PM</b><span>We pick 2–4 roles submitted by attendees and source them live: criteria, search, results, adjustments.</span></li>
+        <li><b>4:40 PM</b><span>Q&amp;A — including the awkward questions about data and accuracy.</span></li>
+        <li><b>4:55 PM</b><span>The offer, for anyone who wants to carry on.</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Who it's for</div>
+        <h2>In-house recruiters, TA leads, agency owners and founders doing their own hiring</h2>
+      </div>
+      <p class="about-copy" style="color:var(--text-muted);">Especially if you've got a role that's been open for months.</p>
+    </div>
+  </section>
+
+  <section class="section section--surface">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">What you get</div>
+        <h2>Free to attend, useful either way</h2>
+      </div>
+      <div class="get-grid">
+        <div class="get-cell">
+          <span class="tag">Access</span>
+          <p>7 days full access to LeadForce, no limitations.</p>
+        </div>
+        <div class="get-cell">
+          <span class="tag">Discount</span>
+          <p>25% off your first paid month, exclusive to this session.</p>
+        </div>
+        <div class="get-cell">
+          <span class="tag">Recording</span>
+          <p>Sent to everyone who registers — whether you make it live or not.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Hosted by</div>
+        <h2>Two people who actually source for a living</h2>
+      </div>
+      <div class="host-row">
+        <div class="host-card">
+          <span class="role">Host</span>
+          <h3>Prafulla Deori</h3>
+          <p style="margin-top:8px; color:var(--text-muted); font-size:.9rem;">I AM A RECRUITER</p>
+        </div>
+        <div class="host-card">
+          <span class="role">Sourcing Partner</span>
+          <h3>Dima Rodenko</h3>
+          <p style="margin-top:8px; color:var(--text-muted); font-size:.9rem;">Co-founder, LeadForceTalent</p>
+        </div>
+      </div>
+      <p class="fineprint" style="margin-top:20px; font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted);">This session is recorded and shared afterwards. Prefer to join directly on Luma? <a href="https://luma.com/nl6gkeb2" target="_blank" rel="noopener" style="color:var(--ev-accent-ink);">luma.com/nl6gkeb2</a></p>
+    </div>
+  </section>
+
+  <section class="section--tight" id="register">
+    <div class="container">
+      <div class="section-head">
+        <div class="eyebrow">Registrations closing Thursday evening</div>
+        <h2>Save your seat</h2>
+      </div>
+      <div class="ev-grid">
+        <div class="ev-info">
+          <h3>What happens next</h3>
+          <ul class="steps" style="list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:20px;">
+            <li style="display:flex; gap:14px; font-size:.95rem; color:var(--text-muted);"><b style="font-family:var(--font-mono); font-size:12px; color:#fff; background:var(--ev-accent); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">1</b><span>You register below — takes about a minute.</span></li>
+            <li style="display:flex; gap:14px; font-size:.95rem; color:var(--text-muted);"><b style="font-family:var(--font-mono); font-size:12px; color:#fff; background:var(--ev-accent); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">2</b><span>Optionally submit the role you'd want sourced live — it might be the one we pick.</span></li>
+            <li style="display:flex; gap:14px; font-size:.95rem; color:var(--text-muted);"><b style="font-family:var(--font-mono); font-size:12px; color:#fff; background:var(--ev-accent); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">3</b><span>You get a confirmation email with the Zoom / Luma link.</span></li>
+            <li style="display:flex; gap:14px; font-size:.95rem; color:var(--text-muted);"><b style="font-family:var(--font-mono); font-size:12px; color:#fff; background:var(--ev-accent); width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; flex:0 0 auto;">4</b><span>Show up Friday 4 PM IST — or wait for the recording, sent either way.</span></li>
+          </ul>
+          <p class="ev-note">We only use your details to run this session — no spam, no selling your data.</p>
+        </div>
+
+        <div style="position:relative;">
+          <form class="ev-form" id="eventForm" novalidate>
+            <div class="field">
+              <label for="eName">Name</label>
+              <input type="text" id="eName" name="Name" required placeholder="Your full name">
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="eEmail">Email ID</label>
+                <input type="email" id="eEmail" name="Email ID" required placeholder="you@email.com">
+              </div>
+              <div class="field">
+                <label for="ePhone">Phone — Mobile</label>
+                <input type="tel" id="ePhone" name="Phone - Mobile" required placeholder="+91 XXXXX XXXXX">
+              </div>
+            </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="eTitle">Job Title</label>
+                <input type="text" id="eTitle" name="Job Title" required placeholder="e.g. Senior Recruiter">
+              </div>
+              <div class="field">
+                <label for="eCompany">Company / Organisation</label>
+                <input type="text" id="eCompany" name="Current Company / Organisation Name" required placeholder="Where you work now">
+              </div>
+            </div>
+            <div class="field">
+              <label for="eRole">The role you'd want sourced live (optional)</label>
+              <textarea id="eRole" name="Role You Want Sourced Live" rows="3" placeholder="Title, key skills, location — whatever you'd normally put in the JD"></textarea>
+            </div>
+
+            <button type="submit" class="btn btn--accent btn--block" id="eventSubmit">Register for the session</button>
+            <p class="form-status" id="eventFormStatus"></p>
+          </form>
+
+          <div class="success-card" id="eventSuccessCard">
+            <h3>You're in. 🎉</h3>
+            <p>Check your inbox for a confirmation email with the Zoom / Luma link. See you Friday 4 PM IST — or watch for the recording either way.</p>
+            <a class="btn btn--accent" href="https://luma.com/nl6gkeb2" target="_blank" rel="noopener">Open on Luma</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band section--ink">
+    <div class="eyebrow" style="justify-content:center;">Fri 11 Sept · 4:00–5:00 PM IST · Zoom · Free</div>
+    <h2>Bring your hardest role. We'll source it live.</h2>
+    <div class="hero__cta" style="justify-content:center; margin-top:32px;">
+      <a class="btn btn--accent" href="#register">Register — it's free</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
+        <p class="text-muted" style="max-width:320px; font-size:.9rem;">India's community for working recruiters — network, stories, and live implementation, all in one place.</p>
+      </div>
+      <div class="site-footer__social">
+        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="site-footer__legal">
+      <span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span>
+      <span><a href="/index.html">Home</a> &nbsp;·&nbsp; <a href="/join.html">Join</a> &nbsp;·&nbsp; <a href="/cohort.html">Founding Cohort</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/site.js"></script>
+<script>
+  // ---- Event registration submission ---------------------------------------
+  // Uses the SAME Apps Script Web App URL as the Join form (see
+  // /apps-script/README.md) — it routes by the "Form Type" field below into
+  // its own "Event - Live Sourcing Demo" sheet tab.
+  var APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
+
+  var form = document.getElementById('eventForm');
+  var statusEl = document.getElementById('eventFormStatus');
+  var submitBtn = document.getElementById('eventSubmit');
+  var successCard = document.getElementById('eventSuccessCard');
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
+    if (!APPS_SCRIPT_URL || APPS_SCRIPT_URL.indexOf('PASTE_YOUR') === 0) {
+      statusEl.textContent = 'Form isn\'t connected yet — the site owner needs to add the Apps Script URL (see apps-script/README.md).';
+      statusEl.className = 'form-status show error';
+      return;
+    }
+
+    var payload = {
+      'Form Type': 'event-live-sourcing',
+      'Name': document.getElementById('eName').value.trim(),
+      'Email ID': document.getElementById('eEmail').value.trim(),
+      'Phone - Mobile': document.getElementById('ePhone').value.trim(),
+      'Job Title': document.getElementById('eTitle').value.trim(),
+      'Current Company / Organisation Name': document.getElementById('eCompany').value.trim(),
+      'Role You Want Sourced Live': document.getElementById('eRole').value.trim()
+    };
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Registering…';
+    statusEl.className = 'form-status';
+    statusEl.textContent = '';
+
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    })
+      .then(function (res) { return res.json(); })
+      .then(function (data) {
+        if (data && data.status === 'success') {
+          form.style.display = 'none';
+          successCard.classList.add('show');
+        } else {
+          throw new Error((data && data.message) || 'Something went wrong.');
+        }
+      })
+      .catch(function (err) {
+        statusEl.textContent = 'Could not submit right now — please try again in a moment, or register on Luma directly.';
+        statusEl.className = 'form-status show error';
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Register for the session';
+      });
+  });
+</script>
+<script>
+(function(){
+  if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  gsap.timeline({ defaults:{ ease:'power3.out' } })
+    .from('.ev-hero .eyebrow', { opacity:0, y:10, duration:.5 })
+    .from('.ev-hero h1', { opacity:0, y:16, duration:.7 }, '-=0.25')
+    .from('.ev-hero .lede', { opacity:0, y:14, duration:.6 }, '-=0.35')
+    .from('.ev-hero .hero__cta', { opacity:0, y:10, duration:.5 }, '-=0.3');
+})();
+</script>
+</body>
+</html>

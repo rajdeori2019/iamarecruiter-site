@@ -43,16 +43,19 @@ Sheet) — I can't deploy Apps Script on your behalf. It takes about 5 minutes.
 
 ## 4. Wire it into the website
 
-Send me that URL (or drop it in yourself) — it goes into **one line** in
-`public/join.html`:
+Send me that URL (or drop it in yourself) — it goes into **one line each** in
+`public/join.html` and `public/event.html`:
 
 ```js
 var APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE";
 ```
 
-Replace the placeholder with the URL from step 3.6, save, and redeploy the
-site. That's it — submissions will start appending to the **Master** tab
-and sending the welcome email.
+Replace the placeholder with the URL from step 3.6 **in both files**, save,
+and redeploy the site. That's it — Join submissions append to the **Master**
+tab and send the welcome email; Event registrations append to the
+**Event - Live Sourcing Demo** tab and send the event confirmation email.
+Both forms post to the same URL — the script tells them apart by a hidden
+"Form Type" field.
 
 ## 5. Test it
 
