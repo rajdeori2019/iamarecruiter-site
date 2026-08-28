@@ -16,6 +16,7 @@ var COMMUNITY_NAME = 'I AM A RECRUITER';
 var LOGO_URL = 'https://www.iamarecruiter.in/assets/logo_trimmed.png';
 var BRAND_ACCENT = '#E8A400';
 var BRAND_INK = '#0E0E10';
+var ADMIN_EMAIL = 'prafulladeori@gmail.com';
 
 // ---- Branded HTML email wrapper ---------------------------------------
 // bodyHtml is the inner content (already-safe HTML). buttons is an array
@@ -141,6 +142,8 @@ var FORM_CONFIGS = {
       'Phone - Mobile',
       'Job Title',
       'Current Company / Organisation Name',
+      'Your Current Location',
+      'Your LinkedIn Profile URL',
       'Will You Be Joining Live',
       'Role You Want Sourced Live',
       'JD File Link'
@@ -150,7 +153,9 @@ var FORM_CONFIGS = {
       'Email ID',
       'Phone - Mobile',
       'Job Title',
-      'Current Company / Organisation Name'
+      'Current Company / Organisation Name',
+      'Your Current Location',
+      'Your LinkedIn Profile URL'
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
@@ -236,6 +241,7 @@ function doPost(e) {
 
     appendToSheet(config, data);
     sendConfirmationEmail(config, data);
+    sendAdminNotification(config, data, formType);
 
     return jsonResponse({ status: 'success' });
   } catch (err) {
@@ -300,6 +306,29 @@ function sendConfirmationEmail(config, data) {
     options.htmlBody = email.htmlBody;
   }
   MailApp.sendEmail(options);
+}
+
+// Notifies the site owner of every new submission, with every field that
+// was captured. Wrapped so a notification failure never blocks the
+// person's own confirmation — their registration already succeeded.
+function sendAdminNotification(config, data, formType) {
+  try {
+    var formLabel = formType === 'join' ? 'Join the Community' : 'Event — Live Sourcing Session';
+    var lines = config.fields
+      .filter(function (f) { return f !== 'JD File Link' || data[f]; }) // skip empty JD link line noise
+      .map(function (f) { return f + ': ' + (data[f] || '—'); });
+
+    var subject = 'New submission — ' + formLabel + ': ' + (data['Name'] || 'Unknown');
+    var body =
+      'New form submission on the website.\n\n' +
+      'Form: ' + formLabel + '\n' +
+      'Submitted: ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + '\n\n' +
+      lines.join('\n');
+
+    MailApp.sendEmail({ to: ADMIN_EMAIL, subject: subject, body: body });
+  } catch (err) {
+    // Swallow — the person's own registration already succeeded regardless.
+  }
 }
 
 // ---- Helpers ------------------------------------------------------------

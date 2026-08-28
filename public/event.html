@@ -258,6 +258,16 @@
                 <input type="text" id="eCompany" name="Current Company / Organisation Name" required placeholder="Where you work now">
               </div>
             </div>
+            <div class="row-2">
+              <div class="field">
+                <label for="eLocation">Your Current Location</label>
+                <input type="text" id="eLocation" name="Your Current Location" required placeholder="City, State">
+              </div>
+              <div class="field">
+                <label for="eLinkedin">Your LinkedIn Profile URL</label>
+                <input type="url" id="eLinkedin" name="Your LinkedIn Profile URL" required placeholder="linkedin.com/in/you">
+              </div>
+            </div>
             <div class="field">
               <label>Will you be joining the session live?</label>
               <div class="radio-row">
@@ -366,6 +376,8 @@
       'Phone - Mobile': document.getElementById('ePhone').value.trim(),
       'Job Title': document.getElementById('eTitle').value.trim(),
       'Current Company / Organisation Name': document.getElementById('eCompany').value.trim(),
+      'Your Current Location': document.getElementById('eLocation').value.trim(),
+      'Your LinkedIn Profile URL': document.getElementById('eLinkedin').value.trim(),
       'Will You Be Joining Live': willJoinLiveEl ? willJoinLiveEl.value : '',
       'Role You Want Sourced Live': document.getElementById('eRole').value.trim()
     };
