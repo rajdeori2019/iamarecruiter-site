@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Videos — Latest Shorts | I AM A RECRUITER</title>
+<meta name="description" content="The latest short videos from I AM A RECRUITER — career stories, recruiter tips, and community moments.">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+  .videos-hero{ padding:56px 0 40px; border-bottom:2px solid var(--ink); }
+  .videos-hero .lede{ margin-top:16px; max-width:560px; color:var(--text-muted); }
+
+  .shorts-grid{
+    display:grid; grid-template-columns:repeat(5, 1fr); gap:1px;
+    background:var(--border); border:1px solid var(--border); margin-top:0;
+  }
+  @media (max-width:980px){ .shorts-grid{ grid-template-columns:repeat(3, 1fr); } }
+  @media (max-width:640px){ .shorts-grid{ grid-template-columns:repeat(2, 1fr); } }
+
+  .short-card{ background:var(--paper); display:flex; flex-direction:column; }
+  .short-card__frame{ position:relative; width:100%; aspect-ratio:9/16; background:#000; overflow:hidden; }
+  .short-card__frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .short-card__frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+  .short-card__play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.15); cursor:pointer; transition:background .15s ease;
+  }
+  .short-card__play:hover{ background:rgba(0,0,0,0.3); }
+  .short-card__play svg{ width:44px; height:44px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.5)); }
+  .short-card__title{
+    padding:12px 14px; font-size:13px; line-height:1.4; font-weight:600; color:var(--text);
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+  }
+  .short-card__meta{ padding:0 14px 14px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+
+  .videos-empty, .videos-loading{
+    padding:60px 24px; text-align:center; color:var(--text-muted); font-family:var(--font-mono); font-size:13px;
+    border:1px dashed var(--border);
+  }
+
+  .videos-updated{ margin-top:18px; font-family:var(--font-mono); font-size:11px; color:var(--text-muted); }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__links" id="navLinks">
+      <a href="/index.html" data-page="index.html">Home</a>
+      <a href="/join.html" data-page="join.html">Join</a>
+      <a href="/cohort.html" data-page="cohort.html">Cohort</a>
+      <a href="/event.html" data-page="event.html">Event</a>
+      <a href="/videos.html" data-page="videos.html" class="is-active">Videos</a>
+      <a class="btn btn--ghost" href="/join.html" style="margin-top:14px;">Join WhatsApp Group</a>
+      <a class="btn btn--accent" href="/join.html" style="margin-top:10px;">Join Now</a>
+    </div>
+    <div class="site-nav__cta">
+      <a class="btn btn--ghost" href="/join.html">Join WhatsApp Group</a>
+      <a class="btn btn--accent" href="/join.html">Join Now</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="videos-hero">
+    <div class="container">
+      <div class="eyebrow">Latest Shorts</div>
+      <h1 style="font-size:clamp(2.2rem,5vw,3.4rem); margin-top:10px;">Watch the latest from I AM A RECRUITER</h1>
+      <p class="lede">Career stories, recruiter tips, and moments from the community — straight from our YouTube channel.</p>
+      <p class="videos-updated" id="videosUpdated"></p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0;">
+    <div class="container">
+      <div id="shortsContainer" class="videos-loading">Loading the latest videos…</div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
+        <p class="text-muted" style="max-width:320px; font-size:.9rem;">India's community for working recruiters — network, stories, and live implementation, all in one place.</p>
+      </div>
+      <div class="site-footer__social">
+        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="site-footer__legal">
+      <span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span>
+      <span><a href="/index.html">Home</a> &nbsp;·&nbsp; <a href="/join.html">Join</a> &nbsp;·&nbsp; <a href="/cohort.html">Founding Cohort</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/site.js"></script>
+<script>
+  function timeAgo(iso) {
+    var diffMs = Date.now() - new Date(iso).getTime();
+    var days = Math.floor(diffMs / 86400000);
+    if (days < 1) return 'Today';
+    if (days === 1) return '1 day ago';
+    if (days < 30) return days + ' days ago';
+    var months = Math.floor(days / 30);
+    if (months < 12) return months + (months === 1 ? ' month ago' : ' months ago');
+    var years = Math.floor(months / 12);
+    return years + (years === 1 ? ' year ago' : ' years ago');
+  }
+
+  function playIconSvg() {
+    return '<svg viewBox="0 0 24 24" fill="white"><circle cx="12" cy="12" r="11" fill="rgba(0,0,0,0.35)"/><path d="M9.5 7.5v9l8-4.5-8-4.5z"/></svg>';
+  }
+
+  function renderShorts(videos) {
+    var container = document.getElementById('shortsContainer');
+    if (!videos || !videos.length) {
+      container.className = 'videos-empty';
+      container.textContent = 'No videos available right now — check back soon.';
+      return;
+    }
+
+    container.className = 'shorts-grid';
+    container.innerHTML = videos.map(function (v) {
+      var safeTitle = v.title.replace(/</g, '&lt;');
+      return (
+        '<div class="short-card">' +
+          '<div class="short-card__frame" data-video-id="' + v.id + '">' +
+            '<img src="' + v.thumbnail + '" alt="' + safeTitle + '" loading="lazy">' +
+            '<div class="short-card__play" role="button" aria-label="Play video">' + playIconSvg() + '</div>' +
+          '</div>' +
+          '<div class="short-card__title">' + safeTitle + '</div>' +
+          '<div class="short-card__meta">' + timeAgo(v.publishedAt) + '</div>' +
+        '</div>'
+      );
+    }).join('');
+
+    container.querySelectorAll('.short-card__frame').forEach(function (frame) {
+      frame.querySelector('.short-card__play').addEventListener('click', function () {
+        var videoId = frame.getAttribute('data-video-id');
+        frame.innerHTML = '<iframe src="https://www.youtube.com/embed/' + videoId + '?autoplay=1" ' +
+          'title="YouTube video player" frameborder="0" ' +
+          'allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" ' +
+          'allowfullscreen></iframe>';
+      });
+    });
+  }
+
+  fetch('/api/shorts')
+    .then(function (res) { return res.json(); })
+    .then(function (data) {
+      renderShorts(data.videos);
+      if (data.updatedAt) {
+        document.getElementById('videosUpdated').textContent = 'Updated ' + timeAgo(data.updatedAt);
+      }
+    })
+    .catch(function () {
+      var container = document.getElementById('shortsContainer');
+      container.className = 'videos-empty';
+      container.textContent = 'Could not load videos right now — please try again shortly.';
+    });
+</script>
+</body>
+</html>
