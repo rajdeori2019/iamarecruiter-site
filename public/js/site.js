@@ -1,4 +1,56 @@
 (function () {
+  // -----------------------------------------------------------------
+  // Canonical site navigation
+  // Keep the three commercial offers visible across the entire site,
+  // while preserving each page's own CTA on the right.
+  // -----------------------------------------------------------------
+  var nav = document.querySelector('.site-nav');
+  if (nav) {
+    var inner = nav.querySelector('.site-nav__inner');
+    var cta = nav.querySelector('.site-nav__cta');
+    var links = nav.querySelector('.site-nav__links');
+
+    if (!links && inner) {
+      links = document.createElement('div');
+      links.className = 'site-nav__links';
+      links.id = 'navLinks';
+      if (cta) inner.insertBefore(links, cta);
+      else inner.appendChild(links);
+    }
+
+    if (links) {
+      links.innerHTML = [
+        '<a href="/index.html" data-page="index.html">Home</a>',
+        '<a href="/fractional-ta.html" data-page="fractional-ta.html">Fractional TA</a>',
+        '<a href="/cohort.html" data-page="cohort.html">Recruiter Cohort</a>',
+        '<a href="/premium-1-1.html" data-page="premium-1-1.html">Premium 1:1</a>',
+        '<a href="/join.html" data-page="join.html">Community</a>'
+      ].join('');
+    }
+
+    // Sales landing pages previously hid the standard link rail.
+    // Override that page-local rule now that all three offers belong
+    // in the header everywhere.
+    if (nav.classList.contains('sales-nav')) {
+      var navStyle = document.createElement('style');
+      navStyle.textContent =
+        '.site-nav.sales-nav .site-nav__links{display:flex !important;}' +
+        '@media(max-width:760px){.site-nav.sales-nav .site-nav__links{display:flex !important;}}';
+      document.head.appendChild(navStyle);
+    }
+
+    // Ensure every header, including sales pages, has a mobile menu toggle.
+    if (cta && !cta.querySelector('.nav-toggle')) {
+      var toggleButton = document.createElement('button');
+      toggleButton.className = 'nav-toggle';
+      toggleButton.id = 'navToggle';
+      toggleButton.setAttribute('aria-label', 'Menu');
+      toggleButton.setAttribute('aria-expanded', 'false');
+      toggleButton.innerHTML = '<span></span>';
+      cta.appendChild(toggleButton);
+    }
+  }
+
   // Mobile nav toggle
   var toggle = document.querySelector('.nav-toggle');
   var links = document.querySelector('.site-nav__links');
@@ -8,7 +60,10 @@
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
     links.querySelectorAll('a').forEach(function (a) {
-      a.addEventListener('click', function () { links.classList.remove('is-open'); });
+      a.addEventListener('click', function () {
+        links.classList.remove('is-open');
+        toggle.setAttribute('aria-expanded', 'false');
+      });
     });
   }
 
