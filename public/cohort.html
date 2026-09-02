@@ -3,8 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI-Enabled Strategic Talent Advisor — I AM A RECRUITER</title>
-<meta name="description" content="Founding cohort of the AI-Enabled Strategic Talent Advisor program, from I AM A RECRUITER — India's community for working recruiters.">
+<title>AI-Enabled Strategic Talent Advisor Cohort — I AM A RECRUITER</title>
+<meta name="description" content="A 6-week live implementation cohort for working recruiters to build AI-enabled talent intelligence, hiring diagnosis, stakeholder advisory, sourcing, assessment and recruiting analytics capability.">
+<link rel="canonical" href="https://www.iamarecruiter.in/cohort.html">
+<meta property="og:title" content="AI-Enabled Strategic Talent Advisor Cohort — I AM A RECRUITER">
+<meta property="og:description" content="Move from recruiter execution to evidence-backed talent advisory. Six weeks. Six applied capabilities. Real work artifacts.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.iamarecruiter.in/cohort.html">
 <link rel="icon" type="image/png" href="/assets/favicon-32.png">
 <link rel="apple-touch-icon" href="/assets/favicon-180.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,846 +19,436 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
-  .site-nav .site-nav__logo, .site-nav__links, .site-nav .btn{ font-family:var(--font-mono); }
-  /* ============ TOKENS — unified with the shared site palette (site.css) ============ */
-  :root{
-    --bg:#FFFFFF;
-    --surface:#F4F3EE;
-    --surface-alt:#EAE8E0;
-    --text:#0E0E10;
-    --text-muted:#55565C;
-    --border:#DAD7CC;
-    --accent:#E8A400;
-    --accent-strong:#3A2900;
-    --accent-contrast:#161200;
-    --caution:#963E29;
-    --caution-bg:rgba(150,62,41,0.09);
-    --shadow: 0 1px 0 rgba(14,14,16,0.05);
+  .sales-nav .site-nav__links{ display:none; }
+  .sales-nav .site-nav__inner{ justify-content:space-between; }
+  .sales-nav .site-nav__cta{ margin-left:auto; }
 
-    --band-bg:#0E0E10;
-    --band-surface:#18181B;
-    --band-text:#FFFFFF;
-    --band-text-muted:#B8B8BC;
-    --band-border:rgba(255,255,255,0.14);
-    --band-accent:#F3B400;
-
-    --font-display:'Archivo Black', 'Archivo', Arial, sans-serif;
-    --font-body:'Archivo', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
-    --font-mono:'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#101012;
-      --surface:#18181B;
-      --surface-alt:#212126;
-      --text:#F4F3EE;
-      --text-muted:#A9A9AE;
-      --border:#2E2E33;
-      --accent:#F3B400;
-      --accent-strong:#F3B400;
-      --accent-contrast:#161200;
-      --caution:#D9836A;
-      --caution-bg:rgba(217,131,106,0.12);
-      --shadow: 0 1px 0 rgba(0,0,0,0.4);
-
-      --band-bg:#F4F3EE;
-      --band-surface:#EAE8E0;
-      --band-text:#101012;
-      --band-text-muted:#55565C;
-      --band-border:rgba(14,14,16,0.14);
-      --band-accent:#3A2900;
-    }
-  }
-  :root[data-theme="dark"]{
-    --bg:#101012;
-    --surface:#18181B;
-    --surface-alt:#212126;
-    --text:#F4F3EE;
-    --text-muted:#A9A9AE;
-    --border:#2E2E33;
-    --accent:#F3B400;
-    --accent-strong:#F3B400;
-    --accent-contrast:#161200;
-    --caution:#D9836A;
-    --caution-bg:rgba(217,131,106,0.12);
-    --shadow: 0 1px 0 rgba(0,0,0,0.4);
-
-    --band-bg:#F4F3EE;
-    --band-surface:#EAE8E0;
-    --band-text:#101012;
-    --band-text-muted:#55565C;
-    --band-border:rgba(14,14,16,0.14);
-    --band-accent:#3A2900;
-  }
-
-  /* ============ RESET / BASE ============ */
-  *,*::before,*::after{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:var(--font-body);
-    font-size:16px;
-    line-height:1.6;
-    -webkit-font-smoothing:antialiased;
-    text-wrap:pretty;
-  }
-  h1,h2,h3,h4{
-    font-family:var(--font-display);
-    font-weight:400;
-    line-height:1.04;
-    margin:0;
-    text-transform:uppercase;
-    letter-spacing:-0.01em;
-    text-wrap:balance;
-    color:var(--text);
-  }
-  p{ margin:0; }
-  a{ color:inherit; }
-  img{ max-width:100%; display:block; }
-  section{ position:relative; }
-  .band .eyebrow{ color:var(--band-accent); }
-  .band .eyebrow::before{ background:var(--band-accent); }
-
-  /* .lede now inherits the shared site.css rule directly, unified with Home and Join. */
-
-  /* Buttons now inherit the shared .btn / .btn--accent / .btn--ghost from site.css,
-     unified with Home and Join. */
-
-  /* ============ HERO — unified with Home/Join's .chero shell ============ */
-  .hero{
-    padding:64px 0 40px;
-    border-bottom:2px solid var(--text);
-  }
-  .hero h1{
-    font-size:clamp(2.4rem, 6vw, 4.4rem);
-    letter-spacing:-.01em;
-    margin-top:6px;
-  }
-  .hero h1 em{
-    font-style:normal;
-    color:var(--accent-strong);
-  }
-  .hero .lede{ margin-top:22px; font-size:1.15rem; max-width:640px; }
-  .hero .punch{
-    font-family:var(--font-body);
-    font-style:normal;
-    font-weight:600;
-    font-size:1.05rem;
-    color:var(--text-muted);
-    margin-top:22px;
-    max-width:520px;
-    border-left:2px solid var(--accent);
-    padding-left:16px;
-  }
-  .hero__cta{
-    display:flex; flex-wrap:wrap; gap:14px; margin-top:34px; align-items:center;
-  }
-  .fineprint{
-    font-family:var(--font-mono);
-    font-size:11.5px;
-    color:var(--text-muted);
-  }
-  .hero__strip{
-    margin-top:48px; border-top:2px solid var(--text); position:relative; z-index:2;
-    display:grid; grid-template-columns:repeat(4,1fr);
-  }
+  .hero{ padding:64px 0 40px; border-bottom:2px solid var(--ink); }
+  .hero h1{ font-size:clamp(2.75rem,7vw,6.2rem); line-height:.94; max-width:1040px; margin-top:8px; }
+  .hero__tag{ margin-top:24px; font-size:1.16rem; max-width:730px; color:var(--text-muted); }
+  .hero__punch{ margin-top:20px; max-width:670px; padding-left:16px; border-left:2px solid var(--accent); font-weight:650; }
+  .hero__cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; align-items:center; }
+  .hero__fine{ font-family:var(--font-mono); font-size:11px; color:var(--text-muted); letter-spacing:.04em; text-transform:uppercase; }
+  .hero__strip{ margin-top:52px; border-top:2px solid var(--ink); display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:2; }
   .hero__strip div{ padding:16px 18px; border-right:1px solid var(--border); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
   .hero__strip div:last-child{ border-right:none; }
   .hero__strip b{ display:block; font-family:var(--font-body); font-weight:700; font-size:15px; color:var(--text); text-transform:none; letter-spacing:0; margin-top:4px; }
-  @media (max-width:760px){ .hero__strip{ grid-template-columns:1fr 1fr; } .hero__strip div{ border-bottom:1px solid var(--border); } }
 
-  /* ============ GENERIC SECTION ============ */
-  .section{ padding:88px 0; }
-  .section--tight{ padding:64px 0; }
-  .band{
-    background:var(--band-bg);
-    color:var(--band-text);
-    border-bottom:1px solid var(--band-border);
-  }
-  .band .lede{ color:var(--band-text-muted); }
-  .band h2, .band h3{ color:var(--band-text); }
+  .section-head--wide{ max-width:840px; }
+  .section-head--wide .lede{ margin-top:16px; }
 
-  .section-head{
-    display:flex; justify-content:space-between; align-items:flex-end; gap:24px;
-    margin-bottom:44px;
-    flex-wrap:wrap;
-  }
-  .section-head h2{ font-size:clamp(1.7rem,3vw,2.35rem); }
+  .problem-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .problem{ background:var(--paper); padding:28px 24px; min-height:200px; }
+  .problem__num{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); letter-spacing:.08em; text-transform:uppercase; }
+  .problem h3{ font-family:var(--font-body); font-size:1.08rem; font-weight:800; text-transform:none; letter-spacing:0; margin-top:11px; }
+  .problem p{ color:var(--text-muted); margin-top:9px; font-size:.92rem; }
 
-  /* ============ PROBLEM / QUOTE ============ */
-  .quote{
-    font-family:var(--font-display);
-    font-size:clamp(1.4rem, 2.6vw, 2rem);
-    font-weight:500;
-    line-height:1.4;
-    max-width:800px;
-    position:relative;
-    padding-left:36px;
-  }
-  .quote::before{
-    content:"\201C";
-    position:absolute; left:-4px; top:-18px;
-    font-size:4rem;
-    color:var(--accent);
-    font-family:var(--font-display);
-    opacity:.55;
-  }
-  .before-after{
-    margin-top:52px;
-    display:grid;
-    gap:0;
-    border-top:1px solid var(--border);
-  }
-  .ba-row{
-    display:grid;
-    grid-template-columns: 1fr 30px 1fr;
-    align-items:center;
-    gap:18px;
-    padding:20px 0;
-    border-bottom:1px solid var(--border);
-  }
-  .ba-row .before{ color:var(--text-muted); font-size:.96rem; }
-  .ba-row .arrow{ font-family:var(--font-mono); color:var(--accent); text-align:center; }
-  .ba-row .after{ font-size:.98rem; }
-  .ba-row .after b{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-strong); display:block; margin-bottom:3px; }
+  .shift{ display:grid; grid-template-columns:.85fr 1.15fr; gap:64px; align-items:start; }
+  .shift__quote{ font-family:var(--font-display); text-transform:uppercase; font-size:clamp(1.9rem,4vw,3.15rem); line-height:1.06; }
+  .shift__quote .accent-line{ color:var(--accent-ink); display:block; margin-top:10px; }
+  .shift__rows{ border-top:1px solid var(--border); }
+  .shift-row{ display:grid; grid-template-columns:1fr 32px 1fr; gap:14px; padding:18px 0; border-bottom:1px solid var(--border); align-items:center; }
+  .shift-row .before{ color:var(--text-muted); font-size:.93rem; }
+  .shift-row .arrow{ font-family:var(--font-mono); color:var(--accent-ink); text-align:center; }
+  .shift-row .after{ font-weight:700; font-size:.94rem; }
 
-  /* ============ TRANSFORMATION BANNER ============ */
-  .transform{
-    text-align:center;
-    padding:76px 24px;
-  }
-  .transform__line{
-    font-family:var(--font-display);
-    font-size:clamp(1.5rem, 4vw, 2.6rem);
-    font-weight:600;
-    display:flex; align-items:center; justify-content:center; gap:20px; flex-wrap:wrap;
-  }
-  .transform__line .arrow{ color:var(--band-accent); font-size:.8em; }
-  .transform__sub{
-    margin-top:18px;
-    color:var(--band-text-muted);
-    font-family:var(--font-mono);
-    font-size:12.5px;
-    letter-spacing:.05em;
-    text-transform:uppercase;
-  }
+  .pillars{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .pillar{ background:var(--paper); padding:28px 24px; display:flex; flex-direction:column; min-height:300px; }
+  .pillar__num{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); letter-spacing:.08em; text-transform:uppercase; }
+  .pillar h3{ font-size:1.18rem; margin-top:12px; }
+  .pillar p{ color:var(--text-muted); font-size:.91rem; margin-top:10px; }
+  .pillar__out{ margin-top:auto; padding-top:16px; border-top:1px dashed var(--border); font-size:.88rem; }
+  .pillar__out b{ display:block; font-family:var(--font-mono); text-transform:uppercase; font-size:10px; letter-spacing:.07em; color:var(--accent-ink); margin-bottom:5px; }
 
-  /* ============ CURRICULUM ============ */
-  .pillars{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:1px;
-    background:var(--border);
-    border:1px solid var(--border);
-  }
-  .pillar{
-    background:var(--surface);
-    padding:26px 24px 24px;
-    display:flex; flex-direction:column; gap:12px;
-    transition:background .15s ease;
-  }
-  .pillar:hover{ background:var(--surface-alt); }
-  .pillar__top{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
-  .pillar__num{
-    font-family:var(--font-mono);
-    font-size:12px;
-    color:var(--accent-strong);
-    border:1px solid var(--border);
-    padding:2px 7px;
-    border-radius:2px;
-  }
-  .pillar__week{
-    font-family:var(--font-mono);
-    font-size:10.5px;
-    color:var(--text-muted);
-    text-align:right;
-    white-space:nowrap;
-  }
-  .pillar h3{ font-size:1.08rem; font-weight:600; }
-  .pillar p{ color:var(--text-muted); font-size:.92rem; }
-  .pillar__out{
-    margin-top:auto;
-    padding-top:12px;
-    border-top:1px dashed var(--border);
-    font-size:.86rem;
-  }
-  .pillar__out b{
-    font-family:var(--font-mono);
-    font-size:.68rem; letter-spacing:.08em; text-transform:uppercase;
-    color:var(--accent-strong); display:block; margin-bottom:4px;
-  }
-  .capstone{
-    margin-top:1px;
-    border:1px solid var(--accent);
-    background:var(--surface);
-    padding:30px 28px;
-    display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap;
-  }
-  .capstone h3{ font-size:1.3rem; }
-  .capstone .capdate{
-    font-family:var(--font-mono); font-size:12px; color:var(--accent-strong);
-    letter-spacing:.06em; text-transform:uppercase;
-  }
+  .governance{ display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; align-items:start; }
+  .gov-list{ display:grid; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .gov-item{ background:var(--paper); padding:20px 22px; }
+  .gov-item b{ display:block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.07em; color:var(--accent-ink); margin-bottom:6px; }
+  .gov-item p{ color:var(--text-muted); font-size:.92rem; }
 
-  /* ============ GOVERNANCE ============ */
-  .gov{
-    display:grid; grid-template-columns:0.9fr 1.1fr; gap:56px; align-items:center;
-  }
-  .gov__rule{
-    border:1px solid var(--band-border);
-    padding:22px 24px;
-    margin-top:14px;
-    font-size:.94rem;
-    color:var(--band-text-muted);
-  }
-  .gov__rule + .gov__rule{ margin-top:12px; }
-  .gov__rule b{ color:var(--band-text); }
+  .format-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .format-cell{ background:var(--paper); padding:24px 22px; }
+  .format-cell span{ font-family:var(--font-mono); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; }
+  .format-cell b{ display:block; margin-top:5px; font-size:1rem; }
 
-  /* ============ SALES FRAME ============ */
-  .frame{
-    display:flex; gap:40px; flex-wrap:wrap; align-items:center; justify-content:center;
-    text-align:center;
-  }
-  .frame .no{
-    font-family:var(--font-body); font-style:normal; font-weight:600;
-    font-size:1.3rem; color:var(--text-muted);
-    text-decoration:line-through;
-    text-decoration-color:var(--caution);
-    text-decoration-thickness:1.5px;
-  }
-  .frame .yes{
-    font-family:var(--font-display); font-weight:400; text-transform:uppercase;
-    font-size:1.4rem;
-  }
-  .frame .divider{ font-family:var(--font-mono); color:var(--text-muted); font-size:.8rem; }
+  .proof-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .proof{ background:var(--paper); padding:28px 24px; }
+  .proof__tag{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); text-transform:uppercase; letter-spacing:.07em; }
+  .proof h3{ font-family:var(--font-body); font-weight:800; text-transform:none; letter-spacing:0; font-size:1.05rem; margin-top:12px; }
+  .proof p{ color:var(--text-muted); font-size:.91rem; margin-top:8px; }
 
-  /* ============ WHO FOR ============ */
-  .qual{
-    display:grid; grid-template-columns:1fr 1fr; gap:1px;
-    background:var(--border); border:1px solid var(--border);
-  }
-  .qual__col{ background:var(--surface); padding:32px 30px; }
-  .qual__col h3{
-    font-family:var(--font-mono); font-size:12.5px; letter-spacing:.1em; text-transform:uppercase;
-    font-weight:600; margin-bottom:18px; display:flex; align-items:center; gap:8px;
-  }
-  .qual__col.fit h3{ color:var(--accent-strong); }
-  .qual__col.notfit h3{ color:var(--caution); }
-  .qual ul{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
-  .qual li{ padding-left:22px; position:relative; font-size:.95rem; }
-  .qual .fit li::before{ content:"✓"; position:absolute; left:0; color:var(--accent-strong); font-family:var(--font-mono); }
-  .qual .notfit li::before{ content:"–"; position:absolute; left:0; color:var(--caution); font-family:var(--font-mono); }
+  .fit-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .fit-col{ background:var(--paper); padding:30px 28px; }
+  .fit-col h3{ font-family:var(--font-mono); font-size:12px; letter-spacing:.09em; }
+  .fit-col.yes h3{ color:var(--accent-ink); }
+  .fit-col.no h3{ color:#963E29; }
+  .fit-col ul{ list-style:none; padding:0; margin:18px 0 0; display:flex; flex-direction:column; gap:13px; }
+  .fit-col li{ position:relative; padding-left:24px; font-size:.94rem; }
+  .fit-col.yes li::before{ content:"✓"; position:absolute; left:0; color:var(--accent-ink); font-family:var(--font-mono); }
+  .fit-col.no li::before{ content:"×"; position:absolute; left:1px; color:#963E29; font-family:var(--font-mono); font-weight:700; }
 
-  /* ============ SCHEDULE TABLE ============ */
-  .ledger{ width:100%; border-collapse:collapse; font-size:.94rem; }
-  .ledger tr{ border-bottom:1px solid var(--border); }
-  .ledger tr:first-child{ border-top:1px solid var(--border); }
-  .ledger td{ padding:14px 6px; }
-  .ledger td:first-child{ color:var(--text-muted); width:40%; }
-  .ledger td:last-child{ font-family:var(--font-mono); font-weight:600; text-align:right; }
+  .offer{ display:grid; grid-template-columns:1.1fr .9fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .offer__main,.offer__side{ background:var(--paper); padding:34px 30px; }
+  .offer__label{ font-family:var(--font-mono); font-size:11px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink); }
+  .offer__price{ font-family:var(--font-display); font-size:clamp(3rem,6vw,5rem); line-height:1; margin-top:14px; }
+  .offer__main h3{ font-size:1.55rem; margin-top:16px; }
+  .offer__main p{ color:var(--text-muted); margin-top:12px; max-width:660px; }
+  .offer__side dl{ margin:16px 0 0; }
+  .offer__side div{ padding:12px 0; border-bottom:1px solid var(--border); }
+  .offer__side dt{ font-family:var(--font-mono); font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; }
+  .offer__side dd{ margin:2px 0 0; font-weight:700; }
 
-  /* ============ TERMS / PRICE ============ */
-  .terms{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
-  .terms__col{ background:var(--surface); padding:34px 32px; }
-  .price{
-    font-family:var(--font-display); font-size:3rem; font-weight:700; color:var(--accent-strong);
-    line-height:1;
-  }
-  .price sup{ font-size:1.2rem; font-family:var(--font-mono); }
-  .price + p{ margin-top:10px; color:var(--text-muted); font-size:.9rem; }
-  .gatebox{
-    margin-top:22px; padding:14px 16px; border:1px dashed var(--border);
-    font-family:var(--font-mono); font-size:12px; color:var(--text-muted);
-  }
-  .seal{
-    display:inline-block; border:2px solid var(--accent); border-radius:50%;
-    width:120px; height:120px; text-align:center; padding-top:26px;
-    transform:rotate(-8deg);
-    font-family:var(--font-mono); color:var(--accent-strong);
-    font-size:11px; letter-spacing:.06em; text-transform:uppercase;
-    margin-bottom:18px;
-  }
-  .seal b{ display:block; font-size:15px; margin-top:4px; }
-  .guarantee-text{ font-size:.98rem; }
-  .guarantee-text + .guarantee-text{ margin-top:10px; color:var(--text-muted); font-size:.9rem; }
-  .glist{ list-style:none; margin:18px 0 0; padding:0; display:flex; flex-direction:column; gap:10px; font-size:.88rem; }
-  .glist li{ display:flex; gap:10px; }
-  .glist .dont{ color:var(--text-muted); text-decoration:line-through; text-decoration-color:var(--caution); }
-  .glist .do{ color:var(--text); }
-  .glist b{ font-family:var(--font-mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); flex:0 0 62px; }
+  .promise{ margin-top:24px; padding:18px 20px; border-left:3px solid var(--accent); background:var(--surface); }
+  .promise b{ display:block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.07em; margin-bottom:6px; }
+  .promise p{ color:var(--text-muted); font-size:.9rem; }
 
-  /* ============ PROOF ============ */
-  .proof{
-    display:flex; gap:32px; align-items:flex-start; flex-wrap:wrap;
-    border:1px dashed var(--border);
-    padding:30px;
-  }
-  .proof__avatar{
-    width:96px; height:96px; border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center;
-    font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
-    text-align:center; flex:0 0 96px;
-    background:var(--surface-alt);
-  }
-  .proof__body{ flex:1; min-width:240px; }
-  .pending{
-    display:inline-block; font-family:var(--font-mono); font-size:10.5px; letter-spacing:.08em;
-    text-transform:uppercase; color:var(--caution); border:1px solid var(--caution); border-radius:2px;
-    padding:3px 8px; margin-bottom:10px;
-  }
-  .proof__body p{ color:var(--text-muted); font-size:.92rem; font-style:italic; }
+  .apply-grid{ display:grid; grid-template-columns:.85fr 1.15fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .apply-copy,.apply-form{ background:var(--paper); padding:34px 30px; }
+  .apply-copy h3{ font-size:1.7rem; }
+  .apply-copy p{ color:var(--text-muted); margin-top:12px; }
+  .apply-steps{ margin:24px 0 0; padding:0; list-style:none; display:grid; gap:13px; }
+  .apply-steps li{ display:grid; grid-template-columns:28px 1fr; gap:10px; align-items:start; font-size:.92rem; }
+  .apply-steps b{ width:24px; height:24px; display:flex; align-items:center; justify-content:center; background:var(--accent); color:var(--on-accent); font-family:var(--font-mono); font-size:11px; border-radius:50%; }
 
-  /* ============ FAQ ============ */
+  .field{ margin-bottom:17px; }
+  .field label{ display:block; font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:7px; }
+  .field input,.field select,.field textarea{ width:100%; padding:13px 14px; border:2px solid var(--border); background:var(--paper); color:var(--text); font:inherit; border-radius:0; }
+  .field textarea{ min-height:104px; resize:vertical; }
+  .field input:focus,.field select:focus,.field textarea:focus{ border-color:var(--ink); outline:none; }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .form-actions{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  .form-note{ margin-top:12px; font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted); }
+
   .faq{ border-top:1px solid var(--border); }
-  .faq details{ border-bottom:1px solid var(--border); padding:20px 0; }
-  .faq summary{
-    cursor:pointer; list-style:none; font-family:var(--font-display); font-weight:600;
-    font-size:1.06rem; display:flex; justify-content:space-between; align-items:center; gap:16px;
-  }
-  .faq summary::-webkit-details-marker{ display:none; }
-  .faq summary::after{
-    content:"+"; font-family:var(--font-mono); color:var(--accent-strong); font-size:1.3rem; flex:0 0 auto;
-    transition:transform .18s ease;
-  }
-  .faq details[open] summary::after{ transform:rotate(45deg); }
-  .faq .a{ margin-top:12px; color:var(--text-muted); max-width:680px; font-size:.95rem; }
+  details{ border-bottom:1px solid var(--border); padding:20px 0; }
+  summary{ cursor:pointer; list-style:none; font-weight:800; padding-right:40px; position:relative; }
+  summary::-webkit-details-marker{ display:none; }
+  summary::after{ content:"+"; position:absolute; right:0; top:0; font-family:var(--font-mono); color:var(--accent-ink); font-size:20px; }
+  details[open] summary::after{ content:"−"; }
+  details p{ color:var(--text-muted); max-width:780px; margin-top:12px; }
 
-  /* ============ FINAL CTA ============ */
-  .final{ text-align:center; padding:96px 24px; }
-  .final h2{ font-size:clamp(1.9rem,4vw,2.8rem); max-width:680px; margin:0 auto; }
-  .final .lede{ margin:18px auto 0; text-align:center; }
-  .final__cta{ display:flex; justify-content:center; gap:14px; margin-top:36px; flex-wrap:wrap; }
-  .final .fineprint{ margin-top:20px; font-family:var(--font-mono); font-size:11.5px; color:var(--band-text-muted); }
+  .cta-band{ text-align:center; padding:100px 24px; }
+  .cta-band h2{ font-size:clamp(2.2rem,5vw,4rem); max-width:900px; margin:0 auto; }
+  .cta-band p{ margin:18px auto 0; color:inherit; opacity:.72; max-width:660px; }
+  .cta-band .hero__cta{ justify-content:center; margin-top:32px; }
 
-  /* ============ FOOTER — unified with the shared .site-footer (site.css) ============ */
-  .cohort-disclaimer{
-    font-family:var(--font-mono); font-size:11px; color:var(--text-muted);
-    line-height:1.7; margin-top:28px; padding-top:20px; border-top:1px solid var(--border);
+  :root[data-theme="dark"] .problem__num,
+  :root[data-theme="dark"] .shift__quote .accent-line,
+  :root[data-theme="dark"] .shift-row .arrow,
+  :root[data-theme="dark"] .pillar__num,
+  :root[data-theme="dark"] .pillar__out b,
+  :root[data-theme="dark"] .gov-item b,
+  :root[data-theme="dark"] .proof__tag,
+  :root[data-theme="dark"] .fit-col.yes h3,
+  :root[data-theme="dark"] .fit-col.yes li::before,
+  :root[data-theme="dark"] .offer__label,
+  :root[data-theme="dark"] summary::after{ color:var(--accent); }
+
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .problem__num,
+    :root:not([data-theme="light"]) .shift__quote .accent-line,
+    :root:not([data-theme="light"]) .shift-row .arrow,
+    :root:not([data-theme="light"]) .pillar__num,
+    :root:not([data-theme="light"]) .pillar__out b,
+    :root:not([data-theme="light"]) .gov-item b,
+    :root:not([data-theme="light"]) .proof__tag,
+    :root:not([data-theme="light"]) .fit-col.yes h3,
+    :root:not([data-theme="light"]) .fit-col.yes li::before,
+    :root:not([data-theme="light"]) .offer__label,
+    :root:not([data-theme="light"]) summary::after{ color:var(--accent); }
   }
 
-  /* ============ REVEAL ============ */
-  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
-  .reveal.is-visible{ opacity:1; transform:none; }
-  @media (prefers-reduced-motion: reduce){
-    .reveal{ opacity:1; transform:none; transition:none; }
+  @media (max-width:920px){
+    .problem-grid,.format-grid{ grid-template-columns:1fr 1fr; }
+    .pillars,.proof-grid{ grid-template-columns:1fr 1fr; }
+    .shift,.governance,.offer,.apply-grid{ grid-template-columns:1fr; gap:36px; }
   }
-
-  /* ============ RESPONSIVE ============ */
-  @media (max-width: 860px){
-    .pillars{ grid-template-columns:1fr 1fr; }
-    .gov{ grid-template-columns:1fr; }
-    .qual{ grid-template-columns:1fr; }
-    .terms{ grid-template-columns:1fr; }
-    .ba-row{ grid-template-columns:1fr; gap:6px; }
-    .ba-row .arrow{ display:none; }
+  @media (max-width:760px){
+    .hero__strip{ grid-template-columns:1fr 1fr; }
+    .hero__strip div{ border-bottom:1px solid var(--border); }
+    .fit-grid{ grid-template-columns:1fr; }
+    .shift-row{ grid-template-columns:1fr; gap:5px; }
+    .shift-row .arrow{ display:none; }
+    .row-2{ grid-template-columns:1fr; }
   }
-  @media (max-width: 560px){
-    .pillars{ grid-template-columns:1fr; }
-    .hero{ padding:64px 0 48px; }
-    .section{ padding:64px 0; }
+  @media (max-width:560px){
+    .problem-grid,.format-grid,.pillars,.proof-grid{ grid-template-columns:1fr; }
+    .hero h1{ font-size:clamp(2.6rem,15vw,4.5rem); }
+    .sales-nav .site-nav__cta .btn--ghost{ display:none; }
   }
 </style>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"Course",
+  "name":"AI-Enabled Strategic Talent Advisor",
+  "description":"A six-week live implementation cohort for working recruiters to build AI-enabled strategic talent advisory capability through applied recruiting work.",
+  "provider":{
+    "@type":"Organization",
+    "name":"I AM A RECRUITER",
+    "url":"https://www.iamarecruiter.in/"
+  },
+  "offers":{
+    "@type":"Offer",
+    "price":"10000",
+    "priceCurrency":"INR",
+    "url":"https://www.iamarecruiter.in/cohort.html#apply"
+  },
+  "hasCourseInstance":{
+    "@type":"CourseInstance",
+    "courseMode":"Online",
+    "startDate":"2026-09-19",
+    "endDate":"2026-10-24"
+  }
+}
+</script>
 </head>
 <body>
 
-<nav class="site-nav">
+<nav class="site-nav sales-nav">
   <div class="site-nav__inner">
     <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
-    <div class="site-nav__links" id="navLinks">
-      <a href="/index.html" data-page="index.html">Home</a>
-      <a href="/join.html" data-page="join.html">Join</a>
-      <a href="/cohort.html" data-page="cohort.html" class="is-active">Cohort</a>
-      <a href="/event.html" data-page="event.html">Event</a>
-      <a href="/videos.html" data-page="videos.html">Videos</a>
-      <a class="btn btn--ghost" href="/join.html" style="margin-top:14px;">Join WhatsApp Group</a>
-      <a class="btn btn--accent" href="#apply" style="margin-top:10px;">Apply Now</a>
-    </div>
     <div class="site-nav__cta">
-      <a class="btn btn--ghost" href="/join.html">Join WhatsApp Group</a>
-      <a class="btn btn--accent" href="#apply">Apply Now</a>
-      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+      <a class="btn btn--ghost" href="#curriculum">See What You Build</a>
+      <a class="btn btn--accent" href="#apply">Apply for the Cohort</a>
     </div>
   </div>
 </nav>
 
 <main>
-
-  <!-- HERO -->
   <section class="hero chero" id="hero">
     <div class="bg-grid"></div>
     <div class="container chero__inner">
-      <div class="eyebrow" id="coKicker">Founding Cohort · Batch 01 — Locked offer 26 Aug 2026</div>
+      <span class="kicker line-wrap"><span id="hKicker">AI-Enabled Strategic Talent Advisor · Founding Cohort</span></span>
       <h1>
-        <span class="line-wrap"><span id="coL1">From recruiter execution to</span></span><br>
-        <em><span class="line-wrap"><span id="coL2">AI-Enabled Strategic Talent Advisor</span></span></em>
+        <span class="line-wrap"><span id="hL1">STOP USING AI ONLY</span></span><br>
+        <span class="line-wrap"><span id="hL2">TO DO <span class="accent">RECRUITING TASKS.</span></span></span><br>
+        <span class="line-wrap"><span id="hL3">USE IT TO ADVISE THE BUSINESS.</span></span>
       </h1>
-      <p class="lede" id="coLede">For working recruiters who already know recruitment — and want to operate at a more strategic, AI-enabled, business-facing level.</p>
-      <p class="punch" id="coPunch">AI can write your Boolean string. That does not make you a strategic recruiter.</p>
-      <div class="hero__cta" id="coCta" style="opacity:0;">
+      <p class="hero__tag" id="hTagline">A 6-week live implementation cohort for working recruiters who already know recruitment and want to become more analytical, consultative, evidence-backed and strategically valuable.</p>
+      <p class="hero__punch" id="hPunch">You will not leave with a prompt list. You will build six real recruiting artifacts you can use to diagnose hiring problems, challenge assumptions and advise stakeholders.</p>
+      <div class="hero__cta" id="hCta" style="opacity:0;">
         <a class="btn btn--accent" href="#apply">Apply for the Founding Cohort</a>
-        <a class="btn btn--ghost" href="#faq">Read the FAQ</a>
+        <a class="btn btn--ghost" href="#curriculum">See the 6 Applied Pillars</a>
+        <span class="hero__fine">₹10,000 · 6 weeks · max 10 participants</span>
       </div>
-      <p class="fineprint" style="margin-top:14px;">Prefer LinkedIn? DM the word "ADVISOR" and I'll send details directly.</p>
-
-      <div class="hero__strip" id="coStrip" style="opacity:0;">
+      <div class="hero__strip" id="hStrip" style="opacity:0;">
         <div>Dates<b>19 Sep – 24 Oct 2026</b></div>
-        <div>Time<b>Sat, 10:30–12:30 IST</b></div>
-        <div>Seats<b>Maximum 10</b></div>
-        <div>Price<b>₹10,000 · 100% refund thru S2</b></div>
+        <div>Live sessions<b>Saturdays · 10:30 AM–12:30 PM IST</b></div>
+        <div>Format<b>Live online + applied work</b></div>
+        <div>Cohort<b>Maximum 10 participants</b></div>
       </div>
     </div>
   </section>
 
-  <!-- PROBLEM -->
   <section class="section" id="problem">
     <div class="container">
-      <div class="eyebrow reveal">Exhibit 01 — The Problem</div>
-      <p class="quote reveal">I know how to recruit, but much of my work is still transactional. AI is changing recruiting, and I do not have a systematic way to become more analytical, consultative, business-facing and strategically valuable.</p>
-
-      <div class="before-after reveal">
-        <div class="ba-row">
-          <div class="before">AI may make parts of my work less valuable</div>
-          <div class="arrow">→</div>
-          <div class="after"><b>Relevance</b>I know how to augment my work with AI, not compete with it</div>
-        </div>
-        <div class="ba-row">
-          <div class="before">I hesitate to challenge a hiring manager</div>
-          <div class="arrow">→</div>
-          <div class="after"><b>Confidence</b>I bring evidence and a recommendation, not just a candidate list</div>
-        </div>
-        <div class="ba-row">
-          <div class="before">I don't know if my analysis is correct</div>
-          <div class="arrow">→</div>
-          <div class="after"><b>Control</b>I know how to verify AI output and market evidence</div>
-        </div>
-        <div class="ba-row">
-          <div class="before">My profile only shows requisitions filled</div>
-          <div class="arrow">→</div>
-          <div class="after"><b>Proof</b>I can demonstrate real strategic work artifacts</div>
-        </div>
-        <div class="ba-row">
-          <div class="before">I feel like one more recruiter</div>
-          <div class="arrow">→</div>
-          <div class="after"><b>Differentiation</b>I can show stronger, evidence-backed advisory capability</div>
-        </div>
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">The gap</div>
+        <h2>AI adoption is not the same as strategic recruiting.</h2>
+        <p class="lede">Writing faster emails, JDs and Boolean strings may improve execution speed. It does not automatically improve judgment, market diagnosis or stakeholder advisory.</p>
+      </div>
+      <div class="problem-grid reveal">
+        <article class="problem"><span class="problem__num">Gap 01</span><h3>You execute requirements you should be diagnosing</h3><p>The role goes live before talent availability, compensation, location, skills and trade-offs are challenged.</p></article>
+        <article class="problem"><span class="problem__num">Gap 02</span><h3>You bring candidates, not a recommendation</h3><p>Hiring managers receive profiles and updates, but not enough evidence to make better hiring decisions.</p></article>
+        <article class="problem"><span class="problem__num">Gap 03</span><h3>AI output looks useful — until it is wrong</h3><p>Without verification, privacy, bias and hallucination controls, faster output can simply create faster mistakes.</p></article>
+        <article class="problem"><span class="problem__num">Gap 04</span><h3>Your profile shows activity, not strategic proof</h3><p>Requisitions filled do not show whether you can diagnose a market, design an assessment or advise leadership.</p></article>
       </div>
     </div>
   </section>
 
-  <!-- TRANSFORMATION -->
-  <section class="band transform">
-    <div class="eyebrow" style="justify-content:center;">The core transformation</div>
-    <div class="transform__line reveal">
-      <span>Recruiter Execution</span><span class="arrow">→</span><span>AI-Enabled Strategic Talent Advisor</span>
+  <section class="section section--surface" id="transformation">
+    <div class="container shift">
+      <div class="reveal">
+        <div class="eyebrow">The transformation</div>
+        <div class="shift__quote">Recruiter execution is necessary.<span class="accent-line">Strategic judgment is the upgrade.</span></div>
+      </div>
+      <div class="shift__rows reveal">
+        <div class="shift-row"><div class="before">Take the JD and start sourcing</div><div class="arrow">→</div><div class="after">Diagnose whether the requirement is hireable first</div></div>
+        <div class="shift-row"><div class="before">Say “the market is difficult”</div><div class="arrow">→</div><div class="after">Bring evidence on supply, compensation and trade-offs</div></div>
+        <div class="shift-row"><div class="before">Send candidate profiles</div><div class="arrow">→</div><div class="after">Bring a sourcing strategy and talent map</div></div>
+        <div class="shift-row"><div class="before">Schedule interviews</div><div class="arrow">→</div><div class="after">Design skills-based assessment and interview architecture</div></div>
+        <div class="shift-row"><div class="before">Report recruiting metrics</div><div class="arrow">→</div><div class="after">Diagnose the funnel and recommend business action</div></div>
+      </div>
     </div>
-    <p class="transform__sub">Combination + depth + implementation — not a syllabus, not a prompt list</p>
   </section>
 
-  <!-- CURRICULUM -->
   <section class="section" id="curriculum">
     <div class="container">
-      <div class="section-head reveal">
-        <div>
-          <div class="eyebrow">Exhibit 02 — What You'll Build</div>
-          <h2>Six capabilities. Six real artifacts. One capstone.</h2>
-        </div>
-        <p class="lede">Sell strategic capability and completed work, not class hours. Every week ends with something usable on Monday morning.</p>
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">Six applied pillars</div>
+        <h2>Every pillar ends with work you can actually use.</h2>
+        <p class="lede">The program is structured around outputs, not passive lesson consumption.</p>
       </div>
-
       <div class="pillars reveal">
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">01</span><span class="pillar__week">Week 1 · 19 Sep</span></div>
-          <h3>AI + Talent Intelligence</h3>
-          <p>Market research, talent pools, competitors, skill adjacency, evidence validation.</p>
-          <div class="pillar__out"><b>Finishes with</b>A real talent-market intelligence report</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">02</span><span class="pillar__week">Week 2 · 26 Sep</span></div>
-          <h3>AI + Hiring Diagnosis</h3>
-          <p>JD decomposition, business context, must-have vs. trainable skills, hiring-risk questions.</p>
-          <div class="pillar__out"><b>Finishes with</b>A requirement diagnosis + feasibility assessment</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">03</span><span class="pillar__week">Week 3 · 3 Oct</span></div>
-          <h3>AI + Hiring Manager Advisory</h3>
-          <p>Stakeholder prep, intake, evidence-backed challenge, recommendation framing.</p>
-          <div class="pillar__out"><b>Finishes with</b>An intake + advisory presentation, run as role-play</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">04</span><span class="pillar__week">Week 4 · 10 Oct</span></div>
-          <h3>AI + Advanced Sourcing</h3>
-          <p>Title/skill adjacency, competitor mapping, Boolean, real result analysis.</p>
-          <div class="pillar__out"><b>Finishes with</b>A sourcing strategy + talent map, built on real searches</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">05</span><span class="pillar__week">Week 5 · 17 Oct</span></div>
-          <h3>AI + Skills-Based Assessment</h3>
-          <p>Competencies, screening evidence, scorecards, structured interview questions.</p>
-          <div class="pillar__out"><b>Finishes with</b>A competency framework + scorecard + interview architecture</div>
-        </div>
-        <div class="pillar">
-          <div class="pillar__top"><span class="pillar__num">06</span><span class="pillar__week">Week 6 · 24 Oct</span></div>
-          <h3>AI + Recruiting Analytics &amp; Strategy</h3>
-          <p>Funnel diagnosis, ageing, conversion, source quality, executive recommendation.</p>
-          <div class="pillar__out"><b>Finishes with</b>A funnel diagnostic + leadership recommendation</div>
-        </div>
-      </div>
-
-      <div class="capstone reveal">
-        <div>
-          <h3>Capstone — Strategic Talent Advisor Portfolio</h3>
-          <p style="color:var(--text-muted); margin-top:6px; font-size:.94rem;">All six artifacts, integrated into one case you can show a hiring manager or your own manager.</p>
-        </div>
-        <div class="capdate">Target — 28 Oct 2026</div>
+        <article class="pillar"><span class="pillar__num">01 · AI + Talent Intelligence</span><h3>Know the market before you advise the business.</h3><p>Build evidence around talent supply, target companies, location, compensation and feasibility.</p><div class="pillar__out"><b>You build</b>Talent-market intelligence report</div></article>
+        <article class="pillar"><span class="pillar__num">02 · AI + Hiring Diagnosis</span><h3>Challenge the requirement before sourcing starts.</h3><p>Diagnose role clarity, unrealistic expectations, skills mismatch and hiring feasibility.</p><div class="pillar__out"><b>You build</b>JD / requirement diagnosis + feasibility assessment</div></article>
+        <article class="pillar"><span class="pillar__num">03 · AI + Hiring Manager Advisory</span><h3>Move from order-taker to evidence-backed advisor.</h3><p>Structure stakeholder intake, challenge assumptions and present a clear hiring recommendation.</p><div class="pillar__out"><b>You build</b>Stakeholder intake + advisory presentation / role-play</div></article>
+        <article class="pillar"><span class="pillar__num">04 · AI + Advanced Sourcing</span><h3>Build a market strategy, not just another search string.</h3><p>Map target companies, talent pools, channels, search logic and outreach around the actual market.</p><div class="pillar__out"><b>You build</b>Sourcing strategy + searches + talent map</div></article>
+        <article class="pillar"><span class="pillar__num">05 · AI + Skills-Based Assessment</span><h3>Evaluate evidence, not interviewer instinct.</h3><p>Translate role outcomes into competencies, scorecards and structured interview architecture.</p><div class="pillar__out"><b>You build</b>Competency framework + scorecard + interview architecture</div></article>
+        <article class="pillar"><span class="pillar__num">06 · AI + Recruiting Analytics</span><h3>Turn recruiting data into a business recommendation.</h3><p>Read funnel signals, locate conversion problems and communicate what leadership should change.</p><div class="pillar__out"><b>You build</b>Funnel diagnostic + leadership recommendation</div></article>
       </div>
     </div>
   </section>
 
-  <!-- GOVERNANCE -->
-  <section class="band section">
-    <div class="container gov">
+  <section class="section section--ink" id="governance">
+    <div class="container governance">
       <div class="reveal">
-        <div class="eyebrow">The seventh layer</div>
-        <h2>AI Governance runs underneath every pillar</h2>
-        <p class="lede" style="margin-top:16px;">Not a bonus module — a discipline applied to everything you build across all six weeks.</p>
+        <div class="eyebrow">The horizontal layer</div>
+        <h2>AI governance is not an optional module.</h2>
+        <p class="lede" style="margin-top:16px;">Every pillar is taught with verification, privacy, bias and hallucination controls because strategic recruiters cannot advise a business using evidence they have not checked.</p>
       </div>
-      <div class="reveal">
-        <div class="gov__rule"><b>Verify, don't trust.</b> Learners must verify AI-generated market claims, candidate conclusions and calculations before using them.</div>
-        <div class="gov__rule"><b>Privacy by default.</b> No confidential candidate or company data goes into public AI tools without authorization — anonymized or synthetic data is the default.</div>
-        <div class="gov__rule"><b>Human judgment stays final.</b> An AI recommendation is not a hiring decision. Final judgment is human-led and evidence-based, always.</div>
+      <div class="gov-list reveal">
+        <div class="gov-item"><b>Verification</b><p>Know what requires source validation before it becomes a recommendation.</p></div>
+        <div class="gov-item"><b>Hallucination control</b><p>Separate AI-generated hypotheses from facts you can defend with evidence.</p></div>
+        <div class="gov-item"><b>Bias</b><p>Use AI without quietly hard-coding unfair or irrelevant screening criteria into hiring decisions.</p></div>
+        <div class="gov-item"><b>Privacy</b><p>Understand what candidate, employee and company data should not be exposed casually to AI tools.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- SALES FRAME -->
-  <section class="section--tight">
+  <section class="section" id="format">
     <div class="container">
-      <div class="frame reveal">
-        <span class="no">12 hours of classes for ₹10,000</span>
-        <span class="divider">is not what we sell</span>
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">How the cohort works</div>
+        <h2>Live implementation. Small cohort. Real recruiting work.</h2>
       </div>
-      <div class="frame reveal" style="margin-top:10px;">
-        <span class="yes">Six capabilities + six artifacts + live implementation + feedback + capstone</span>
+      <div class="format-grid reveal">
+        <div class="format-cell"><span>Duration</span><b>6 weeks</b></div>
+        <div class="format-cell"><span>Live session</span><b>2 hours every Saturday</b></div>
+        <div class="format-cell"><span>Cohort size</span><b>Maximum 10</b></div>
+        <div class="format-cell"><span>Delivery</span><b>Live online</b></div>
+      </div>
+      <div class="format-grid reveal" style="margin-top:1px;">
+        <div class="format-cell"><span>Learning style</span><b>Cases + assignments</b></div>
+        <div class="format-cell"><span>Practice</span><b>Role-play + review</b></div>
+        <div class="format-cell"><span>Evidence</span><b>6 applied artifacts</b></div>
+        <div class="format-cell"><span>Finish</span><b>Capstone proof of work</b></div>
       </div>
     </div>
   </section>
 
-  <!-- WHO FOR -->
+  <section class="section section--surface" id="mentor">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">Built from operator experience</div>
+        <h2>This is taught from real technology hiring environments.</h2>
+        <p class="lede">Prafulla Deori has 13+ years in Talent Acquisition across APAC, EMEA and AMER, including work with Adobe, Cloudera, Cradlepoint and Ericsson.</p>
+      </div>
+      <div class="proof-grid reveal">
+        <article class="proof"><span class="proof__tag">Scaling</span><h3>Built hiring systems in high-growth technology environments</h3><p>Experience includes engineering, cloud, networking, security and multi-country hiring.</p></article>
+        <article class="proof"><span class="proof__tag">Leadership</span><h3>Worked from hands-on execution through TA leadership</h3><p>The cohort is designed around the judgment recruiters need when they move beyond requisition processing.</p></article>
+        <article class="proof"><span class="proof__tag">Implementation</span><h3>Artifacts mirror real recruiting work</h3><p>Talent intelligence, requirement diagnosis, stakeholder advisory, sourcing strategy, assessment design and funnel diagnosis.</p></article>
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="fit">
     <div class="container">
-      <div class="eyebrow reveal">Exhibit 03 — Qualification</div>
-      <h2 class="reveal" style="margin-bottom:36px;">Who this founding batch is for</h2>
-      <div class="qual reveal">
-        <div class="qual__col fit">
-          <h3>Strong fit</h3>
-          <ul>
-            <li>In-house / corporate recruiter who already owns requisitions</li>
-            <li>Recruiter aiming for Senior Recruiter / Lead responsibilities</li>
-            <li>Recruiter who struggles to influence hiring managers or use data</li>
-            <li>Recruiter already using AI, but without a structured system</li>
-            <li>Strong agency recruiter moving toward corporate / advisory TA</li>
-          </ul>
-        </div>
-        <div class="qual__col notfit">
-          <h3>Not for Batch 01</h3>
-          <ul>
-            <li>HR freshers who haven't independently handled requirements — needs a beginner product</li>
-            <li>Job seekers looking for a placement or employment guarantee — wrong product</li>
-          </ul>
-        </div>
+      <div class="section-head reveal">
+        <div class="eyebrow">Fit matters</div>
+        <h2>This is for working recruiters — not passive course collectors.</h2>
+      </div>
+      <div class="fit-grid reveal">
+        <div class="fit-col yes"><h3>Strong fit</h3><ul><li>You already understand the fundamentals of recruiting and want to operate more strategically.</li><li>You want stronger conversations with hiring managers and business leaders.</li><li>You want to use AI for diagnosis, intelligence and decision support — not only content generation.</li><li>You are willing to complete applied work between sessions.</li><li>You want tangible proof of strategic capability, not another certificate sitting on LinkedIn.</li></ul></div>
+        <div class="fit-col no"><h3>Not a fit</h3><ul><li>You are looking for a basic recruitment-foundations course.</li><li>You want prompt templates without learning how to verify or apply the output.</li><li>You do not intend to complete assignments or participate in applied exercises.</li><li>You are buying primarily for a certificate rather than capability.</li><li>You expect a guaranteed job, promotion, salary increase or interview outcome.</li></ul></div>
       </div>
     </div>
   </section>
 
-  <!-- SCHEDULE -->
-  <section class="section--tight" id="schedule">
-    <div class="container container--narrow">
-      <div class="eyebrow reveal">Exhibit 04 — Format &amp; Schedule</div>
-      <table class="ledger reveal">
-        <tr><td>Format</td><td>Live online</td></tr>
-        <tr><td>Duration</td><td>6 weeks</td></tr>
-        <tr><td>Core sessions</td><td>6 Saturdays × 2 hours</td></tr>
-        <tr><td>Timing</td><td>10:30 AM – 12:30 PM IST</td></tr>
-        <tr><td>Optional clinics</td><td>Up to 3 × 1 hour</td></tr>
-        <tr><td>Start date</td><td>Sat, 19 Sep 2026</td></tr>
-        <tr><td>Core completion</td><td>Sat, 24 Oct 2026</td></tr>
-        <tr><td>Capstone target</td><td>28 Oct 2026</td></tr>
-        <tr><td>Assignments</td><td>Weekly, required</td></tr>
-        <tr><td>Community</td><td>Small cohort group</td></tr>
-      </table>
-    </div>
-  </section>
-
-  <!-- TERMS -->
-  <section class="section" id="terms">
+  <section class="section section--surface" id="offer">
     <div class="container">
-      <div class="eyebrow reveal">Exhibit 05 — Price &amp; Guarantee</div>
-      <div class="terms reveal">
-        <div class="terms__col">
-          <div class="price">₹10,000<sup>&nbsp;INR</sup></div>
-          <p>Founding / test price — explicitly not a claimed market benchmark.</p>
-          <div class="gatebox">
-            SEATS — Maximum 10 active participants.<br>
-            LAUNCH GATE — This batch runs once 5+ seats are fully paid.<br>
-            WAITLIST — A genuine buffer once seats fill. No fake scarcity, ever.
-          </div>
+      <div class="section-head section-head--wide reveal"><div class="eyebrow">Founding cohort offer</div><h2>Six weeks to build strategic recruiting capability you can demonstrate.</h2></div>
+      <div class="offer reveal">
+        <div class="offer__main">
+          <span class="offer__label">Founding / test price</span>
+          <div class="offer__price">₹10,000</div>
+          <h3>AI-Enabled Strategic Talent Advisor</h3>
+          <p>Includes six live sessions, applied assignments, review, role-play, six strategic recruiting artifacts and a capstone proof-of-work exercise.</p>
+          <div class="hero__cta"><a class="btn btn--accent" href="#apply">Apply for a Seat</a><a class="btn btn--ghost" href="#faq">Read the FAQ</a></div>
+          <div class="promise"><b>Important</b><p>Payment and refund terms will be shown clearly before payment. The program does not guarantee a job, promotion, salary increase, interview call or employer decision.</p></div>
         </div>
-        <div class="terms__col">
-          <div class="seal">Guarantee<b>100%</b>thru S2</div>
-          <p class="guarantee-text"><b>100% refund, no questions asked</b> — any time through Session 2.</p>
-          <p class="guarantee-text">No refund from Session 3 onward. If you're three sessions in, something is already working for you.</p>
-          <ul class="glist">
-            <li><b>Won't promise</b><span class="dont">Job, promotion, salary increase</span></li>
-            <li><b>Will promise</b><span class="do">Live access, feedback, templates, and the chance to finish all six artifacts</span></li>
-          </ul>
-        </div>
+        <aside class="offer__side">
+          <span class="offer__label">Cohort details</span>
+          <dl><div><dt>Start</dt><dd>19 September 2026</dd></div><div><dt>Finish</dt><dd>24 October 2026</dd></div><div><dt>Day</dt><dd>Saturdays</dd></div><div><dt>Time</dt><dd>10:30 AM–12:30 PM IST</dd></div><div><dt>Participants</dt><dd>Maximum 10</dd></div><div><dt>Mode</dt><dd>Live online</dd></div></dl>
+        </aside>
       </div>
     </div>
   </section>
 
-  <!-- PROOF -->
-  <section class="section--tight" id="proof">
-    <div class="container container--narrow">
-      <div class="eyebrow reveal">Exhibit 06 — Instructor Proof</div>
-      <div class="proof reveal">
-        <div class="proof__avatar">PHOTO<br>PENDING</div>
-        <div class="proof__body">
-          <span class="pending">Verification pending</span>
-          <p>This is the founding cohort — there are no alumni yet, and none are claimed. Verified experience, real scope of work, and substantiated results go here before this page goes live. No unsupported "AI expert" claims, no fabricated outcomes.</p>
+  <section class="section" id="apply">
+    <div class="container">
+      <div class="section-head section-head--wide reveal"><div class="eyebrow">Apply</div><h2>Tell me where your recruiting capability needs to level up.</h2><p class="lede">This is a small implementation cohort. The application is deliberately short and focused on fit.</p></div>
+      <div class="apply-grid reveal">
+        <div class="apply-copy">
+          <h3>What happens next</h3>
+          <p>Complete the short application. It prepares a message you can send directly to Prafulla. If the cohort is the right fit, you will receive the payment and onboarding path.</p>
+          <ol class="apply-steps"><li><b>1</b><span>Share your current recruiting role and experience.</span></li><li><b>2</b><span>Identify the strategic capability you most want to improve.</span></li><li><b>3</b><span>Send the application by WhatsApp or email.</span></li><li><b>4</b><span>If there is fit, receive payment + onboarding instructions.</span></li></ol>
         </div>
+        <form class="apply-form" id="cohortForm" novalidate>
+          <div class="row-2"><div class="field"><label for="cName">Full name</label><input id="cName" name="name" type="text" autocomplete="name" required placeholder="Your full name"></div><div class="field"><label for="cEmail">Email</label><input id="cEmail" name="email" type="email" autocomplete="email" required placeholder="you@email.com"></div></div>
+          <div class="row-2"><div class="field"><label for="cRole">Current role</label><input id="cRole" name="role" type="text" autocomplete="organization-title" required placeholder="e.g. Senior Recruiter"></div><div class="field"><label for="cExp">Recruiting experience</label><select id="cExp" name="experience" required><option value="">Select</option><option>Less than 2 years</option><option>2–5 years</option><option>6–10 years</option><option>11+ years</option></select></div></div>
+          <div class="field"><label for="cGoal">What do you most want to improve?</label><select id="cGoal" name="goal" required><option value="">Select the closest fit</option><option>Talent intelligence / market advisory</option><option>Hiring diagnosis / requirement calibration</option><option>Hiring-manager / stakeholder advisory</option><option>Advanced sourcing strategy</option><option>Skills-based assessment / interviews</option><option>Recruiting analytics / business recommendations</option><option>Overall strategic recruiter capability</option></select></div>
+          <div class="field"><label for="cContext">What is currently stopping you from operating more strategically?</label><textarea id="cContext" name="context" required placeholder="A short answer is enough."></textarea></div>
+          <div class="form-actions"><button class="btn btn--accent" type="submit">Send Application on WhatsApp</button><button class="btn btn--ghost" type="button" id="emailApplication">Email Instead</button></div>
+          <p class="form-note">Submitting here does not make a payment. It prepares your application message so fit can be checked first.</p>
+        </form>
       </div>
     </div>
   </section>
 
-  <!-- FAQ -->
-  <section class="section" id="faq">
+  <section class="section section--surface" id="faq">
     <div class="container container--narrow">
-      <div class="eyebrow reveal">Clarifications</div>
-      <h2 class="reveal" style="margin-bottom:8px;">Questions worth asking before you pay</h2>
-      <p class="lede reveal" style="margin-bottom:30px;">Answered without hype — including the hard ones.</p>
-
+      <div class="section-head reveal"><div class="eyebrow">FAQ</div><h2>Before you apply.</h2></div>
       <div class="faq reveal">
-        <details>
-          <summary>Is this just an AI tools course?</summary>
-          <p class="a">No. AI is embedded across talent intelligence, hiring diagnosis, hiring-manager advisory, sourcing, skills assessment and recruiting analytics — it's one operating system, not a prompt list.</p>
-        </details>
-        <details>
-          <summary>Will I get a job or a promotion from this?</summary>
-          <p class="a">No job, placement, salary or promotion guarantee. You'll build and demonstrate real capabilities and artifacts — a title or employer decision is never something this program can promise.</p>
-        </details>
-        <details>
-          <summary>Why pay ₹10,000 when free content exists?</summary>
-          <p class="a">Information is free. The paid value is live implementation, direct feedback, real cases, role-play, a capstone and accountability — not information access. If that's not valuable to you, this isn't the right fit.</p>
-        </details>
-        <details>
-          <summary>Why should I learn this here instead of LinkedIn Learning, Udemy or CHRMP?</summary>
-          <p class="a">No shade to them. The difference is a small live cohort (max 10), an integrated strategic-TA architecture across six pillars, applied artifacts, direct feedback, role-play and a capstone — not self-paced video. You decide if that's worth it.</p>
-        </details>
-        <details>
-          <summary>What exactly is the refund policy?</summary>
-          <p class="a">100% refund, no questions asked, any time through Session 2. No refund once you've attended Session 3 — full stop, published in advance, honored exactly.</p>
-        </details>
-        <details>
-          <summary>Have other recruiters already gone through this?</summary>
-          <p class="a">Not yet — this is honestly the founding cohort. No alumni, no manufactured outcomes, no fabricated testimonials. What you see here is what exists today.</p>
-        </details>
-        <details>
-          <summary>Can my company sponsor my seat?</summary>
-          <p class="a">Yes — invoice / bank-transfer payment is supported, and there's a manager sponsorship note you can forward for L&amp;D approval. Ask when you apply.</p>
-        </details>
-        <details>
-          <summary>What will actually be different in my work on Monday?</summary>
-          <p class="a">Six concrete artifacts and workflows you can apply directly — a market-intelligence report, a requirement diagnosis, a sourcing strategy, a scorecard, a funnel diagnostic, and the judgment to verify AI output before you rely on it.</p>
-        </details>
+        <details><summary>Is this a beginner recruitment course?</summary><p>No. It is designed for working recruiters who already understand recruitment fundamentals and want to move toward more analytical, consultative and business-facing work.</p></details>
+        <details><summary>Is this mainly a ChatGPT or prompt-engineering course?</summary><p>No. AI is used as an accelerator across talent intelligence, diagnosis, sourcing, assessment and analytics. The core skill being developed is recruiter judgment.</p></details>
+        <details><summary>What will I have at the end?</summary><p>You should have six applied recruiting artifacts plus a capstone proof-of-work exercise. The value is in the work you can explain and use, not simply attendance.</p></details>
+        <details><summary>Will this help me get a job or promotion?</summary><p>The program is designed to improve strategic recruiting capability, but it does not guarantee a job, interview, promotion, salary increase or employer decision.</p></details>
+        <details><summary>Why is the cohort capped at 10?</summary><p>The format includes applied work, review and role-play. A small cohort keeps participation and feedback practical instead of turning the program into a webinar.</p></details>
+        <details><summary>What are the payment and refund terms?</summary><p>The fee is ₹10,000 for the founding cohort. The exact payment and refund terms will be shown clearly before payment so you can review them before committing.</p></details>
+        <details><summary>What if I miss a live session?</summary><p>This is an implementation-led cohort, so live participation is strongly preferred. Any recording, make-up or catch-up arrangements will follow the final onboarding terms for the cohort.</p></details>
       </div>
     </div>
   </section>
 
-  <!-- FINAL CTA -->
-  <section class="band final" id="apply">
-    <div class="eyebrow" style="justify-content:center;">Founding Cohort · Batch 01</div>
-    <h2>Ten seats. Six weeks. One real transformation.</h2>
-    <p class="lede">Apply below, or DM "ADVISOR" on LinkedIn. Every applicant gets a short qualification conversation before an offer is made — this isn't a checkout page.</p>
-    <div class="final__cta">
-      <a class="btn btn--accent" href="mailto:prafulladeori@gmail.com?subject=Application%20%E2%80%94%20AI-Enabled%20Strategic%20Talent%20Advisor%20Founding%20Cohort&body=Hi%20Prafulla%2C%0D%0A%0D%0AI'd%20like%20to%20apply%20for%20the%20Founding%20Cohort.%0D%0A%0D%0AName%3A%0D%0ACurrent%20role%20%26%20company%3A%0D%0ALinkedIn%3A%0D%0AWhat%20feels%20most%20transactional%20in%20my%20recruiting%20work%20today%3A%0D%0A%0D%0AThanks!">Apply for the Founding Cohort</a>
-      <a class="btn btn--ghost" href="#curriculum" style="border-color:var(--band-border); color:var(--band-text);">Review the curriculum</a>
-    </div>
-    <p class="fineprint">19 Sep – 24 Oct 2026 · Saturdays 10:30–12:30 IST · ₹10,000 founding price · Max 10 seats · Runs at 5+ paid</p>
+  <section class="cta-band section--ink">
+    <div class="eyebrow" style="justify-content:center;">One question</div>
+    <h2>Do you want to use AI to do recruiting faster — or to become a stronger recruiter?</h2>
+    <p>If your goal is stronger judgment, better stakeholder conversations and strategic proof of work, apply for the founding cohort.</p>
+    <div class="hero__cta"><a class="btn btn--accent" href="#apply">Apply for the Founding Cohort</a><a class="btn btn--ghost" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%27d%20like%20to%20know%20more%20about%20the%20AI-Enabled%20Strategic%20Talent%20Advisor%20Cohort." target="_blank" rel="noopener">Ask on WhatsApp</a></div>
   </section>
-
 </main>
 
 <footer class="site-footer">
   <div class="container">
     <div class="site-footer__top">
-      <div class="site-footer__brand">
-        <img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
-        <p class="text-muted" style="max-width:320px; font-size:.9rem;">Founding Cohort · Batch 01 — AI-Enabled Strategic Talent Advisor, from I AM A RECRUITER.</p>
-      </div>
-      <div class="site-footer__social">
-        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a>
-        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a>
-        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a>
-        <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1" target="_blank" rel="noopener">WhatsApp</a>
-      </div>
+      <div class="site-footer__brand"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"><p class="text-muted" style="max-width:360px; font-size:.9rem;">A recruiter community and implementation platform built around stronger recruiting judgment, real work and strategic capability.</p></div>
+      <div class="site-footer__social"><a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a><a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a><a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a></div>
     </div>
-    <p class="cohort-disclaimer">A program from I AM A RECRUITER™ · Founding Batch 01 · Offer locked 26 Aug 2026. Price, seat count, duration and conversion assumptions are test hypotheses until validated by paid, retained buyers. No job, placement, salary or promotion is guaranteed by this program. Questions — <a href="mailto:prafulladeori@gmail.com" style="color:var(--accent-strong);">prafulladeori@gmail.com</a></p>
-    <div class="site-footer__legal">
-      <span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span>
-      <span><a href="/index.html">Home</a> &nbsp;·&nbsp; <a href="/join.html">Join</a></span>
-    </div>
+    <div class="site-footer__legal"><span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span><span><a href="/index.html">Home</a> &nbsp;·&nbsp; <a href="/fractional-ta.html">Fractional TA</a> &nbsp;·&nbsp; <a href="mailto:hello@iamarecruiter.in">Contact</a></span></div>
   </div>
 </footer>
 
 <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 <script src="/js/site.js"></script>
 <script>
-  (function(){
-    var els = document.querySelectorAll('.reveal');
-    if(!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-      els.forEach(function(el){ el.classList.add('is-visible'); });
-      return;
-    }
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if(entry.isIntersecting){
-          entry.target.classList.add('is-visible');
-          io.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
-    els.forEach(function(el){ io.observe(el); });
-  })();
-</script>
-<script>
 (function(){
-  if (!window.gsap || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    ['coCta','coStrip'].forEach(function(id){ var el = document.getElementById(id); if (el) el.style.opacity = 1; });
-    return;
-  }
-  if (window.ScrollTrigger) { gsap.registerPlugin(ScrollTrigger); }
-  gsap.timeline({ defaults:{ ease:'power3.out' } })
-    .from('#coKicker', { opacity:0, y:10, duration:.5 })
-    .from('#coL1', { yPercent:110, duration:.7 }, '-=0.2')
-    .from('#coL2', { yPercent:110, duration:.7 }, '-=0.5')
-    .from('#coLede', { opacity:0, y:14, duration:.6 }, '-=0.35')
-    .from('#coPunch', { opacity:0, y:14, duration:.6 }, '-=0.4')
-    .to('#coCta', { opacity:1, duration:.5 }, '-=0.3')
-    .to('#coStrip', { opacity:1, duration:.6 }, '-=0.3');
+  if (!window.gsap) return;
+  if (window.ScrollTrigger) { gsap.registerPlugin(ScrollTrigger); ScrollTrigger.normalizeScroll(true); }
+  var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+  tl.from('#hKicker', { yPercent:120, duration:.55 }).from('#hL1', { yPercent:110, duration:.72 }, '-=.28').from('#hL2', { yPercent:110, duration:.72 }, '-=.58').from('#hL3', { yPercent:110, duration:.72 }, '-=.58').from('#hTagline', { y:24, opacity:0, duration:.62 }, '-=.36').from('#hPunch', { y:18, opacity:0, duration:.55 }, '-=.34').to('#hCta', { opacity:1, duration:.5 }, '-=.25').to('#hStrip', { opacity:1, duration:.5 }, '-=.2');
+  if (window.ScrollTrigger) { gsap.to('.chero .bg-grid', { y:44, ease:'none', scrollTrigger:{ trigger:'.chero', start:'top top', end:'bottom top', scrub:true } }); }
+})();
 
-  if (window.ScrollTrigger) {
-    var grid = document.querySelector('.hero .bg-grid');
-    if (grid) {
-      gsap.to(grid, {
-        backgroundPosition: '0px 120px', ease:'none',
-        scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:0.6 }
-      });
-    }
-  }
+(function(){
+  var form = document.getElementById('cohortForm');
+  var emailBtn = document.getElementById('emailApplication');
+  function values(){ return { name:document.getElementById('cName').value.trim(), email:document.getElementById('cEmail').value.trim(), role:document.getElementById('cRole').value.trim(), experience:document.getElementById('cExp').value, goal:document.getElementById('cGoal').value, context:document.getElementById('cContext').value.trim() }; }
+  function buildMessage(v){ return ['Hi Prafulla, I would like to apply for the AI-Enabled Strategic Talent Advisor founding cohort.','','Name: '+v.name,'Email: '+v.email,'Current role: '+v.role,'Recruiting experience: '+v.experience,'Main capability I want to improve: '+v.goal,'What is stopping me from operating more strategically: '+v.context].join('\n'); }
+  form.addEventListener('submit', function(e){ e.preventDefault(); if(!form.checkValidity()){ form.reportValidity(); return; } var message=buildMessage(values()); window.open('https://wa.me/919742944825?text='+encodeURIComponent(message),'_blank','noopener'); });
+  emailBtn.addEventListener('click', function(){ if(!form.checkValidity()){ form.reportValidity(); return; } var v=values(); var subject='Founding Cohort Application — '+v.name; var body=buildMessage(v); window.location.href='mailto:hello@iamarecruiter.in?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body); });
 })();
 </script>
 </body>
