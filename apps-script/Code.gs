@@ -11,6 +11,7 @@
 var SPREADSHEET_ID = '1T5GUZqQlIPIL_cOgiBrhJtzkzL1u4H7hK6ZB5zsAP6I';
 var WHATSAPP_LINK = 'https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1';
 var COHORT_WHATSAPP_LINK = 'https://wa.me/919742944825?text=' + encodeURIComponent('Hi Prafulla, I have submitted my application for the AI-Enabled Strategic Talent Advisor founding cohort.');
+var PREMIUM_WHATSAPP_LINK = 'https://wa.me/919742944825?text=' + encodeURIComponent('Hi Prafulla, I have submitted my Premium 1:1 application for the Interview Conversion Intensive.');
 var COMMUNITY_NAME = 'I AM A RECRUITER';
 var LOGO_URL = 'https://www.iamarecruiter.in/assets/logo_trimmed.png';
 var BRAND_ACCENT = '#E8A400';
@@ -203,6 +204,87 @@ var FORM_CONFIGS = {
         ])
       };
     }
+  },
+
+  'premium-application': {
+    sheetName: 'Premium 1:1 Applications',
+    fields: [
+      'Name',
+      'Email ID',
+      'Phone - Mobile',
+      'LinkedIn URL',
+      'Current Role',
+      'Years Experience',
+      'Target Role',
+      'Target Company',
+      'Interview Scheduled',
+      'Interview Date',
+      'Interview Stage',
+      'Recent Interview Outcomes',
+      'Feedback Received',
+      'Main Difficulty',
+      'What Have You Tried',
+      'Support Needed',
+      'Source',
+      'UTM Source',
+      'UTM Medium',
+      'UTM Campaign',
+      'Application Status',
+      'Fit Status',
+      'Payment Status',
+      'Recommended Package',
+      'Consent'
+    ],
+    requiredFields: [
+      'Name',
+      'Email ID',
+      'Phone - Mobile',
+      'LinkedIn URL',
+      'Current Role',
+      'Years Experience',
+      'Target Role',
+      'Interview Scheduled',
+      'Interview Stage',
+      'Recent Interview Outcomes',
+      'Main Difficulty',
+      'What Have You Tried',
+      'Support Needed',
+      'Consent'
+    ],
+    defaults: {
+      'Source': 'Website - Premium 1:1 Landing Page',
+      'Application Status': 'NEW',
+      'Fit Status': 'UNASSESSED',
+      'Payment Status': 'UNPAID',
+      'Recommended Package': 'UNASSIGNED'
+    },
+    buildEmail: function (data) {
+      var firstName = String(data['Name']).trim().split(/\s+/)[0];
+      var roleLine = data['Target Role'] ? ('Target role: ' + data['Target Role'] + '.\n\n') : '';
+      var plainBody =
+        'Hi ' + firstName + ',\n\n' +
+        'Your Premium 1:1 application has been received.\n\n' +
+        roleLine +
+        'Next step: Prafulla will review whether the problem you described is actually an interview-conversion problem and whether the Interview Conversion Intensive is the right intervention.\n\n' +
+        'If there is fit, you will receive the exact scope, commercial terms, payment and onboarding path before committing.\n\n' +
+        'Current Interview Conversion Intensive test price: ₹14,999.\n' +
+        'This is interview preparation/coaching and does not guarantee an interview, offer, job or employer decision.\n\n' +
+        'Continue on WhatsApp:\n' + PREMIUM_WHATSAPP_LINK + '\n\n' +
+        'I AM A RECRUITER';
+      var htmlInner =
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + firstName + '.</p>' +
+        '<p style="margin:0 0 16px;">Your Premium 1:1 application is now recorded.</p>' +
+        '<p style="margin:0 0 16px;">Prafulla will review your target role, interview stage and conversion pattern before recommending a next step.</p>' +
+        '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;"><strong>Interview Conversion Intensive:</strong> current test price ₹14,999 · one role/company · role-specific 1:1 preparation.</p>' +
+        '<p style="margin:0; color:#55565C; font-size:13px;">No interview, offer, job, promotion or salary outcome is guaranteed.</p>';
+      return {
+        subject: 'We received your Premium 1:1 application',
+        body: plainBody,
+        htmlBody: wrapEmailHtml(htmlInner, [
+          { text: 'Continue on WhatsApp', url: PREMIUM_WHATSAPP_LINK }
+        ])
+      };
+    }
   }
 };
 
@@ -313,7 +395,8 @@ function sendAdminNotification(config, data, formType) {
     var labels = {
       'join': 'Join the Community',
       'event-live-sourcing': 'Event — Live Sourcing Session',
-      'cohort-application': 'Cohort Application — AI-Enabled Strategic Talent Advisor'
+      'cohort-application': 'Cohort Application — AI-Enabled Strategic Talent Advisor',
+      'premium-application': 'Premium 1:1 Application — Interview Conversion Intensive'
     };
     var formLabel = labels[formType] || formType;
     var lines = config.fields
