@@ -2,26 +2,23 @@
  * I AM A RECRUITER — Website form backend
  * ------------------------------------------------------------------
  * Deployed as a Web App bound to the community Google Sheet. Receives
- * a POST from the website's forms (Join, and Event registrations),
- * appends a row to the relevant tab, and emails a confirmation.
- *
- * Setup: see README.md in this folder for the exact deployment steps.
+ * POSTs from website forms, appends rows to the relevant tab, and sends
+ * applicant + admin confirmation emails.
  */
 
 // ---- Configuration --------------------------------------------------
 
 var SPREADSHEET_ID = '1T5GUZqQlIPIL_cOgiBrhJtzkzL1u4H7hK6ZB5zsAP6I';
 var WHATSAPP_LINK = 'https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1';
+var COHORT_WHATSAPP_LINK = 'https://wa.me/919742944825?text=' + encodeURIComponent('Hi Prafulla, I have submitted my application for the AI-Enabled Strategic Talent Advisor founding cohort.');
 var COMMUNITY_NAME = 'I AM A RECRUITER';
 var LOGO_URL = 'https://www.iamarecruiter.in/assets/logo_trimmed.png';
 var BRAND_ACCENT = '#E8A400';
 var BRAND_INK = '#0E0E10';
 var ADMIN_EMAIL = 'prafulladeori@gmail.com';
 
-// ---- Branded HTML email wrapper ---------------------------------------
-// bodyHtml is the inner content (already-safe HTML). buttons is an array
-// of { text, url } — the first renders as a filled accent button, any
-// further ones as outlined secondary buttons. Pass [] to omit buttons.
+// ---- Branded HTML email wrapper ------------------------------------
+
 function wrapEmailHtml(bodyHtml, buttons) {
   buttons = buttons || [];
   var buttonRows = buttons.map(function (btn, idx) {
@@ -50,22 +47,15 @@ function wrapEmailHtml(bodyHtml, buttons) {
         '</td></tr>' +
         buttonRows +
         '<tr><td style="padding:24px 40px 32px; border-top:1px solid #DAD7CC;">' +
-          '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
-            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.linkedin.com/company/i-am-a-recruiter-community" style="color:' + BRAND_INK + '; text-decoration:none;">LinkedIn</a></td>' +
-            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.instagram.com/i.am.a.recruiter/" style="color:' + BRAND_INK + '; text-decoration:none;">Instagram</a></td>' +
-            '<td style="padding-right:16px; font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="https://www.youtube.com/@IAMARECRUITER" style="color:' + BRAND_INK + '; text-decoration:none;">YouTube</a></td>' +
-            '<td style="font-family:Arial,Helvetica,sans-serif; font-size:12px;"><a href="' + WHATSAPP_LINK + '" style="color:' + BRAND_INK + '; text-decoration:none;">WhatsApp</a></td>' +
-          '</tr></table>' +
-          '<p style="margin:16px 0 0; font-family:Arial,Helvetica,sans-serif; font-size:11px; color:#8A8A8E;">' + COMMUNITY_NAME + ' — India\'s community for working recruiters.</p>' +
+          '<p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; color:#8A8A8E;">' + COMMUNITY_NAME + '</p>' +
         '</td></tr>' +
       '</table>' +
     '</div>'
   );
 }
 
-// Each form on the site sends a "Form Type" field identifying which
-// config below to use. The Join form omits it (defaults to 'join') so
-// existing behaviour is unchanged.
+// ---- Form configurations --------------------------------------------
+
 var FORM_CONFIGS = {
   'join': {
     sheetName: 'Master',
@@ -89,41 +79,15 @@ var FORM_CONFIGS = {
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
-
       var plainBody =
         'Hi ' + firstName + ',\n\n' +
-        'Welcome to ' + COMMUNITY_NAME + ' — so glad to have you here! You\'re now part of India\'s ' +
-        'community for working recruiters, built by recruiters who wanted this to exist.\n\n' +
-        'One last step — hop into our WhatsApp community so you don\'t miss anything:\n' +
-        WHATSAPP_LINK + '\n\n' +
-        'While you\'re at it, come say hello on our other channels too:\n' +
-        '- LinkedIn: https://www.linkedin.com/company/i-am-a-recruiter-community\n' +
-        '- Instagram: https://www.instagram.com/i.am.a.recruiter/\n' +
-        '- YouTube: https://www.youtube.com/@IAMARECRUITER\n' +
-        '- Facebook: https://www.facebook.com/I.MA.A.RECRUITER\n\n' +
-        'Inside the community, you\'ll find a real peer network, honest career stories on the ' +
-        COMMUNITY_NAME + ' podcast, live sessions, and warm introductions — plus our founding ' +
-        'AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.\n\n' +
-        'A quick heads-up: going forward, we\'ll also reach you by email and phone/SMS — not just ' +
-        'WhatsApp — so keep an eye on your inbox too.\n\n' +
-        'Glad you\'re here — talk soon,\n' +
-        'The ' + COMMUNITY_NAME + ' Team';
-
+        'Welcome to ' + COMMUNITY_NAME + ' — so glad to have you here! You\'re now part of India\'s community for working recruiters.\n\n' +
+        'Join the WhatsApp community here:\n' + WHATSAPP_LINK + '\n\n' +
+        'Glad you\'re here,\nThe ' + COMMUNITY_NAME + ' Team';
       var htmlInner =
         '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Welcome, ' + firstName + '! 🎉</p>' +
-        '<p style="margin:0 0 16px;">So glad to have you here. You\'re now part of ' + COMMUNITY_NAME +
-        ' — India\'s community for working recruiters, built by recruiters who wanted this to exist.</p>' +
-        '<p style="margin:0 0 16px;">One last step — hop into our WhatsApp community so you don\'t miss anything. Tap the button below to join.</p>' +
-        '<p style="margin:0 0 16px;">While you\'re at it, come say hello on our other channels:<br>' +
-        '<a href="https://www.linkedin.com/company/i-am-a-recruiter-community" style="color:' + BRAND_INK + ';">LinkedIn</a> · ' +
-        '<a href="https://www.instagram.com/i.am.a.recruiter/" style="color:' + BRAND_INK + ';">Instagram</a> · ' +
-        '<a href="https://www.youtube.com/@IAMARECRUITER" style="color:' + BRAND_INK + ';">YouTube</a> · ' +
-        '<a href="https://www.facebook.com/I.MA.A.RECRUITER" style="color:' + BRAND_INK + ';">Facebook</a></p>' +
-        '<p style="margin:0 0 16px;">Inside the community: a real peer network, honest career stories on the ' + COMMUNITY_NAME +
-        ' podcast, live sessions, and warm introductions — plus our founding AI-Enabled Strategic Talent Advisor cohort if you want to go deeper.</p>' +
-        '<p style="margin:0; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;">' +
-        'Heads-up: going forward we\'ll also reach you by email and phone/SMS — not just WhatsApp — so keep an eye on your inbox too.</p>';
-
+        '<p style="margin:0 0 16px;">You\'re now part of ' + COMMUNITY_NAME + ' — India\'s community for working recruiters.</p>' +
+        '<p style="margin:0;">Use the button below to join the WhatsApp community.</p>';
       return {
         subject: 'Welcome to ' + COMMUNITY_NAME + ', ' + firstName + '! 🎉',
         body: plainBody,
@@ -159,45 +123,15 @@ var FORM_CONFIGS = {
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
-      var roleLine = data['Role You Want Sourced Live']
-        ? 'The role you shared — "' + data['Role You Want Sourced Live'] + '" — is in the pool we may pick from to source live on the call.'
-        : '';
-      var jdLine = data['JD File Link']
-        ? 'Got your JD attachment too — thanks for sending it over.'
-        : '';
-      var notComingLine = (data['Will You Be Joining Live'] && data['Will You Be Joining Live'].indexOf('No') === 0)
-        ? 'No worries about missing it live — the recording will land in your inbox right after.'
-        : '';
-
       var plainBody =
         'Hi ' + firstName + ',\n\n' +
         'You\'re registered for "Your hardest role, sourced live." — Friday, 11 Sept, 4:00–5:00 PM IST, on Zoom.\n\n' +
         'Join here on the day: https://luma.com/nl6gkeb2\n\n' +
-        (roleLine ? roleLine + '\n\n' : '') +
-        (jdLine ? jdLine + '\n\n' : '') +
-        (notComingLine ? notComingLine + '\n\n' : '') +
-        'What you get:\n' +
-        '- 7 days full access to LeadForce, no limitations\n' +
-        '- 25% off your first paid month, exclusive to this session\n' +
-        '- The recording, sent to everyone who registers — whether you make it live or not\n\n' +
-        'See you Friday,\n' +
-        'Prafulla Deori, ' + COMMUNITY_NAME;
-
+        'See you Friday,\nPrafulla Deori, ' + COMMUNITY_NAME;
       var htmlInner =
         '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">You\'re in, ' + firstName + '. 🎉</p>' +
-        '<p style="margin:0 0 16px;">You\'re registered for <strong>"Your hardest role, sourced live."</strong> — ' +
-        '<strong>Friday, 11 Sept, 4:00–5:00 PM IST</strong>, on Zoom.</p>' +
-        (roleLine ? '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;">' + roleLine + '</p>' : '') +
-        (jdLine ? '<p style="margin:0 0 16px; color:#55565C; font-size:14px;">' + jdLine + '</p>' : '') +
-        (notComingLine ? '<p style="margin:0 0 16px; color:#55565C; font-size:14px;">' + notComingLine + '</p>' : '') +
-        '<p style="margin:0 0 8px; font-weight:bold;">What you get</p>' +
-        '<ul style="margin:0 0 16px; padding-left:20px;">' +
-          '<li style="margin-bottom:6px;">7 days full access to LeadForce, no limitations</li>' +
-          '<li style="margin-bottom:6px;">25% off your first paid month, exclusive to this session</li>' +
-          '<li>The recording, sent to everyone who registers — whether you make it live or not</li>' +
-        '</ul>' +
+        '<p style="margin:0 0 16px;">You\'re registered for <strong>"Your hardest role, sourced live."</strong> — <strong>Friday, 11 Sept, 4:00–5:00 PM IST</strong>.</p>' +
         '<p style="margin:0;">See you Friday,<br>Prafulla Deori, ' + COMMUNITY_NAME + '</p>';
-
       return {
         subject: 'You\'re registered — Live Sourcing Session, Fri 11 Sept',
         body: plainBody,
@@ -207,10 +141,72 @@ var FORM_CONFIGS = {
         ])
       };
     }
+  },
+
+  'cohort-application': {
+    sheetName: 'Cohort Applications',
+    fields: [
+      'Name',
+      'Email ID',
+      'Phone - Mobile',
+      'Current Role',
+      'Current Company / Organisation Name',
+      'Recruiting Experience',
+      'Main Capability Gap',
+      'Current Challenge',
+      'Source',
+      'UTM Source',
+      'UTM Medium',
+      'UTM Campaign',
+      'Application Status',
+      'Follow-up Status',
+      'Payment Status',
+      'Cohort Batch',
+      'Consent'
+    ],
+    requiredFields: [
+      'Name',
+      'Email ID',
+      'Phone - Mobile',
+      'Current Role',
+      'Recruiting Experience',
+      'Main Capability Gap',
+      'Current Challenge',
+      'Consent'
+    ],
+    defaults: {
+      'Source': 'Website - Cohort Landing Page',
+      'Application Status': 'NEW',
+      'Follow-up Status': 'NOT STARTED',
+      'Payment Status': 'UNPAID',
+      'Cohort Batch': 'Batch 01 · Sep 2026'
+    },
+    buildEmail: function (data) {
+      var firstName = String(data['Name']).trim().split(/\s+/)[0];
+      var plainBody =
+        'Hi ' + firstName + ',\n\n' +
+        'Your application for the AI-Enabled Strategic Talent Advisor founding cohort has been received.\n\n' +
+        'Next step: we will review fit based on your current recruiting experience and the capability gap you shared. If the cohort is a fit, you will receive the payment and onboarding path.\n\n' +
+        'Founding cohort: 19 Sep–24 Oct 2026 | Saturdays | 10:30 AM–12:30 PM IST | ₹10,000.\n\n' +
+        'You can continue the conversation with Prafulla on WhatsApp:\n' + COHORT_WHATSAPP_LINK + '\n\n' +
+        'I AM A RECRUITER';
+      var htmlInner =
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + firstName + '.</p>' +
+        '<p style="margin:0 0 16px;">Your application for the <strong>AI-Enabled Strategic Talent Advisor</strong> founding cohort is now recorded.</p>' +
+        '<p style="margin:0 0 16px;">We\'ll review your recruiting experience and the capability gap you shared. If the cohort is the right fit, you\'ll receive the payment and onboarding path.</p>' +
+        '<p style="margin:0; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;"><strong>Batch 01:</strong> 19 Sep–24 Oct 2026 · Saturdays · 10:30 AM–12:30 PM IST · ₹10,000</p>';
+      return {
+        subject: 'We received your Strategic Talent Advisor Cohort application',
+        body: plainBody,
+        htmlBody: wrapEmailHtml(htmlInner, [
+          { text: 'Continue on WhatsApp', url: COHORT_WHATSAPP_LINK }
+        ])
+      };
+    }
   }
 };
 
-// ---- Entry point ------------------------------------------------------
+// ---- Entry point ----------------------------------------------------
 
 function doPost(e) {
   try {
@@ -225,8 +221,11 @@ function doPost(e) {
       return jsonResponse({ status: 'error', message: 'Unknown form type: ' + formType });
     }
 
-    // Required-field validation (form-specific)
-    var missing = config.requiredFields.filter(function (f) { return !data[f] || String(data[f]).trim() === ''; });
+    applyDefaults(config, data);
+
+    var missing = config.requiredFields.filter(function (f) {
+      return !data[f] || String(data[f]).trim() === '';
+    });
     if (missing.length) {
       return jsonResponse({ status: 'error', message: 'Missing fields: ' + missing.join(', ') });
     }
@@ -234,7 +233,6 @@ function doPost(e) {
       return jsonResponse({ status: 'error', message: 'Invalid email address.' });
     }
 
-    // If a JD file was attached (base64), upload it to Drive and store the link.
     if (data['JD File Base64']) {
       data['JD File Link'] = uploadJdFile(data);
     }
@@ -249,10 +247,15 @@ function doPost(e) {
   }
 }
 
-// Decodes a base64 JD file sent from the event form, saves it into a
-// "JD Uploads" Drive folder (creating it on first use), and returns a
-// shareable link. Returns '' if anything about the upload fails — a
-// failed upload should never block the registration itself.
+function applyDefaults(config, data) {
+  var defaults = config.defaults || {};
+  Object.keys(defaults).forEach(function (field) {
+    if (!data[field] || String(data[field]).trim() === '') {
+      data[field] = defaults[field];
+    }
+  });
+}
+
 function uploadJdFile(data) {
   try {
     var fileName = data['JD File Name'] || ('JD - ' + data['Name']);
@@ -262,7 +265,6 @@ function uploadJdFile(data) {
 
     var folders = DriveApp.getFoldersByName('JD Uploads — I AM A RECRUITER');
     var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('JD Uploads — I AM A RECRUITER');
-
     var file = folder.createFile(blob);
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     return file.getUrl();
@@ -271,14 +273,13 @@ function uploadJdFile(data) {
   }
 }
 
-// Lets you sanity-check the deployment URL by opening it in a browser.
 function doGet(e) {
   return ContentService
     .createTextOutput('I AM A RECRUITER website form endpoint is live. POST JSON to this URL.')
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-// ---- Sheet ------------------------------------------------------------
+// ---- Sheet ----------------------------------------------------------
 
 function appendToSheet(config, data) {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
@@ -287,35 +288,36 @@ function appendToSheet(config, data) {
     sheet = ss.insertSheet(config.sheetName);
   }
 
-  // Write the header row once, if the sheet is currently empty.
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(['Timestamp'].concat(config.fields));
     sheet.setFrozenRows(1);
   }
 
-  var row = [new Date()].concat(config.fields.map(function (f) { return data[f] || ''; }));
+  var row = [new Date()].concat(config.fields.map(function (f) {
+    return data[f] || '';
+  }));
   sheet.appendRow(row);
 }
 
-// ---- Email --------------------------------------------------------------
+// ---- Email ----------------------------------------------------------
 
 function sendConfirmationEmail(config, data) {
   var email = config.buildEmail(data);
   var options = { to: data['Email ID'], subject: email.subject, body: email.body };
-  if (email.htmlBody) {
-    options.htmlBody = email.htmlBody;
-  }
+  if (email.htmlBody) options.htmlBody = email.htmlBody;
   MailApp.sendEmail(options);
 }
 
-// Notifies the site owner of every new submission, with every field that
-// was captured. Wrapped so a notification failure never blocks the
-// person's own confirmation — their registration already succeeded.
 function sendAdminNotification(config, data, formType) {
   try {
-    var formLabel = formType === 'join' ? 'Join the Community' : 'Event — Live Sourcing Session';
+    var labels = {
+      'join': 'Join the Community',
+      'event-live-sourcing': 'Event — Live Sourcing Session',
+      'cohort-application': 'Cohort Application — AI-Enabled Strategic Talent Advisor'
+    };
+    var formLabel = labels[formType] || formType;
     var lines = config.fields
-      .filter(function (f) { return f !== 'JD File Link' || data[f]; }) // skip empty JD link line noise
+      .filter(function (f) { return f !== 'JD File Link' || data[f]; })
       .map(function (f) { return f + ': ' + (data[f] || '—'); });
 
     var subject = 'New submission — ' + formLabel + ': ' + (data['Name'] || 'Unknown');
@@ -327,11 +329,11 @@ function sendAdminNotification(config, data, formType) {
 
     MailApp.sendEmail({ to: ADMIN_EMAIL, subject: subject, body: body });
   } catch (err) {
-    // Swallow — the person's own registration already succeeded regardless.
+    // A notification failure should never block the applicant submission.
   }
 }
 
-// ---- Helpers ------------------------------------------------------------
+// ---- Helpers --------------------------------------------------------
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email));
