@@ -7,10 +7,15 @@ Allow: /
 User-agent: Bingbot
 Allow: /
 
+# OpenAI crawler used for ChatGPT Search discovery.
 User-agent: OAI-SearchBot
 Allow: /
 
-User-agent: GPTBot
+# OpenAI user-initiated browsing requests.
+User-agent: ChatGPT-User
 Allow: /
+
+# GPTBot is intentionally not treated as a search-ranking signal here.
+# It inherits the general User-agent: * rule above unless separately changed.
 
 Sitemap: https://www.iamarecruiter.in/sitemap.xml
