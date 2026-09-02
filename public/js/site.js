@@ -20,6 +20,16 @@
     }
   });
 
+  // Ensure core policy links are reachable from existing site footers.
+  var legalFooter = document.querySelector('.site-footer__legal');
+  var alreadyHasPolicyLinks = document.querySelector('footer a[href="/privacy.html"]');
+  if (legalFooter && !alreadyHasPolicyLinks) {
+    var policyLinks = document.createElement('span');
+    policyLinks.className = 'site-footer__policy-links';
+    policyLinks.innerHTML = '<a href="/contact.html">Contact</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a> &nbsp;·&nbsp; <a href="/cancellation.html">Cancellation &amp; Refunds</a>';
+    legalFooter.appendChild(policyLinks);
+  }
+
   // Reveal on scroll
   var els = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
