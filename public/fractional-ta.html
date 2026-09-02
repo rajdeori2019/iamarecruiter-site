@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fractional Head of Talent Acquisition — I AM A RECRUITER</title>
+<meta name="description" content="Fractional Head of Talent Acquisition and 30-Day Tech Hiring Acceleration for high-growth technology companies that need senior hiring leadership without adding a full-time TA leader yet.">
+<meta property="og:title" content="Fractional Head of Talent Acquisition — I AM A RECRUITER">
+<meta property="og:description" content="Diagnose the hiring bottleneck, reset the system and create a hiring operating rhythm your team can execute.">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<style>
+  .hero{ padding:64px 0 40px; border-bottom:2px solid var(--ink); }
+  .hero h1{ font-size:clamp(2.8rem,7vw,6.25rem); line-height:.94; max-width:980px; margin-top:8px; }
+  .hero__tag{ margin-top:24px; font-size:1.16rem; max-width:690px; color:var(--text-muted); }
+  .hero__punch{ margin-top:22px; max-width:690px; padding-left:16px; border-left:2px solid var(--accent); font-weight:650; }
+  .hero__cta{ display:flex; gap:14px; margin-top:34px; flex-wrap:wrap; align-items:center; }
+  .hero__fine{ font-family:var(--font-mono); font-size:11px; color:var(--text-muted); letter-spacing:.04em; text-transform:uppercase; }
+  .hero__strip{ margin-top:54px; border-top:2px solid var(--ink); display:grid; grid-template-columns:repeat(4,1fr); position:relative; z-index:2; }
+  .hero__strip div{ padding:16px 18px; border-right:1px solid var(--border); font-family:var(--font-mono); font-size:11.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--text-muted); }
+  .hero__strip div:last-child{ border-right:none; }
+  .hero__strip b{ display:block; font-family:var(--font-body); font-weight:700; font-size:15px; color:var(--text); text-transform:none; letter-spacing:0; margin-top:4px; }
+
+  .section-head--wide{ max-width:820px; }
+  .section-head--wide .lede{ margin-top:16px; }
+
+  .signal-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .signal{ background:var(--paper); padding:28px 26px; min-height:190px; }
+  .signal__num{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); letter-spacing:.08em; text-transform:uppercase; }
+  .signal h3{ font-family:var(--font-body); font-size:1.12rem; font-weight:800; text-transform:none; letter-spacing:0; margin-top:11px; }
+  .signal p{ color:var(--text-muted); margin-top:10px; font-size:.94rem; }
+
+  .diagnosis{ display:grid; grid-template-columns:.86fr 1.14fr; gap:64px; align-items:start; }
+  .diagnosis__quote{ font-family:var(--font-display); text-transform:uppercase; font-size:clamp(1.9rem,4vw,3.1rem); line-height:1.06; }
+  .diagnosis__quote .accent-line{ display:block; color:var(--accent-ink); margin-top:10px; }
+  .diagnosis__list{ border-top:1px solid var(--border); }
+  .diag-row{ display:grid; grid-template-columns:42px 1fr; gap:18px; padding:20px 0; border-bottom:1px solid var(--border); }
+  .diag-row__num{ font-family:var(--font-mono); color:var(--accent-ink); font-size:12px; padding-top:2px; }
+  .diag-row h3{ font-family:var(--font-body); font-weight:800; text-transform:none; letter-spacing:0; font-size:1.02rem; }
+  .diag-row p{ margin-top:5px; color:var(--text-muted); font-size:.93rem; }
+
+  .ops{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .op{ background:var(--surface); padding:30px 24px; }
+  .op__step{ font-family:var(--font-mono); font-size:11px; color:var(--accent-ink); letter-spacing:.08em; text-transform:uppercase; }
+  .op h3{ font-size:1.2rem; margin-top:12px; }
+  .op p{ color:var(--text-muted); margin-top:10px; font-size:.92rem; }
+
+  .deliverables{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .deliverable{ background:var(--paper); padding:22px 24px 22px 54px; position:relative; min-height:100px; }
+  .deliverable::before{ content:"✓"; position:absolute; left:24px; top:22px; color:var(--accent-ink); font-family:var(--font-mono); font-weight:700; }
+  .deliverable h3{ font-family:var(--font-body); font-weight:800; text-transform:none; letter-spacing:0; font-size:1rem; }
+  .deliverable p{ color:var(--text-muted); margin-top:5px; font-size:.9rem; }
+
+  .proof-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border); border:1px solid var(--border); }
+  .proof{ background:var(--paper); padding:30px 26px; }
+  .proof__company{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:.08em; font-size:11px; color:var(--accent-ink); }
+  .proof__metric{ font-family:var(--font-display); font-size:clamp(2rem,4vw,3.25rem); line-height:1; margin-top:16px; }
+  .proof h3{ font-family:var(--font-body); font-weight:800; text-transform:none; letter-spacing:0; font-size:1.04rem; margin-top:14px; }
+  .proof p{ color:var(--text-muted); margin-top:8px; font-size:.91rem; }
+  .proof-note{ margin-top:18px; font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted); }
+
+  .fit-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .fit-col{ background:var(--paper); padding:32px 30px; }
+  .fit-col h3{ font-family:var(--font-mono); font-size:12px; letter-spacing:.1em; }
+  .fit-col.yes h3{ color:var(--accent-ink); }
+  .fit-col.no h3{ color:#963E29; }
+  .fit-col ul{ list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:14px; }
+  .fit-col li{ position:relative; padding-left:24px; font-size:.95rem; }
+  .fit-col.yes li::before{ content:"✓"; position:absolute; left:0; color:var(--accent-ink); font-family:var(--font-mono); }
+  .fit-col.no li::before{ content:"×"; position:absolute; left:1px; color:#963E29; font-family:var(--font-mono); font-weight:700; }
+
+  .engagement{ display:grid; grid-template-columns:1.1fr .9fr; gap:1px; background:var(--border); border:1px solid var(--border); }
+  .engagement__main,.engagement__side{ background:var(--paper); padding:34px 30px; }
+  .engagement__main .label,.engagement__side .label{ font-family:var(--font-mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--accent-ink); }
+  .engagement__main h3{ font-size:clamp(1.8rem,3vw,2.45rem); margin-top:12px; }
+  .engagement__main p{ color:var(--text-muted); margin-top:14px; max-width:650px; }
+  .engagement__side dl{ margin:18px 0 0; }
+  .engagement__side div{ padding:12px 0; border-bottom:1px solid var(--border); }
+  .engagement__side dt{ font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.07em; color:var(--text-muted); }
+  .engagement__side dd{ margin:2px 0 0; font-weight:700; }
+
+  .faq{ border-top:1px solid var(--border); }
+  details{ border-bottom:1px solid var(--border); padding:20px 0; }
+  summary{ cursor:pointer; list-style:none; font-weight:800; padding-right:40px; position:relative; }
+  summary::-webkit-details-marker{ display:none; }
+  summary::after{ content:"+"; position:absolute; right:0; top:0; font-family:var(--font-mono); color:var(--accent-ink); font-size:20px; }
+  details[open] summary::after{ content:"−"; }
+  details p{ color:var(--text-muted); max-width:760px; margin-top:12px; }
+
+  .cta-band{ text-align:center; padding:100px 24px; }
+  .cta-band h2{ font-size:clamp(2.2rem,5vw,4rem); max-width:920px; margin:0 auto; }
+  .cta-band p{ margin:18px auto 0; color:inherit; opacity:.72; max-width:660px; }
+  .cta-band .hero__cta{ justify-content:center; margin-top:32px; }
+
+  :root[data-theme="dark"] .signal__num,
+  :root[data-theme="dark"] .diag-row__num,
+  :root[data-theme="dark"] .diagnosis__quote .accent-line,
+  :root[data-theme="dark"] .op__step,
+  :root[data-theme="dark"] .deliverable::before,
+  :root[data-theme="dark"] .proof__company,
+  :root[data-theme="dark"] .fit-col.yes h3,
+  :root[data-theme="dark"] .fit-col.yes li::before,
+  :root[data-theme="dark"] .engagement .label,
+  :root[data-theme="dark"] summary::after{ color:var(--accent); }
+
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .signal__num,
+    :root:not([data-theme="light"]) .diag-row__num,
+    :root:not([data-theme="light"]) .diagnosis__quote .accent-line,
+    :root:not([data-theme="light"]) .op__step,
+    :root:not([data-theme="light"]) .deliverable::before,
+    :root:not([data-theme="light"]) .proof__company,
+    :root:not([data-theme="light"]) .fit-col.yes h3,
+    :root:not([data-theme="light"]) .fit-col.yes li::before,
+    :root:not([data-theme="light"]) .engagement .label,
+    :root:not([data-theme="light"]) summary::after{ color:var(--accent); }
+  }
+
+  @media (max-width:920px){
+    .signal-grid,.proof-grid{ grid-template-columns:1fr 1fr; }
+    .ops{ grid-template-columns:1fr 1fr; }
+    .diagnosis{ grid-template-columns:1fr; gap:42px; }
+    .engagement{ grid-template-columns:1fr; }
+  }
+  @media (max-width:760px){
+    .hero__strip{ grid-template-columns:1fr 1fr; }
+    .hero__strip div{ border-bottom:1px solid var(--border); }
+    .deliverables,.fit-grid{ grid-template-columns:1fr; }
+  }
+  @media (max-width:560px){
+    .signal-grid,.proof-grid,.ops{ grid-template-columns:1fr; }
+    .hero h1{ font-size:clamp(2.6rem,15vw,4.5rem); }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__links" id="navLinks">
+      <a href="/index.html" data-page="index.html">Home</a>
+      <a href="/join.html" data-page="join.html">Join</a>
+      <a href="/cohort.html" data-page="cohort.html">Cohort</a>
+      <a href="/event.html" data-page="event.html">Event</a>
+      <a href="/videos.html" data-page="videos.html">Videos</a>
+      <a class="btn btn--ghost" href="mailto:hello@iamarecruiter.in?subject=Fractional%20TA%20Hiring%20Diagnostic" style="margin-top:14px;">Hiring Diagnostic</a>
+      <a class="btn btn--accent" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%27d%20like%20to%20discuss%20Fractional%20TA%20support." target="_blank" rel="noopener" style="margin-top:10px;">Talk to Prafulla</a>
+    </div>
+    <div class="site-nav__cta">
+      <a class="btn btn--ghost" href="mailto:hello@iamarecruiter.in?subject=Fractional%20TA%20Hiring%20Diagnostic">Hiring Diagnostic</a>
+      <a class="btn btn--accent" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%27d%20like%20to%20discuss%20Fractional%20TA%20support." target="_blank" rel="noopener">Talk to Prafulla</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu" aria-expanded="false"><span></span></button>
+    </div>
+  </div>
+</nav>
+
+<main>
+  <section class="hero chero">
+    <div class="bg-grid"></div>
+    <div class="container chero__inner">
+      <span class="kicker line-wrap"><span id="hKicker">Fractional Head of Talent Acquisition</span></span>
+      <h1>
+        <span class="line-wrap"><span id="hL1">YOUR HIRING DOESN'T</span></span><br>
+        <span class="line-wrap"><span id="hL2">NEED MORE <span class="accent">NOISE.</span></span></span><br>
+        <span class="line-wrap"><span id="hL3">IT NEEDS A SYSTEM.</span></span>
+      </h1>
+      <p class="hero__tag" id="hTagline">For high-growth technology companies where critical roles are open, hiring is expensive to get wrong, and the business needs senior TA leadership before it needs another full-time layer.</p>
+      <p class="hero__punch" id="hPunch">I diagnose the bottleneck, reset the hiring system and work with your team to create measurable movement on priority roles.</p>
+      <div class="hero__cta" id="hCta" style="opacity:0;">
+        <a class="btn btn--accent" href="mailto:hello@iamarecruiter.in?subject=Fractional%20TA%20Hiring%20Diagnostic">Request a Hiring Diagnostic</a>
+        <a class="btn btn--ghost" href="#how-it-works">See how the sprint works</a>
+        <span class="hero__fine">No CV-forwarding pitch. No generic RPO.</span>
+      </div>
+      <div class="hero__strip" id="hStrip" style="opacity:0;">
+        <div>Best for<b>Scaling technology companies</b></div>
+        <div>Engagement<b>30-Day Tech Hiring Acceleration</b></div>
+        <div>Focus<b>Diagnose → reset → execute</b></div>
+        <div>Led by<b>Prafulla Deori · 13+ yrs TA</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">The real problem</div>
+        <h2>Most hiring teams don't have a sourcing problem. They have a system problem.</h2>
+        <p class="lede">When the setup is wrong, adding recruiters, agencies or more candidates usually adds activity — not outcomes.</p>
+      </div>
+      <div class="signal-grid reveal">
+        <div class="signal"><span class="signal__num">Signal 01</span><h3>Critical roles stay open</h3><p>Searches run for weeks, but the shortlist never becomes a confident hiring decision.</p></div>
+        <div class="signal"><span class="signal__num">Signal 02</span><h3>Hiring managers keep changing the brief</h3><p>The role is live before the business has aligned on skills, trade-offs, level or evaluation criteria.</p></div>
+        <div class="signal"><span class="signal__num">Signal 03</span><h3>Good candidates disappear in the funnel</h3><p>Slow feedback, unclear panels and inconsistent interviews create avoidable drop-off.</p></div>
+        <div class="signal"><span class="signal__num">Signal 04</span><h3>Offers are not converting</h3><p>Compensation gets blamed while role narrative, timing, candidate motivation and closing discipline go unexamined.</p></div>
+        <div class="signal"><span class="signal__num">Signal 05</span><h3>Growth arrived before TA leadership</h3><p>Founders, HR or recruiters are carrying hiring without a senior operator owning the system end to end.</p></div>
+        <div class="signal"><span class="signal__num">Signal 06</span><h3>Everyone is busy. Nobody owns the bottleneck.</h3><p>Recruiting activity is visible; accountability for conversion, quality and speed is not.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="diagnosis">
+    <div class="container diagnosis">
+      <div class="reveal">
+        <div class="eyebrow">My operating belief</div>
+        <div class="diagnosis__quote">More candidates won't repair a broken hiring setup.<span class="accent-line">Diagnose before you scale.</span></div>
+      </div>
+      <div class="diagnosis__list reveal">
+        <div class="diag-row"><span class="diag-row__num">01</span><div><h3>Role clarity</h3><p>Is the role actually hireable at the target level, location, compensation and timeline?</p></div></div>
+        <div class="diag-row"><span class="diag-row__num">02</span><div><h3>Talent-market reality</h3><p>What does the available market say — before the team commits to an unrealistic search?</p></div></div>
+        <div class="diag-row"><span class="diag-row__num">03</span><div><h3>Funnel conversion</h3><p>Where exactly are candidates leaking: sourcing, screening, panel, decision, offer or joining?</p></div></div>
+        <div class="diag-row"><span class="diag-row__num">04</span><div><h3>Decision architecture</h3><p>Are interviewers measuring the same capabilities with a scorecard, or operating on personal preference?</p></div></div>
+        <div class="diag-row"><span class="diag-row__num">05</span><div><h3>Ownership and cadence</h3><p>Who owns the role, the bottleneck, the SLA and the next decision every week?</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">30-Day Tech Hiring Acceleration</div>
+        <h2>Four phases. One objective: make the hiring system move.</h2>
+      </div>
+      <div class="ops reveal">
+        <div class="op"><span class="op__step">Week 01 · Diagnose</span><h3>Find the constraint</h3><p>Audit priority roles, funnel data, JDs, interview stages, rejection patterns, candidate feedback and TA ownership.</p></div>
+        <div class="op"><span class="op__step">Week 01–02 · Reset</span><h3>Fix the setup</h3><p>Calibrate roles, scorecards, interview architecture, market assumptions, sourcing strategy, SLAs and stakeholder rhythm.</p></div>
+        <div class="op"><span class="op__step">Week 02–04 · Execute</span><h3>Create movement</h3><p>Work with the team on priority searches, talent mapping, candidate conversion, hiring-manager decisions and offer strategy.</p></div>
+        <div class="op"><span class="op__step">Day 30 · Transfer</span><h3>Leave an operating system</h3><p>Hand over the dashboard, playbook, cadence and next 30/60/90-day hiring roadmap so progress does not depend on me forever.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--ink" id="deliverables">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">What gets built</div>
+        <h2>Senior TA leadership that produces usable operating assets.</h2>
+        <p class="lede">The engagement is designed around real hiring work — not a slide deck that gets forgotten after the meeting.</p>
+      </div>
+      <div class="deliverables reveal">
+        <div class="deliverable"><h3>Hiring-system diagnostic</h3><p>A prioritized view of the bottlenecks blocking speed, quality or conversion.</p></div>
+        <div class="deliverable"><h3>Role feasibility + talent intelligence</h3><p>Market reality on talent availability, compensation, location and search trade-offs.</p></div>
+        <div class="deliverable"><h3>Hiring-manager calibration</h3><p>A sharper brief with must-have capabilities, trade-offs and decision criteria.</p></div>
+        <div class="deliverable"><h3>JD + scorecard reset</h3><p>Role language and evaluation architecture aligned to what the business actually needs.</p></div>
+        <div class="deliverable"><h3>Sourcing architecture</h3><p>Target companies, talent pools, channels, outreach logic and recruiter execution plan.</p></div>
+        <div class="deliverable"><h3>Interview-process redesign</h3><p>Clear stages, ownership, SLAs and evidence-based evaluation instead of duplicated interviews.</p></div>
+        <div class="deliverable"><h3>Funnel dashboard</h3><p>Visibility on stage conversion, ageing, blockers and next decisions for priority roles.</p></div>
+        <div class="deliverable"><h3>Leadership hiring cadence</h3><p>A weekly operating rhythm that forces decisions instead of allowing searches to drift.</p></div>
+        <div class="deliverable"><h3>Hands-on priority-role support</h3><p>Execution support where the constraint is urgent, specialist or commercially important.</p></div>
+        <div class="deliverable"><h3>30 / 60 / 90-day roadmap</h3><p>A practical continuation plan for the internal team after the acceleration sprint.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="proof">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">Operator proof</div>
+        <h2>Built in high-pressure technology hiring environments.</h2>
+        <p class="lede">The operating model comes from building and scaling hiring across software, cloud, networking and global technology teams.</p>
+      </div>
+      <div class="proof-grid reveal">
+        <article class="proof"><span class="proof__company">Adobe</span><div class="proof__metric">250+</div><h3>Software engineering hires in ~6 months</h3><p>High-volume engineering execution with roughly 10–12 offers during hiring weekends.</p></article>
+        <article class="proof"><span class="proof__company">Cloudera</span><div class="proof__metric">90</div><h3>Hires across 6 countries in 3 months</h3><p>Multi-country talent acquisition delivery across a fast-moving technology environment.</p></article>
+        <article class="proof"><span class="proof__company">Cradlepoint / Ericsson</span><div class="proof__metric">0→250+</div><h3>India R&amp;D team scaled from the ground up</h3><p>Built hiring capability with a six-recruiter team; operating TTF was typically 30–45 days, with ~85% offer acceptance and ~35% diversity.</p></article>
+      </div>
+      <p class="proof-note reveal">Selected career operating experience. Past results are context, not a guarantee of identical outcomes for every company or search.</p>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="fit">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Fit matters</div>
+        <h2>This is not recruitment outsourcing.</h2>
+      </div>
+      <div class="fit-grid reveal">
+        <div class="fit-col yes">
+          <h3>Strong fit</h3>
+          <ul>
+            <li>High-growth technology company with important roles that need movement now.</li>
+            <li>Funding, expansion, new geography or a hiring surge has increased recruiting complexity.</li>
+            <li>Senior or specialist roles are repeatedly stalling despite recruiter effort.</li>
+            <li>The company needs senior TA judgment but is not ready for a permanent Head of TA.</li>
+            <li>Founders, HR and hiring leaders are willing to change broken hiring decisions — not just demand more CVs.</li>
+          </ul>
+        </div>
+        <div class="fit-col no">
+          <h3>Not a fit</h3>
+          <ul>
+            <li>You only want an agency to forward resumes against a fixed JD.</li>
+            <li>There is no actual hiring priority, urgency or executive sponsorship.</li>
+            <li>The interview process cannot be changed regardless of evidence.</li>
+            <li>You want guaranteed hires or guaranteed joining dates.</li>
+            <li>The only buying criterion is the lowest possible recruiting fee.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="engagement">
+    <div class="container">
+      <div class="section-head section-head--wide reveal">
+        <div class="eyebrow">Commercial model</div>
+        <h2>Start with the bottleneck. Scope around the outcome.</h2>
+      </div>
+      <div class="engagement reveal">
+        <div class="engagement__main">
+          <span class="label">Core engagement</span>
+          <h3>30-Day Tech Hiring Acceleration Sprint</h3>
+          <p>A focused Fractional Head of TA engagement for companies that need a senior operator to diagnose, reset and drive the hiring system — without immediately adding a full-time leadership layer.</p>
+          <div class="hero__cta">
+            <a class="btn btn--accent" href="mailto:hello@iamarecruiter.in?subject=Fractional%20TA%20Hiring%20Diagnostic">Request a Hiring Diagnostic</a>
+            <a class="btn btn--ghost" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%27d%20like%20to%20discuss%20Fractional%20TA%20support." target="_blank" rel="noopener">WhatsApp Prafulla</a>
+          </div>
+        </div>
+        <aside class="engagement__side">
+          <span class="label">Typical scope</span>
+          <dl>
+            <div><dt>Initial term</dt><dd>30 days</dd></div>
+            <div><dt>Leadership model</dt><dd>Fractional / embedded</dd></div>
+            <div><dt>Primary focus</dt><dd>Priority hiring bottlenecks</dd></div>
+            <div><dt>Working style</dt><dd>Diagnostic + hands-on execution</dd></div>
+            <div><dt>Continuation</dt><dd>Extend only if the business case exists</dd></div>
+          </dl>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--surface" id="faq">
+    <div class="container container--narrow">
+      <div class="section-head reveal">
+        <div class="eyebrow">FAQ</div>
+        <h2>Before we talk.</h2>
+      </div>
+      <div class="faq reveal">
+        <details><summary>Are you an external recruitment agency?</summary><p>No. This offer is senior TA leadership and operating support. The work can include hands-on search execution, but the primary job is to diagnose and improve the hiring system around your business priorities.</p></details>
+        <details><summary>Do you replace our internal recruiters?</summary><p>Usually, no. The better use of a Fractional Head of TA is to make internal recruiters, hiring managers and leadership operate as one accountable hiring system. The exact scope depends on where the constraint sits.</p></details>
+        <details><summary>Can you support technical and senior hiring?</summary><p>That is where the model is strongest. My background includes software engineering, cloud, networking, security and multi-country technology hiring, including senior and specialist searches.</p></details>
+        <details><summary>Do you guarantee hires?</summary><p>No. Serious hiring work cannot ethically guarantee an individual's decision or joining. I can commit to a rigorous operating process, transparent funnel data, sharper decisions and measurable execution against agreed priorities.</p></details>
+        <details><summary>What happens after 30 days?</summary><p>You should have a clearer hiring system, working cadence, operating assets and a 30/60/90-day roadmap. We extend only when there is a defined business need and both sides believe continued fractional support creates value.</p></details>
+        <details><summary>Can you work with companies outside India?</summary><p>Yes. The operating experience is multi-country and the Fractional TA opportunity set is global. Scope, time-zone overlap and commercial terms are agreed before the engagement begins.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-band section--ink">
+    <div class="eyebrow" style="justify-content:center;">One question first</div>
+    <h2>Where is your hiring actually breaking?</h2>
+    <p>If the answer is unclear, that is exactly where the diagnostic starts. Bring the priority roles, the funnel and the current blockers. We will identify whether there is a real Fractional TA problem worth solving.</p>
+    <div class="hero__cta">
+      <a class="btn btn--accent" href="mailto:hello@iamarecruiter.in?subject=Fractional%20TA%20Hiring%20Diagnostic">Request a Hiring Diagnostic</a>
+      <a class="btn btn--ghost" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%27d%20like%20to%20discuss%20Fractional%20TA%20support." target="_blank" rel="noopener">Talk on WhatsApp</a>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__top">
+      <div class="site-footer__brand">
+        <img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
+        <p class="text-muted" style="max-width:360px; font-size:.9rem;">Recruiter community, strategic recruiter development and senior talent-acquisition support — built around real hiring work.</p>
+      </div>
+      <div class="site-footer__social">
+        <a href="https://www.linkedin.com/company/i-am-a-recruiter-community" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://www.instagram.com/i.am.a.recruiter/" target="_blank" rel="noopener">Instagram</a>
+        <a href="https://www.youtube.com/@IAMARECRUITER" target="_blank" rel="noopener">YouTube</a>
+        <a href="https://www.facebook.com/I.MA.A.RECRUITER" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1" target="_blank" rel="noopener">WhatsApp</a>
+      </div>
+    </div>
+    <div class="site-footer__legal">
+      <span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span>
+      <span><a href="/index.html">Home</a> &nbsp;·&nbsp; <a href="/cohort.html">Founding Cohort</a> &nbsp;·&nbsp; <a href="mailto:hello@iamarecruiter.in">Contact</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+<script src="/js/site.js"></script>
+<script>
+(function(){
+  if (!window.gsap) return;
+  if (window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.normalizeScroll(true);
+  }
+  var tl = gsap.timeline({ defaults:{ ease:'power3.out' } });
+  tl.from('#hKicker', { yPercent:120, duration:.55 })
+    .from('#hL1', { yPercent:110, duration:.72 }, '-=.28')
+    .from('#hL2', { yPercent:110, duration:.72 }, '-=.58')
+    .from('#hL3', { yPercent:110, duration:.72 }, '-=.58')
+    .from('#hTagline', { y:24, opacity:0, duration:.62 }, '-=.36')
+    .from('#hPunch', { y:18, opacity:0, duration:.55 }, '-=.34')
+    .to('#hCta', { opacity:1, duration:.5 }, '-=.25')
+    .to('#hStrip', { opacity:1, duration:.5 }, '-=.2');
+
+  if (window.ScrollTrigger) {
+    gsap.to('.chero .bg-grid', {
+      y:44,
+      ease:'none',
+      scrollTrigger:{ trigger:'.chero', start:'top top', end:'bottom top', scrub:true }
+    });
+  }
+})();
+</script>
+</body>
+</html>
