@@ -1,8 +1,8 @@
 (function () {
   // -----------------------------------------------------------------
   // Canonical site navigation
-  // Keep the three commercial offers visible across the entire site,
-  // while preserving each page's own CTA on the right.
+  // Preserve the original site pages and add the three commercial
+  // offers without removing Join, Event or Videos.
   // -----------------------------------------------------------------
   var nav = document.querySelector('.site-nav');
   if (nav) {
@@ -21,23 +21,28 @@
     if (links) {
       links.innerHTML = [
         '<a href="/index.html" data-page="index.html">Home</a>',
+        '<a href="/join.html" data-page="join.html">Join</a>',
         '<a href="/fractional-ta.html" data-page="fractional-ta.html">Fractional TA</a>',
-        '<a href="/cohort.html" data-page="cohort.html">Recruiter Cohort</a>',
+        '<a href="/cohort.html" data-page="cohort.html">Cohort</a>',
         '<a href="/premium-1-1.html" data-page="premium-1-1.html">Premium 1:1</a>',
-        '<a href="/join.html" data-page="join.html">Community</a>'
+        '<a href="/event.html" data-page="event.html">Event</a>',
+        '<a href="/videos.html" data-page="videos.html">Videos</a>'
       ].join('');
     }
 
     // Sales landing pages previously hid the standard link rail.
-    // Override that page-local rule now that all three offers belong
-    // in the header everywhere.
-    if (nav.classList.contains('sales-nav')) {
-      var navStyle = document.createElement('style');
-      navStyle.textContent =
+    // Keep the full navigation visible there as well.
+    var navStyle = document.createElement('style');
+    navStyle.textContent =
+      '@media(min-width:761px){' +
+        '.site-nav .site-nav__links{gap:14px;font-size:11px;white-space:nowrap;}' +
+        '.site-nav .site-nav__inner{gap:14px;}' +
         '.site-nav.sales-nav .site-nav__links{display:flex !important;}' +
-        '@media(max-width:760px){.site-nav.sales-nav .site-nav__links{display:flex !important;}}';
-      document.head.appendChild(navStyle);
-    }
+      '}' +
+      '@media(max-width:760px){' +
+        '.site-nav.sales-nav .site-nav__links{display:flex !important;}' +
+      '}';
+    document.head.appendChild(navStyle);
 
     // Ensure every header, including sales pages, has a mobile menu toggle.
     if (cta && !cta.querySelector('.nav-toggle')) {
