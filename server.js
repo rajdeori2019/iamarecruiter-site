@@ -10,10 +10,9 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const CANONICAL_HOST = 'www.iamarecruiter.in';
 
 // ---------------------------------------------------------------------
-// Canonical host + legacy migration redirects.
-// The previous Wix version of the site still has URLs indexed in search.
-// These redirects consolidate those signals into the current site rather
-// than serving the homepage as a soft 404.
+// Canonical host + legacy Wix migration.
+// Redirect only when there is a genuine current equivalent. Retired
+// time-sensitive pages return 410 instead of being sent to an unrelated URL.
 // ---------------------------------------------------------------------
 app.use((req, res, next) => {
   const forwardedHost = String(req.headers['x-forwarded-host'] || req.headers.host || '').split(':')[0].toLowerCase();
@@ -27,22 +26,57 @@ const LEGACY_REDIRECTS = {
   '/about-us': '/',
   '/joinus': '/join.html',
   '/subscriptions': '/join.html',
-  '/mentorship': '/join.html',
+  '/mentorship': '/resources.html',
   '/eventspage': '/event.html',
+  '/blog': '/resources.html',
   '/terms-conditions': '/terms.html',
   '/privacy-policy': '/privacy.html',
   '/refund-policy': '/cancellation.html',
+  '/return-and-refund-policy': '/cancellation.html',
   '/cancellation-policy': '/cancellation.html',
-  '/contact-us': '/contact.html'
+  '/contact-us': '/contact.html',
+
+  // Historical content with a clear current destination.
+  '/post/from-a-small-town-to-a-global-talent-leader-the-inspiring-journey-of-pooja-rao': '/videos.html',
+  '/post/failed-engineer-to-ta-rockstar': '/videos.html',
+  '/post/from-small-town-in-assam-to-ai-startup-ceo-abhisek-s-inspiring-journey': '/videos.html',
+  '/post/from-tier-3-college-to-talent-leader-ishita-gupta-s-inspiring-journey': '/videos.html',
+  '/post/ca-to-changemaker-shraddha-s-bold-leap-i-am-a-recruiter-podcast': '/videos.html',
+  '/post/from-army-boots-to-coaching-suits-major-kiran-s-power-move': '/videos.html',
+  '/post/no-naukri-no-problem-siddharth-s-rise-to-ta-leadership': '/videos.html',
+  '/post/5k-scam-to-founding-recruiting-monk': '/videos.html',
+  '/post/from-100-rejections-to-rockstar-campus-recruiter-i-am-a-recruiter-podcast': '/videos.html',
+  '/post/mehak-s-hr-odyssey-from-10-internships-to-skydiving-recruiter': '/videos.html',
+  '/post/most-common-challenges-in-hiring': '/fractional-ta.html',
+  '/post/honest-confession-from-a-first-time-founder': '/resources.html',
+  '/post/selfcare-sunday-recruiters-i-am-a-recruiter': '/resources.html',
+  '/post/i-am-a-recruiter-community-is-growing': '/'
 };
 
 Object.keys(LEGACY_REDIRECTS).forEach((from) => {
   app.get(from, (req, res) => res.redirect(301, LEGACY_REDIRECTS[from]));
 });
 
-// Prevent duplicate extensionless URLs from competing with canonical .html URLs.
+const RETIRED_LEGACY_PATHS = new Set([
+  '/shipping',
+  '/shipping-policy',
+  '/post/vantahire-team-is-hiring-freelance-recruiter',
+  '/post/join-the-evalmatchai-beta'
+]);
+
+app.get(Array.from(RETIRED_LEGACY_PATHS), (req, res) => {
+  res.status(410).sendFile(path.join(PUBLIC_DIR, 'gone.html'));
+});
+
+// Any other old Wix post has no verified equivalent yet. Returning 410 is
+// safer than a blanket redirect that could be interpreted as a soft 404.
+app.get(/^\/post\/.+/, (req, res) => {
+  res.status(410).sendFile(path.join(PUBLIC_DIR, 'gone.html'));
+});
+
+// Prevent extensionless duplicates from competing with canonical .html URLs.
 [
-  'join', 'fractional-ta', 'cohort', 'premium-1-1', 'event', 'videos',
+  'join', 'resources', 'fractional-ta', 'cohort', 'premium-1-1', 'event', 'videos',
   'contact', 'privacy', 'terms', 'cancellation'
 ].forEach((slug) => {
   app.get(`/${slug}`, (req, res) => res.redirect(301, `/${slug}.html`));
@@ -51,7 +85,7 @@ Object.keys(LEGACY_REDIRECTS).forEach((from) => {
 // ---------------------------------------------------------------------
 // Search + AI discovery layer.
 // Served server-side so titles, descriptions, entity markup and visible
-// explanatory content are present in the initial HTML crawlers receive.
+// explanatory content exist in the initial HTML response.
 // ---------------------------------------------------------------------
 const SEO_PAGES = {
   '/': {
@@ -170,12 +204,12 @@ function buildEntitySchema(config) {
       {
         '@type': 'Organization',
         '@id': 'https://www.iamarecruiter.in/#organization',
-        name: 'Deori RecruiterHub OPC Solutions OPC Pvt Ltd',
-        alternateName: 'I AM A RECRUITER',
+        name: 'I AM A RECRUITER',
+        legalName: 'Deori RecruiterHub OPC Solutions OPC Pvt Ltd',
+        alternateName: 'I AM A RECRUITER™',
         url: 'https://www.iamarecruiter.in/',
         logo: 'https://www.iamarecruiter.in/assets/logo_trimmed.png',
-        brand: { '@type': 'Brand', name: 'I AM A RECRUITER' },
-        foundingDate: '2024',
+        foundingDate: '2024-02',
         address: {
           '@type': 'PostalAddress',
           streetAddress: 'GM Infinite, A114, E Block, 1st Floor, Thirupalya Road, Electronic City Phase 1',
@@ -188,15 +222,13 @@ function buildEntitySchema(config) {
           '@type': 'ContactPoint',
           telephone: '+91-97429-44825',
           email: 'hello@iamarecruiter.in',
-          contactType: 'customer support',
-          areaServed: 'IN',
-          availableLanguage: ['English', 'Hindi']
+          contactType: 'customer support'
         },
         sameAs: [
           'https://www.linkedin.com/company/i-am-a-recruiter-community',
-          'https://www.instagram.com/i.am.a.recruiter/',
           'https://www.youtube.com/@IAMARECRUITER',
-          'https://www.facebook.com/I.MA.A.RECRUITER'
+          'https://www.instagram.com/i.am.a.recruiter/',
+          'https://www.facebook.com/profile.php?id=61556803922273'
         ],
         knowsAbout: [
           'Talent Acquisition', 'Recruitment', 'Recruiter Community', 'Sourcing',
@@ -260,7 +292,7 @@ function buildDiscoveryBlock(config, includeFaq) {
     </div>` : '';
 
   const related = config.canonical === 'https://www.iamarecruiter.in/' ? '' : `
-    <p class="seo-related">Related: <a href="/">Recruiter community India</a> · <a href="/fractional-ta.html">Fractional Talent Acquisition</a> · <a href="/cohort.html">Strategic Talent Acquisition Cohort</a> · <a href="/premium-1-1.html">Senior Interview Coaching</a></p>`;
+    <p class="seo-related">Related: <a href="/">Recruiter community India</a> · <a href="/resources.html">Recruiter resources</a> · <a href="/fractional-ta.html">Fractional Talent Acquisition</a> · <a href="/cohort.html">Strategic Talent Acquisition Cohort</a> · <a href="/premium-1-1.html">Senior Interview Coaching</a></p>`;
 
   return `
 <section class="section seo-discovery" aria-labelledby="search-intent-heading">
@@ -344,15 +376,12 @@ registerSeoRoute('/premium-1-1.html', SEO_PAGES['/premium-1-1.html']);
 app.use(express.static(PUBLIC_DIR, { extensions: ['html'] }));
 
 // ---------------------------------------------------------------------
-// YouTube Shorts feed — fetched from the YouTube Data API, cached in
-// memory, and refreshed on a schedule so page loads are fast and we
-// never come close to the API's daily quota.
+// YouTube Shorts feed.
 // ---------------------------------------------------------------------
-
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY || '';
 const YOUTUBE_CHANNEL_HANDLE = process.env.YOUTUBE_CHANNEL_HANDLE || '@IAMARECRUITER';
 const SHORTS_COUNT = 10;
-const REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1000; // 3 hours
+const REFRESH_INTERVAL_MS = 3 * 60 * 60 * 1000;
 
 let shortsCache = { videos: [], updatedAt: null };
 let cachedChannelUploadsPlaylistId = null;
@@ -435,7 +464,7 @@ app.get('/api/shorts', (req, res) => {
 refreshShortsCache();
 setInterval(refreshShortsCache, REFRESH_INTERVAL_MS);
 
-// True 404 response: do not return the homepage for unknown URLs.
+// True 404 response for all other unknown URLs.
 app.use((req, res) => {
   res.status(404).sendFile(path.join(PUBLIC_DIR, '404.html'));
 });
