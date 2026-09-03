@@ -6,8 +6,6 @@
  * applicant + admin confirmation emails.
  */
 
-// ---- Configuration --------------------------------------------------
-
 var SPREADSHEET_ID = '1T5GUZqQlIPIL_cOgiBrhJtzkzL1u4H7hK6ZB5zsAP6I';
 var WHATSAPP_LINK = 'https://chat.whatsapp.com/9lNsbSksZ9F34ojDJxWNC1';
 var COHORT_WHATSAPP_LINK = 'https://wa.me/919742944825?text=' + encodeURIComponent('Hi Prafulla, I have submitted my application for the AI-Enabled Strategic Talent Advisor founding cohort.');
@@ -17,8 +15,6 @@ var LOGO_URL = 'https://www.iamarecruiter.in/assets/logo_trimmed.png';
 var BRAND_ACCENT = '#E8A400';
 var BRAND_INK = '#0E0E10';
 var ADMIN_EMAIL = 'prafulladeori@gmail.com';
-
-// ---- Branded HTML email wrapper ------------------------------------
 
 function wrapEmailHtml(bodyHtml, buttons) {
   buttons = buttons || [];
@@ -30,9 +26,9 @@ function wrapEmailHtml(bodyHtml, buttons) {
     var padBottom = (idx === buttons.length - 1) ? '32px' : '10px';
     return (
       '<tr><td style="padding:8px 40px ' + padBottom + ';">' +
-        '<a href="' + btn.url + '" style="display:inline-block; ' + style + ' text-decoration:none; ' +
+        '<a href="' + escapeHtmlForEmail(btn.url) + '" style="display:inline-block; ' + style + ' text-decoration:none; ' +
         'font-family:Arial,Helvetica,sans-serif; font-weight:bold; font-size:14px; letter-spacing:0.5px; ' +
-        'padding:14px 28px; text-transform:uppercase; border-radius:2px;">' + btn.text + '</a>' +
+        'padding:14px 28px; text-transform:uppercase; border-radius:2px;">' + escapeHtmlForEmail(btn.text) + '</a>' +
       '</td></tr>'
     );
   }).join('');
@@ -55,28 +51,16 @@ function wrapEmailHtml(bodyHtml, buttons) {
   );
 }
 
-// ---- Form configurations --------------------------------------------
-
 var FORM_CONFIGS = {
   'join': {
     sheetName: 'Master',
     fields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Job Title',
-      'Current Company / Organisation Name',
-      'Your Current Location',
-      'Your LinkedIn Profile URL'
+      'Name', 'Email ID', 'Phone - Mobile', 'Job Title',
+      'Current Company / Organisation Name', 'Your Current Location', 'Your LinkedIn Profile URL'
     ],
     requiredFields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Job Title',
-      'Current Company / Organisation Name',
-      'Your Current Location',
-      'Your LinkedIn Profile URL'
+      'Name', 'Email ID', 'Phone - Mobile', 'Job Title',
+      'Current Company / Organisation Name', 'Your Current Location', 'Your LinkedIn Profile URL'
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
@@ -86,15 +70,13 @@ var FORM_CONFIGS = {
         'Join the WhatsApp community here:\n' + WHATSAPP_LINK + '\n\n' +
         'Glad you\'re here,\nThe ' + COMMUNITY_NAME + ' Team';
       var htmlInner =
-        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Welcome, ' + firstName + '! 🎉</p>' +
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Welcome, ' + escapeHtmlForEmail(firstName) + '! 🎉</p>' +
         '<p style="margin:0 0 16px;">You\'re now part of ' + COMMUNITY_NAME + ' — India\'s community for working recruiters.</p>' +
         '<p style="margin:0;">Use the button below to join the WhatsApp community.</p>';
       return {
         subject: 'Welcome to ' + COMMUNITY_NAME + ', ' + firstName + '! 🎉',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, [
-          { text: 'Join the WhatsApp Community', url: WHATSAPP_LINK }
-        ])
+        htmlBody: wrapEmailHtml(htmlInner, [{ text: 'Join the WhatsApp Community', url: WHATSAPP_LINK }])
       };
     }
   },
@@ -102,25 +84,13 @@ var FORM_CONFIGS = {
   'event-live-sourcing': {
     sheetName: 'Event - Live Sourcing Demo',
     fields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Job Title',
-      'Current Company / Organisation Name',
-      'Your Current Location',
-      'Your LinkedIn Profile URL',
-      'Will You Be Joining Live',
-      'Role You Want Sourced Live',
-      'JD File Link'
+      'Name', 'Email ID', 'Phone - Mobile', 'Job Title',
+      'Current Company / Organisation Name', 'Your Current Location', 'Your LinkedIn Profile URL',
+      'Will You Be Joining Live', 'Role You Want Sourced Live', 'JD File Link'
     ],
     requiredFields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Job Title',
-      'Current Company / Organisation Name',
-      'Your Current Location',
-      'Your LinkedIn Profile URL'
+      'Name', 'Email ID', 'Phone - Mobile', 'Job Title',
+      'Current Company / Organisation Name', 'Your Current Location', 'Your LinkedIn Profile URL'
     ],
     buildEmail: function (data) {
       var firstName = String(data['Name']).trim().split(/\s+/)[0];
@@ -130,7 +100,7 @@ var FORM_CONFIGS = {
         'Join here on the day: https://luma.com/nl6gkeb2\n\n' +
         'See you Friday,\nPrafulla Deori, ' + COMMUNITY_NAME;
       var htmlInner =
-        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">You\'re in, ' + firstName + '. 🎉</p>' +
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">You\'re in, ' + escapeHtmlForEmail(firstName) + '. 🎉</p>' +
         '<p style="margin:0 0 16px;">You\'re registered for <strong>"Your hardest role, sourced live."</strong> — <strong>Friday, 11 Sept, 4:00–5:00 PM IST</strong>.</p>' +
         '<p style="margin:0;">See you Friday,<br>Prafulla Deori, ' + COMMUNITY_NAME + '</p>';
       return {
@@ -147,33 +117,14 @@ var FORM_CONFIGS = {
   'cohort-application': {
     sheetName: 'Cohort Applications',
     fields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Current Role',
-      'Current Company / Organisation Name',
-      'Recruiting Experience',
-      'Main Capability Gap',
-      'Current Challenge',
-      'Source',
-      'UTM Source',
-      'UTM Medium',
-      'UTM Campaign',
-      'Application Status',
-      'Follow-up Status',
-      'Payment Status',
-      'Cohort Batch',
-      'Consent'
+      'Name', 'Email ID', 'Phone - Mobile', 'Current Role', 'Current Company / Organisation Name',
+      'Recruiting Experience', 'Main Capability Gap', 'Current Challenge', 'Source', 'UTM Source',
+      'UTM Medium', 'UTM Campaign', 'Application Status', 'Follow-up Status', 'Payment Status',
+      'Cohort Batch', 'Consent'
     ],
     requiredFields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'Current Role',
-      'Recruiting Experience',
-      'Main Capability Gap',
-      'Current Challenge',
-      'Consent'
+      'Name', 'Email ID', 'Phone - Mobile', 'Current Role', 'Recruiting Experience',
+      'Main Capability Gap', 'Current Challenge', 'Consent'
     ],
     defaults: {
       'Source': 'Website - Cohort Landing Page',
@@ -192,16 +143,14 @@ var FORM_CONFIGS = {
         'You can continue the conversation with Prafulla on WhatsApp:\n' + COHORT_WHATSAPP_LINK + '\n\n' +
         'I AM A RECRUITER';
       var htmlInner =
-        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + firstName + '.</p>' +
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + escapeHtmlForEmail(firstName) + '.</p>' +
         '<p style="margin:0 0 16px;">Your application for the <strong>AI-Enabled Strategic Talent Advisor</strong> founding cohort is now recorded.</p>' +
         '<p style="margin:0 0 16px;">We\'ll review your recruiting experience and the capability gap you shared. If the cohort is the right fit, you\'ll receive the payment and onboarding path.</p>' +
         '<p style="margin:0; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;"><strong>Batch 01:</strong> 19 Sep–24 Oct 2026 · Saturdays · 10:30 AM–12:30 PM IST · ₹10,000</p>';
       return {
         subject: 'We received your Strategic Talent Advisor Cohort application',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, [
-          { text: 'Continue on WhatsApp', url: COHORT_WHATSAPP_LINK }
-        ])
+        htmlBody: wrapEmailHtml(htmlInner, [{ text: 'Continue on WhatsApp', url: COHORT_WHATSAPP_LINK }])
       };
     }
   },
@@ -209,52 +158,16 @@ var FORM_CONFIGS = {
   'diagnostic': {
     sheetName: 'Diagnostic Leads',
     fields: [
-      'Full Name',
-      'Email ID',
-      'Mobile',
-      'Current Role',
-      'Current Company',
-      'Recruiting Experience',
-      'LinkedIn URL',
-      'Overall Score',
-      'Result Level',
-      'Talent Intelligence',
-      'Hiring Diagnosis',
-      'Hiring Manager Advisory',
-      'Advanced Sourcing',
-      'Skills-Based Assessment',
-      'Recruiting Analytics',
-      'AI Capability',
-      'AI Governance',
-      'Strongest Capability',
-      'Gap #1',
-      'Gap #2',
-      'Gap #3',
-      'Cohort Fit',
-      'Source',
-      'UTM Source',
-      'UTM Medium',
-      'UTM Campaign',
-      'UTM Content',
-      'Landing URL',
-      'Referrer',
-      'Lead Status',
-      'Free Session Status',
-      'Cohort Interest',
-      'Follow-up Status',
-      'Follow-up Date',
-      'Last Contact Date',
-      'Next Action',
-      'Payment Status',
-      'Notes'
+      'Full Name', 'Email ID', 'Mobile', 'Current Role', 'Current Company', 'Recruiting Experience',
+      'LinkedIn URL', 'Overall Score', 'Result Level', 'Talent Intelligence', 'Hiring Diagnosis',
+      'Hiring Manager Advisory', 'Advanced Sourcing', 'Skills-Based Assessment', 'Recruiting Analytics',
+      'AI Capability', 'AI Governance', 'Strongest Capability', 'Gap #1', 'Gap #2', 'Gap #3',
+      'Cohort Fit', 'Source', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'UTM Content', 'Landing URL',
+      'Referrer', 'Lead Status', 'Free Session Status', 'Cohort Interest', 'Follow-up Status',
+      'Follow-up Date', 'Last Contact Date', 'Next Action', 'Payment Status', 'Notes'
     ],
     requiredFields: [
-      'Full Name',
-      'Email ID',
-      'Mobile',
-      'Current Role',
-      'Recruiting Experience',
-      'Consent'
+      'Full Name', 'Email ID', 'Mobile', 'Current Role', 'Recruiting Experience', 'LinkedIn URL', 'Consent'
     ],
     defaults: {
       'Source': 'Website - Strategic Recruiter Diagnostic',
@@ -271,36 +184,29 @@ var FORM_CONFIGS = {
       var gap1 = data['Gap #1'] || '—';
       var gap2 = data['Gap #2'] || '—';
       var gap3 = data['Gap #3'] || '—';
-
       var plainBody =
         'Hi ' + firstName + ',\n\n' +
         'You completed the Strategic Recruiter Readiness Diagnostic.\n\n' +
         'Your score: ' + score + '/100\n' +
         'Your current level: ' + level + '\n\n' +
         'Your top development priorities:\n' +
-        '1. ' + gap1 + '\n' +
-        '2. ' + gap2 + '\n' +
-        '3. ' + gap3 + '\n\n' +
+        '1. ' + gap1 + '\n2. ' + gap2 + '\n3. ' + gap3 + '\n\n' +
         'Your full capability breakdown is shown immediately on the diagnostic result page.\n\n' +
         'I AM A RECRUITER';
-
       var htmlInner =
-        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Your Strategic Recruiter profile is ready, ' + firstName + '.</p>' +
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Your Strategic Recruiter profile is ready, ' + escapeHtmlForEmail(firstName) + '.</p>' +
         '<p style="margin:0 0 16px;">You completed the <strong>Strategic Recruiter Readiness Diagnostic</strong>.</p>' +
-        '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + ';"><strong>Score:</strong> ' + score + '/100<br><strong>Current level:</strong> ' + level + '</p>' +
+        '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + ';"><strong>Score:</strong> ' + escapeHtmlForEmail(score) + '/100<br><strong>Current level:</strong> ' + escapeHtmlForEmail(level) + '</p>' +
         '<p style="margin:0 0 8px;"><strong>Your top development priorities</strong></p>' +
-        '<ol style="margin:0 0 16px; padding-left:20px;"><li>' + gap1 + '</li><li>' + gap2 + '</li><li>' + gap3 + '</li></ol>' +
+        '<ol style="margin:0 0 16px; padding-left:20px;"><li>' + escapeHtmlForEmail(gap1) + '</li><li>' + escapeHtmlForEmail(gap2) + '</li><li>' + escapeHtmlForEmail(gap3) + '</li></ol>' +
         '<p style="margin:0; color:#55565C; font-size:13px;">Your score is a self-assessment of current recruiting behaviour, not a professional certification or employment guarantee.</p>';
-
       return {
         subject: 'Your Strategic Recruiter Readiness result — ' + score + '/100',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, [
-          {
-            text: 'Explore the Strategic Recruiter Cohort',
-            url: 'https://www.iamarecruiter.in/cohort.html?utm_source=email&utm_medium=diagnostic_result&utm_campaign=cohort_launch_sep26'
-          }
-        ])
+        htmlBody: wrapEmailHtml(htmlInner, [{
+          text: 'Explore the Strategic Recruiter Cohort',
+          url: 'https://www.iamarecruiter.in/cohort.html?utm_source=email&utm_medium=diagnostic_result&utm_campaign=cohort_launch_sep26'
+        }])
       };
     }
   },
@@ -308,47 +214,16 @@ var FORM_CONFIGS = {
   'premium-application': {
     sheetName: 'Premium 1:1 Applications',
     fields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'LinkedIn URL',
-      'Current Role',
-      'Years Experience',
-      'Target Role',
-      'Target Company',
-      'Interview Scheduled',
-      'Interview Date',
-      'Interview Stage',
-      'Recent Interview Outcomes',
-      'Feedback Received',
-      'Main Difficulty',
-      'What Have You Tried',
-      'Support Needed',
-      'Source',
-      'UTM Source',
-      'UTM Medium',
-      'UTM Campaign',
-      'Application Status',
-      'Fit Status',
-      'Payment Status',
-      'Recommended Package',
-      'Consent'
+      'Name', 'Email ID', 'Phone - Mobile', 'LinkedIn URL', 'Current Role', 'Years Experience',
+      'Target Role', 'Target Company', 'Interview Scheduled', 'Interview Date', 'Interview Stage',
+      'Recent Interview Outcomes', 'Feedback Received', 'Main Difficulty', 'What Have You Tried',
+      'Support Needed', 'Source', 'UTM Source', 'UTM Medium', 'UTM Campaign', 'Application Status',
+      'Fit Status', 'Payment Status', 'Recommended Package', 'Consent'
     ],
     requiredFields: [
-      'Name',
-      'Email ID',
-      'Phone - Mobile',
-      'LinkedIn URL',
-      'Current Role',
-      'Years Experience',
-      'Target Role',
-      'Interview Scheduled',
-      'Interview Stage',
-      'Recent Interview Outcomes',
-      'Main Difficulty',
-      'What Have You Tried',
-      'Support Needed',
-      'Consent'
+      'Name', 'Email ID', 'Phone - Mobile', 'LinkedIn URL', 'Current Role', 'Years Experience',
+      'Target Role', 'Interview Scheduled', 'Interview Stage', 'Recent Interview Outcomes',
+      'Main Difficulty', 'What Have You Tried', 'Support Needed', 'Consent'
     ],
     defaults: {
       'Source': 'Website - Premium 1:1 Landing Page',
@@ -371,7 +246,7 @@ var FORM_CONFIGS = {
         'Continue on WhatsApp:\n' + PREMIUM_WHATSAPP_LINK + '\n\n' +
         'I AM A RECRUITER';
       var htmlInner =
-        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + firstName + '.</p>' +
+        '<p style="margin:0 0 16px; font-size:20px; font-weight:bold;">Application received, ' + escapeHtmlForEmail(firstName) + '.</p>' +
         '<p style="margin:0 0 16px;">Your Premium 1:1 application is now recorded.</p>' +
         '<p style="margin:0 0 16px;">Prafulla will review your target role, interview stage and conversion pattern before recommending a next step.</p>' +
         '<p style="margin:0 0 16px; padding:14px 16px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + '; font-size:13px; color:#55565C;"><strong>Interview Conversion Intensive:</strong> current test price ₹14,999 · one role/company · role-specific 1:1 preparation.</p>' +
@@ -379,49 +254,38 @@ var FORM_CONFIGS = {
       return {
         subject: 'We received your Premium 1:1 application',
         body: plainBody,
-        htmlBody: wrapEmailHtml(htmlInner, [
-          { text: 'Continue on WhatsApp', url: PREMIUM_WHATSAPP_LINK }
-        ])
+        htmlBody: wrapEmailHtml(htmlInner, [{ text: 'Continue on WhatsApp', url: PREMIUM_WHATSAPP_LINK }])
       };
     }
   }
 };
-
-// ---- Entry point ----------------------------------------------------
 
 function doPost(e) {
   try {
     if (!e || !e.postData || !e.postData.contents) {
       return jsonResponse({ status: 'error', message: 'No data received.' });
     }
-
     var data = JSON.parse(e.postData.contents);
     var formType = data['Form Type'] || 'join';
     var config = FORM_CONFIGS[formType];
-    if (!config) {
-      return jsonResponse({ status: 'error', message: 'Unknown form type: ' + formType });
-    }
+    if (!config) return jsonResponse({ status: 'error', message: 'Unknown form type: ' + formType });
 
     applyDefaults(config, data);
 
     var missing = config.requiredFields.filter(function (f) {
       return !data[f] || String(data[f]).trim() === '';
     });
-    if (missing.length) {
-      return jsonResponse({ status: 'error', message: 'Missing fields: ' + missing.join(', ') });
-    }
-    if (!isValidEmail(data['Email ID'])) {
-      return jsonResponse({ status: 'error', message: 'Invalid email address.' });
+    if (missing.length) return jsonResponse({ status: 'error', message: 'Missing fields: ' + missing.join(', ') });
+    if (!isValidEmail(data['Email ID'])) return jsonResponse({ status: 'error', message: 'Invalid email address.' });
+    if (formType === 'diagnostic' && !isValidLinkedInProfile(data['LinkedIn URL'])) {
+      return jsonResponse({ status: 'error', message: 'A valid LinkedIn personal profile URL is required.' });
     }
 
-    if (data['JD File Base64']) {
-      data['JD File Link'] = uploadJdFile(data);
-    }
+    if (data['JD File Base64']) data['JD File Link'] = uploadJdFile(data);
 
     appendToSheet(config, data);
     sendConfirmationEmail(config, data);
     sendAdminNotification(config, data, formType);
-
     return jsonResponse({ status: 'success' });
   } catch (err) {
     return jsonResponse({ status: 'error', message: err && err.message ? err.message : String(err) });
@@ -431,9 +295,7 @@ function doPost(e) {
 function applyDefaults(config, data) {
   var defaults = config.defaults || {};
   Object.keys(defaults).forEach(function (field) {
-    if (!data[field] || String(data[field]).trim() === '') {
-      data[field] = defaults[field];
-    }
+    if (!data[field] || String(data[field]).trim() === '') data[field] = defaults[field];
   });
 }
 
@@ -443,7 +305,6 @@ function uploadJdFile(data) {
     var mimeType = data['JD File MimeType'] || 'application/octet-stream';
     var bytes = Utilities.base64Decode(data['JD File Base64']);
     var blob = Utilities.newBlob(bytes, mimeType, fileName);
-
     var folders = DriveApp.getFoldersByName('JD Uploads — I AM A RECRUITER');
     var folder = folders.hasNext() ? folders.next() : DriveApp.createFolder('JD Uploads — I AM A RECRUITER');
     var file = folder.createFile(blob);
@@ -460,27 +321,17 @@ function doGet(e) {
     .setMimeType(ContentService.MimeType.TEXT);
 }
 
-// ---- Sheet ----------------------------------------------------------
-
 function appendToSheet(config, data) {
   var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
   var sheet = ss.getSheetByName(config.sheetName);
-  if (!sheet) {
-    sheet = ss.insertSheet(config.sheetName);
-  }
-
+  if (!sheet) sheet = ss.insertSheet(config.sheetName);
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(['Timestamp'].concat(config.fields));
     sheet.setFrozenRows(1);
   }
-
-  var row = [new Date()].concat(config.fields.map(function (f) {
-    return data[f] || '';
-  }));
+  var row = [new Date()].concat(config.fields.map(function (f) { return data[f] || ''; }));
   sheet.appendRow(row);
 }
-
-// ---- Email ----------------------------------------------------------
 
 function sendConfirmationEmail(config, data) {
   var email = config.buildEmail(data);
@@ -499,25 +350,103 @@ function sendAdminNotification(config, data, formType) {
       'premium-application': 'Premium 1:1 Application — Interview Conversion Intensive'
     };
     var formLabel = labels[formType] || formType;
-    var lines = config.fields
-      .filter(function (f) { return f !== 'JD File Link' || data[f]; })
-      .map(function (f) { return f + ': ' + (data[f] || '—'); });
-
     var submitterName = data['Name'] || data['Full Name'] || 'Unknown';
+    var submittedAt = Utilities.formatDate(new Date(), 'Asia/Kolkata', 'dd MMM yyyy, hh:mm a');
     var subject = 'New submission — ' + formLabel + ': ' + submitterName;
+
+    var visibleFields = config.fields.filter(function (f) {
+      return f !== 'JD File Link' || data[f];
+    });
+    var lines = visibleFields.map(function (f) { return f + ': ' + (data[f] || '—'); });
     var body =
       'New form submission on the website.\n\n' +
       'Form: ' + formLabel + '\n' +
-      'Submitted: ' + new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) + '\n\n' +
+      'Submitted: ' + submittedAt + '\n\n' +
       lines.join('\n');
 
-    MailApp.sendEmail({ to: ADMIN_EMAIL, subject: subject, body: body });
+    var summaryHtml = '';
+    if (formType === 'diagnostic') {
+      summaryHtml =
+        '<div style="margin:0 0 24px; padding:18px; background:#F4F3EE; border-left:3px solid ' + BRAND_ACCENT + ';">' +
+          '<div style="font-size:11px; text-transform:uppercase; letter-spacing:.7px; color:#77787D; margin-bottom:8px;">Readiness summary</div>' +
+          '<div style="font-size:28px; font-weight:bold; line-height:1.1; margin-bottom:6px;">' + escapeHtmlForEmail(data['Overall Score'] || '—') + '/100</div>' +
+          '<div style="margin-bottom:10px;"><strong>' + escapeHtmlForEmail(data['Result Level'] || '—') + '</strong></div>' +
+          '<div style="font-size:13px; color:#55565C;">' +
+            '<strong>Cohort fit:</strong> ' + escapeHtmlForEmail(data['Cohort Fit'] || '—') + '<br>' +
+            '<strong>Strongest:</strong> ' + escapeHtmlForEmail(data['Strongest Capability'] || '—') + '<br>' +
+            '<strong>Top gaps:</strong> ' + escapeHtmlForEmail([data['Gap #1'], data['Gap #2'], data['Gap #3']].filter(Boolean).join(' · ') || '—') +
+          '</div>' +
+        '</div>';
+    }
+
+    var rowsHtml = visibleFields.map(function (field) {
+      var value = data[field] || '—';
+      return '<tr>' +
+        '<td style="width:42%; padding:10px 12px; border-bottom:1px solid #E7E4DA; vertical-align:top; color:#77787D; font-size:12px; font-weight:bold;">' + escapeHtmlForEmail(field) + '</td>' +
+        '<td style="padding:10px 12px; border-bottom:1px solid #E7E4DA; vertical-align:top; color:' + BRAND_INK + '; font-size:13px; word-break:break-word;">' + adminValueHtml(field, value) + '</td>' +
+      '</tr>';
+    }).join('');
+
+    var htmlInner =
+      '<p style="margin:0 0 6px; font-size:11px; text-transform:uppercase; letter-spacing:.8px; color:#77787D;">Website submission</p>' +
+      '<p style="margin:0 0 18px; font-size:22px; line-height:1.25; font-weight:bold;">' + escapeHtmlForEmail(formLabel) + '</p>' +
+      '<p style="margin:0 0 24px; color:#55565C; font-size:13px;"><strong>Submitted:</strong> ' + escapeHtmlForEmail(submittedAt) + '<br><strong>Lead:</strong> ' + escapeHtmlForEmail(submitterName) + '</p>' +
+      summaryHtml +
+      '<div style="font-size:11px; text-transform:uppercase; letter-spacing:.7px; color:#77787D; margin:0 0 8px;">Submission details</div>' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border:1px solid #DAD7CC; border-collapse:collapse; margin:0 0 8px;">' + rowsHtml + '</table>';
+
+    var buttons = [];
+    var linkedIn = data['LinkedIn URL'] || data['Your LinkedIn Profile URL'];
+    if (linkedIn && isValidLinkedInProfile(linkedIn)) {
+      buttons.push({ text: 'Verify LinkedIn Profile', url: linkedIn });
+    }
+    buttons.push({ text: 'Open Lead Tracker', url: 'https://docs.google.com/spreadsheets/d/' + SPREADSHEET_ID + '/edit' });
+
+    MailApp.sendEmail({
+      to: ADMIN_EMAIL,
+      subject: subject,
+      body: body,
+      htmlBody: wrapEmailHtml(htmlInner, buttons)
+    });
   } catch (err) {
     // A notification failure should never block the applicant submission.
   }
 }
 
-// ---- Helpers --------------------------------------------------------
+function adminValueHtml(field, value) {
+  var safe = escapeHtmlForEmail(value);
+  var raw = String(value || '');
+  if ((field === 'LinkedIn URL' || field === 'Your LinkedIn Profile URL' || field === 'Landing URL' || field === 'JD File Link') && /^https?:\/\//i.test(raw)) {
+    return '<a href="' + escapeHtmlForEmail(raw) + '" style="color:#1A5FB4; text-decoration:underline;">' + safe + '</a>';
+  }
+  if (field === 'Email ID' && isValidEmail(raw)) {
+    return '<a href="mailto:' + escapeHtmlForEmail(raw) + '" style="color:#1A5FB4; text-decoration:underline;">' + safe + '</a>';
+  }
+  if ((field === 'Mobile' || field === 'Phone - Mobile') && raw) {
+    return '<a href="tel:' + escapeHtmlForEmail(raw) + '" style="color:#1A5FB4; text-decoration:underline;">' + safe + '</a>';
+  }
+  return safe;
+}
+
+function escapeHtmlForEmail(value) {
+  return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[c];
+  });
+}
+
+function isValidLinkedInProfile(value) {
+  try {
+    var text = String(value || '').trim();
+    if (!/^https?:\/\//i.test(text)) return false;
+    var match = text.match(/^https?:\/\/([^\/]+)(\/[^?#]*)?/i);
+    if (!match) return false;
+    var host = String(match[1] || '').toLowerCase().replace(/^www\./, '');
+    var path = String(match[2] || '').toLowerCase();
+    return (host === 'linkedin.com' || /\.linkedin\.com$/.test(host)) && path.indexOf('/in/') === 0 && path.length > 4;
+  } catch (err) {
+    return false;
+  }
+}
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email));
