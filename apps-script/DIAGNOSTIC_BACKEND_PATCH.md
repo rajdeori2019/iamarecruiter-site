@@ -12,10 +12,11 @@ Place this block after the existing `cohort-application` entry and before `premi
   'diagnostic': {
     sheetName: 'Diagnostic Leads',
     // Order matters: it matches the existing A:AM columns in Diagnostic Leads.
-    // The sheet headers say Full Name / Email, while the backend intentionally
-    // consumes Name / Email ID so the shared validation + email functions work.
+    // Email ID is intentionally used here because the shared backend validates
+    // and emails through data['Email ID']; it will still land under the existing
+    // sheet header named "Email" because the append logic writes by column order.
     fields: [
-      'Name',
+      'Full Name',
       'Email ID',
       'Mobile',
       'Current Role',
@@ -55,7 +56,7 @@ Place this block after the existing `cohort-application` entry and before `premi
       'Notes'
     ],
     requiredFields: [
-      'Name',
+      'Full Name',
       'Email ID',
       'Mobile',
       'Current Role',
@@ -71,7 +72,7 @@ Place this block after the existing `cohort-application` entry and before `premi
       'Payment Status': 'UNPAID'
     },
     buildEmail: function (data) {
-      var firstName = String(data['Name']).trim().split(/\s+/)[0];
+      var firstName = String(data['Full Name']).trim().split(/\s+/)[0];
       var score = data['Overall Score'] || '—';
       var level = data['Result Level'] || 'Strategic Recruiter profile';
       var gap1 = data['Gap #1'] || '—';
@@ -106,13 +107,28 @@ Place this block after the existing `cohort-application` entry and before `premi
   },
 ```
 
-## 2) Add the admin label
+## 2) Add the admin label and full-name fallback
 
 Inside `sendAdminNotification`, add this item to the `labels` object:
 
 ```javascript
 'diagnostic': 'Strategic Recruiter Readiness Diagnostic',
 ```
+
+Then replace the existing subject line:
+
+```javascript
+var subject = 'New submission — ' + formLabel + ': ' + (data['Name'] || 'Unknown');
+```
+
+with:
+
+```javascript
+var submitterName = data['Name'] || data['Full Name'] || 'Unknown';
+var subject = 'New submission — ' + formLabel + ': ' + submitterName;
+```
+
+This preserves all existing form behavior and gives diagnostic submissions the correct name in the admin notification.
 
 ## 3) Deploy the Apps Script web app
 
