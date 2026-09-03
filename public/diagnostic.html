@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Strategic Recruiter Readiness Diagnostic — I AM A RECRUITER</title>
+<meta name="description" content="Take the free 5-minute Strategic Recruiter Readiness Diagnostic. Answer 16 real-world hiring scenarios and discover your strengths, readiness level and top strategic recruiting gaps.">
+<link rel="canonical" href="https://www.iamarecruiter.in/diagnostic.html">
+<meta property="og:title" content="Strategic Recruiter Readiness Diagnostic — I AM A RECRUITER">
+<meta property="og:description" content="Are you operating as a recruiter or a Strategic Talent Advisor? Take the free 5-minute diagnostic and get your personalized capability breakdown.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.iamarecruiter.in/diagnostic.html">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="apple-touch-icon" href="/assets/favicon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/diagnostic.css">
+</head>
+<body>
+<nav class="site-nav diag-nav" id="diagNav">
+  <div class="site-nav__inner">
+    <a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a>
+    <div class="site-nav__cta">
+      <a class="btn btn--ghost" href="/cohort.html">Explore Cohort</a>
+      <button class="btn btn--accent" type="button" id="navStart">Start Diagnostic</button>
+    </div>
+  </div>
+</nav>
+
+<main id="landing">
+<section class="diag-hero">
+  <div class="bg-grid"></div>
+  <div class="container diag-hero__inner">
+    <span class="eyebrow">Free · 5-Minute Diagnostic</span>
+    <h1>ARE YOU OPERATING AS A RECRUITER — OR A <span class="accent">STRATEGIC TALENT ADVISOR?</span></h1>
+    <p class="diag-hero__lede">Answer 16 real-world hiring scenarios and discover your Strategic Recruiter Readiness Score, strongest capability and top development gaps.</p>
+    <div class="diag-hero__actions">
+      <button class="btn btn--accent" type="button" id="heroStart">Start My Free Diagnostic →</button>
+      <span class="diag-fine">5 minutes · Instant personalized result · No preparation required</span>
+    </div>
+    <div class="preview-card" aria-label="Preview of your diagnostic result">
+      <div class="preview-card__top"><span>Your Strategic Recruiter Profile</span><span>Personalized after completion</span></div>
+      <div class="preview-card__body">
+        <div class="preview-score"><span>Readiness score</span><strong>72</strong><div class="diag-fine">/ 100</div></div>
+        <div class="preview-gaps"><span>Your strongest capability + top 3 gaps</span><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section section--tight">
+  <div class="container"><div class="grid-3">
+    <div class="cell"><span class="eyebrow">16 scenarios</span><h3>REAL HIRING DECISIONS</h3><p class="text-muted">No theory quiz. Choose what you would actually do in realistic recruiting situations.</p></div>
+    <div class="cell"><span class="eyebrow">8 capabilities</span><h3>STRATEGIC TA BREAKDOWN</h3><p class="text-muted">Talent intelligence, diagnosis, advisory, sourcing, assessment, analytics and responsible AI.</p></div>
+    <div class="cell"><span class="eyebrow">Instant result</span><h3>YOUR NEXT DEVELOPMENT PRIORITY</h3><p class="text-muted">See where you are strong and where execution is still limiting your strategic value.</p></div>
+  </div></div>
+</section>
+</main>
+
+<section class="diag-shell" id="diagnosticShell" aria-live="polite">
+  <div class="diag-stage"><div class="diag-card" id="diagCard">
+    <div class="diag-card__head"><span class="diag-label" id="stageLabel">Strategic Recruiter Readiness Diagnostic</span><span class="diag-label" id="stageCount"></span></div>
+    <div class="diag-progress"><div class="diag-progress__bar" id="progressBar"></div></div>
+    <div class="diag-card__body" id="stageBody"></div>
+  </div></div>
+</section>
+
+<div class="result-wrap" id="resultWrap">
+<section class="result-hero"><div class="container"><div class="result-grid">
+  <div class="score-box"><div class="score-box__eyebrow">Strategic Recruiter Readiness Score</div><div class="score-number"><span id="resultScore">0</span><small>/100</small></div><div class="score-level" id="resultLevel"></div><p class="score-copy" id="resultSummary"></p></div>
+  <div class="result-lead"><span class="eyebrow">Your Personalized Result</span><h1 id="resultHeadline"></h1><p id="resultCareer"></p><div class="mini-pair"><div class="mini-card"><span>Your Strategic Strength</span><strong id="strengthName"></strong><b id="strengthScore"></b></div><div class="mini-card"><span>#1 Development Priority</span><strong id="priorityName"></strong><b id="priorityScore"></b></div></div></div>
+</div></div></section>
+<section class="result-section"><div class="container"><div class="section-head"><span class="eyebrow">All 8 capabilities</span><h2>Your Strategic TA Capability Map</h2><p class="lede">Your total score is useful. The capability pattern below is more useful because it shows where your recruiting behaviour becomes strategic — and where it still breaks.</p></div><div class="cap-list" id="capabilityList"></div></div></section>
+<section class="result-section section--surface"><div class="container"><div class="section-head"><span class="eyebrow">Development priorities</span><h2>Your Top 3 Capability Gaps</h2></div><div class="gap-list" id="gapList"></div></div></section>
+<section class="result-section"><div class="container"><div class="cta-panel"><span class="eyebrow">Next step</span><h2 id="sessionHeadline">Your diagnostic showed you where the gaps are. Now learn how to close them.</h2><p id="sessionCopy">Join the free Recruiter → Strategic Talent Advisor session to see how talent intelligence, hiring diagnosis, stakeholder advisory and AI change the way a recruiter operates.</p><div class="cta-row"><a class="btn btn--accent" id="sessionCta" href="#" aria-disabled="true">Free Session — Coming Next</a><a class="btn btn--ghost" href="/cohort.html?utm_source=diagnostic&utm_medium=result&utm_campaign=cohort_launch_sep26&utm_content=cohort_cta">Explore the Founding Cohort</a></div><div class="share-row"><button class="share-btn" type="button" id="shareWhatsApp">Share on WhatsApp</button><button class="share-btn" type="button" id="shareLinkedIn">Share on LinkedIn</button><button class="share-btn" type="button" id="copyLink">Copy Diagnostic Link</button></div></div></div></section>
+</div>
+
+<footer class="site-footer diag-footer"><div class="container"><div class="site-footer__legal"><span>© I AM A RECRUITER</span><span><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/cohort.html">Recruiter Cohort</a></span></div></div></footer>
+<script src="/js/diagnostic.js"></script>
+</body>
+</html>
