@@ -82,31 +82,44 @@
 (function(){
   function enforceLinkedInProfile(){
     var input=document.getElementById('linkedin');
-    if(!input)return;
+    if(!input || input.dataset.profileValidationBound==='true') return;
+
+    input.dataset.profileValidationBound='true';
     input.required=true;
     input.setAttribute('aria-required','true');
     input.placeholder='https://www.linkedin.com/in/your-profile';
+
     var label=document.querySelector('label[for="linkedin"]');
-    if(label)label.textContent='LinkedIn Profile *';
-    if(input.dataset.profileValidationBound==='true')return;
-    input.dataset.profileValidationBound='true';
+    if(label) label.textContent='LinkedIn Profile *';
+
     function validateLinkedIn(){
       var value=input.value.trim();
-      if(!value){input.setCustomValidity('Please enter your LinkedIn profile URL.');return;}
+      if(!value){
+        input.setCustomValidity('Please enter your LinkedIn profile URL.');
+        return;
+      }
       try{
         var url=new URL(value);
         var host=url.hostname.toLowerCase().replace(/^www\./,'');
         var isLinkedIn=host==='linkedin.com'||host.endsWith('.linkedin.com');
         var isProfile=url.pathname.toLowerCase().indexOf('/in/')===0;
         input.setCustomValidity(isLinkedIn&&isProfile?'':'Please enter a valid LinkedIn personal profile URL, for example https://www.linkedin.com/in/your-name');
-      }catch(err){input.setCustomValidity('Please enter a valid LinkedIn profile URL.');}
+      }catch(err){
+        input.setCustomValidity('Please enter a valid LinkedIn profile URL.');
+      }
     }
+
     input.addEventListener('input',validateLinkedIn);
     input.addEventListener('blur',validateLinkedIn);
     validateLinkedIn();
   }
-  var stageBody=document.getElementById('stageBody');
-  if(stageBody)new MutationObserver(enforceLinkedInProfile).observe(stageBody,{childList:true,subtree:true});
+
+  document.addEventListener('click',function(event){
+    if(event.target && event.target.closest && event.target.closest('#unlockBtn')){
+      setTimeout(enforceLinkedInProfile,0);
+    }
+  });
+
   enforceLinkedInProfile();
 })();
 </script>
