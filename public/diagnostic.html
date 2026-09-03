@@ -78,5 +78,37 @@
 
 <footer class="site-footer diag-footer"><div class="container"><div class="site-footer__legal"><span>© I AM A RECRUITER</span><span><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/cohort.html">Recruiter Cohort</a></span></div></div></footer>
 <script src="/js/diagnostic.js"></script>
+<script>
+(function(){
+  function enforceLinkedInProfile(){
+    var input=document.getElementById('linkedin');
+    if(!input)return;
+    input.required=true;
+    input.setAttribute('aria-required','true');
+    input.placeholder='https://www.linkedin.com/in/your-profile';
+    var label=document.querySelector('label[for="linkedin"]');
+    if(label)label.textContent='LinkedIn Profile *';
+    if(input.dataset.profileValidationBound==='true')return;
+    input.dataset.profileValidationBound='true';
+    function validateLinkedIn(){
+      var value=input.value.trim();
+      if(!value){input.setCustomValidity('Please enter your LinkedIn profile URL.');return;}
+      try{
+        var url=new URL(value);
+        var host=url.hostname.toLowerCase().replace(/^www\./,'');
+        var isLinkedIn=host==='linkedin.com'||host.endsWith('.linkedin.com');
+        var isProfile=url.pathname.toLowerCase().indexOf('/in/')===0;
+        input.setCustomValidity(isLinkedIn&&isProfile?'':'Please enter a valid LinkedIn personal profile URL, for example https://www.linkedin.com/in/your-name');
+      }catch(err){input.setCustomValidity('Please enter a valid LinkedIn profile URL.');}
+    }
+    input.addEventListener('input',validateLinkedIn);
+    input.addEventListener('blur',validateLinkedIn);
+    validateLinkedIn();
+  }
+  var stageBody=document.getElementById('stageBody');
+  if(stageBody)new MutationObserver(enforceLinkedInProfile).observe(stageBody,{childList:true,subtree:true});
+  enforceLinkedInProfile();
+})();
+</script>
 </body>
 </html>
