@@ -90,6 +90,48 @@
     legalFooter.appendChild(policyLinks);
   }
 
+  // Premium 1:1 conversion framing.
+  // Keep the working form/backend intact; reduce first-step friction by
+  // framing the existing application as a Senior Interview Conversion Check.
+  if (path === 'premium-1-1.html' || document.getElementById('premiumForm')) {
+    var premiumTopCta = document.querySelector('.sales-nav .site-nav__cta > a.btn--accent[href="#apply"]');
+    if (premiumTopCta) premiumTopCta.textContent = 'Check My Interview Bottleneck';
+
+    var heroPrimaryCta = document.querySelector('#hCta a.btn--accent[href="#apply"]');
+    if (heroPrimaryCta) heroPrimaryCta.textContent = 'Check My Interview Bottleneck →';
+
+    var heroFine = document.querySelector('#hCta .hero__fine');
+    if (heroFine) heroFine.textContent = '2-minute check · no payment · no hiring-outcome guarantee';
+
+    var applySection = document.getElementById('apply');
+    if (applySection) {
+      var eyebrow = applySection.querySelector('.section-head .eyebrow');
+      var heading = applySection.querySelector('.section-head h2');
+      var lede = applySection.querySelector('.section-head .lede');
+      if (eyebrow) eyebrow.textContent = 'Senior Interview Conversion Check';
+      if (heading) heading.textContent = 'Already getting interviews but not consistently converting?';
+      if (lede) lede.textContent = 'Answer a few questions about your target role, interview stage and recent outcomes. I’ll review where the bottleneck may be before recommending any paid intervention.';
+
+      var submitButton = document.getElementById('premiumSubmit');
+      if (submitButton) submitButton.textContent = 'Submit My Interview Conversion Check';
+
+      var formNote = applySection.querySelector('.form-note');
+      if (formNote) formNote.textContent = 'No payment is collected on this page. Your answers are used only to review the likely interview bottleneck, assess fit and follow up with an appropriate next step.';
+
+      var successHeading = document.querySelector('#premiumSuccess h3');
+      var successCopy = document.querySelector('#premiumSuccess p');
+      if (successHeading) successHeading.textContent = 'Your Interview Conversion Check is received.';
+      if (successCopy) successCopy.textContent = 'Your details are recorded. If you have an active interview, keep your JD and interview date ready. If there appears to be a strong fit, the next step is a focused diagnostic conversation.';
+    }
+
+    document.querySelectorAll('#offer a.btn--accent[href="#apply"], .cta-band a.btn--accent[href="#apply"]').forEach(function (a) {
+      a.textContent = 'Check My Interview Bottleneck →';
+    });
+
+    var finalCtaCopy = document.querySelector('.cta-band p');
+    if (finalCtaCopy) finalCtaCopy.textContent = 'If you are already getting interviews, start with the evidence. Complete the Senior Interview Conversion Check and let the diagnosis determine whether Premium 1:1 is the right intervention.';
+  }
+
   // Reveal on scroll
   var els = document.querySelectorAll('.reveal');
   if (!('IntersectionObserver' in window) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
