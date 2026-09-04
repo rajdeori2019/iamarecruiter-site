@@ -90,6 +90,87 @@
     legalFooter.appendChild(policyLinks);
   }
 
+  // Cohort conversion path.
+  // Keep the paid application available for high-intent visitors, but give
+  // everyone else a lower-friction diagnostic that feeds the same funnel.
+  if (path === 'cohort.html' || document.getElementById('cohortForm')) {
+    function diagnosticUrl(content) {
+      return '/diagnostic.html?utm_source=cohort&utm_medium=website&utm_campaign=cohort_launch_sep26&utm_content=' + content;
+    }
+
+    var cohortNavSecondary = document.querySelector('.sales-nav .site-nav__cta > a.btn--ghost');
+    if (cohortNavSecondary) {
+      cohortNavSecondary.href = diagnosticUrl('nav_diagnostic');
+      cohortNavSecondary.textContent = 'Take Free Diagnostic';
+    }
+
+    var cohortHeroSecondary = document.querySelector('#hCta a.btn--ghost');
+    if (cohortHeroSecondary) {
+      cohortHeroSecondary.href = diagnosticUrl('hero_diagnostic');
+      cohortHeroSecondary.textContent = 'Take Free 5-Min Diagnostic';
+    }
+
+    var cohortHeroFine = document.querySelector('#hCta .hero__fine');
+    if (cohortHeroFine) {
+      cohortHeroFine.textContent = '₹10,000 cohort · or start free with the 5-minute readiness diagnostic';
+    }
+
+    var heroSection = document.getElementById('hero');
+    if (heroSection && !document.getElementById('diagnostic-entry')) {
+      var diagnosticSection = document.createElement('section');
+      diagnosticSection.className = 'section section--surface';
+      diagnosticSection.id = 'diagnostic-entry';
+      diagnosticSection.innerHTML =
+        '<div class="container">' +
+          '<div class="section-head section-head--wide reveal">' +
+            '<div class="eyebrow">Not ready to apply yet?</div>' +
+            '<h2>First, find out where your strategic recruiting capability actually stands.</h2>' +
+            '<p class="lede">Take the free 5-minute Strategic Recruiter Readiness Diagnostic. You’ll get a 0–100 readiness score, all 8 capability ratings, your strongest capability and your top 3 development priorities.</p>' +
+          '</div>' +
+          '<div class="apply-grid reveal">' +
+            '<div class="apply-copy">' +
+              '<h3>Start with evidence, not a course decision.</h3>' +
+              '<p>If the diagnostic shows meaningful gaps in hiring diagnosis, talent intelligence, stakeholder advisory, sourcing, assessment, analytics or responsible AI, you’ll know exactly what needs strengthening before deciding whether the cohort is relevant.</p>' +
+              '<div class="hero__cta">' +
+                '<a class="btn btn--accent" href="' + diagnosticUrl('entry_primary') + '">Take My Free Diagnostic →</a>' +
+                '<a class="btn btn--ghost" href="#curriculum">See the 6 Applied Pillars</a>' +
+              '</div>' +
+              '<p class="form-note">16 scenarios · about 5 minutes · instant personalized result · no payment</p>' +
+            '</div>' +
+            '<div class="apply-copy">' +
+              '<h3>What you’ll see immediately</h3>' +
+              '<ol class="apply-steps">' +
+                '<li><b>1</b><span>Your Strategic Recruiter Readiness Score out of 100.</span></li>' +
+                '<li><b>2</b><span>Your level: execution-first, developing, emerging, strategic or advanced.</span></li>' +
+                '<li><b>3</b><span>Your strongest capability across 8 strategic TA dimensions.</span></li>' +
+                '<li><b>4</b><span>Your top 3 development priorities and what they mean.</span></li>' +
+              '</ol>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      heroSection.insertAdjacentElement('afterend', diagnosticSection);
+    }
+
+    var offerSecondary = document.querySelector('#offer a.btn--ghost');
+    if (offerSecondary) {
+      offerSecondary.href = diagnosticUrl('offer_diagnostic');
+      offerSecondary.textContent = 'Take Free Diagnostic First';
+    }
+
+    var finalCtaCopy = document.querySelector('.cta-band p');
+    if (finalCtaCopy) {
+      finalCtaCopy.textContent = 'If you already know you want to build these capabilities, apply. If you are not sure where your gaps are yet, take the free readiness diagnostic first.';
+    }
+
+    var finalSecondary = document.querySelector('.cta-band a.btn--ghost');
+    if (finalSecondary) {
+      finalSecondary.href = diagnosticUrl('final_diagnostic');
+      finalSecondary.removeAttribute('target');
+      finalSecondary.removeAttribute('rel');
+      finalSecondary.textContent = 'Take Free Diagnostic';
+    }
+  }
+
   // Premium 1:1 conversion framing.
   // Keep the working form/backend intact; reduce first-step friction by
   // framing the existing application as a Senior Interview Conversion Check.
