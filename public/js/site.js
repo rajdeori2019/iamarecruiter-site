@@ -94,6 +94,21 @@
   // Keep the working form/backend intact; reduce first-step friction by
   // framing the existing application as a Senior Interview Conversion Check.
   if (path === 'premium-1-1.html' || document.getElementById('premiumForm')) {
+    // The current live Premium backend already stores UTM Source, Medium and Campaign.
+    // Preserve exact content attribution immediately by folding utm_content into the
+    // campaign value before the page's form script reads the query parameters.
+    // Example: premium_sep04__content_final_round_conversion
+    var premiumUrl = new URL(window.location.href);
+    var premiumContent = premiumUrl.searchParams.get('utm_content');
+    if (premiumContent) {
+      var cleanContent = premiumContent.slice(0, 80).replace(/[^a-zA-Z0-9_-]/g, '-');
+      var premiumCampaign = premiumUrl.searchParams.get('utm_campaign') || 'premium_content';
+      if (premiumCampaign.indexOf('__content_') === -1) {
+        premiumUrl.searchParams.set('utm_campaign', premiumCampaign + '__content_' + cleanContent);
+        window.history.replaceState({}, '', premiumUrl.pathname + '?' + premiumUrl.searchParams.toString() + premiumUrl.hash);
+      }
+    }
+
     var premiumTopCta = document.querySelector('.sales-nav .site-nav__cta > a.btn--accent[href="#apply"]');
     if (premiumTopCta) premiumTopCta.textContent = 'Check My Interview Bottleneck';
 
