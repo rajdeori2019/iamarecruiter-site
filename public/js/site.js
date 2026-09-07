@@ -1,8 +1,8 @@
 (function () {
   // -----------------------------------------------------------------
   // Canonical site navigation
-  // Preserve the original site pages and add the three commercial
-  // offers without removing Join, Event or Videos.
+  // Preserve the original site pages and add the commercial offers
+  // without removing Join, Event or Videos.
   // -----------------------------------------------------------------
   var nav = document.querySelector('.site-nav');
   if (nav) {
@@ -23,6 +23,7 @@
         '<a href="/index.html" data-page="index.html">Home</a>',
         '<a href="/join.html" data-page="join.html">Join</a>',
         '<a href="/fractional-ta.html" data-page="fractional-ta.html">Fractional TA</a>',
+        '<a href="/ai-workflow.html" data-page="ai-workflow.html">₹99 AI Challenge</a>',
         '<a href="/cohort.html" data-page="cohort.html">Cohort</a>',
         '<a href="/premium-1-1.html" data-page="premium-1-1.html">Premium 1:1</a>',
         '<a href="/event.html" data-page="event.html">Event</a>',
@@ -35,8 +36,8 @@
     var navStyle = document.createElement('style');
     navStyle.textContent =
       '@media(min-width:761px){' +
-        '.site-nav .site-nav__links{gap:14px;font-size:11px;white-space:nowrap;}' +
-        '.site-nav .site-nav__inner{gap:14px;}' +
+        '.site-nav .site-nav__links{gap:12px;font-size:10.6px;white-space:nowrap;}' +
+        '.site-nav .site-nav__inner{gap:12px;}' +
         '.site-nav.sales-nav .site-nav__links{display:flex !important;}' +
       '}' +
       '@media(max-width:760px){' +
