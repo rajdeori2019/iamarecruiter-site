@@ -4,7 +4,6 @@
   var checkoutUrl = 'https://checkout.razorpay.com/v1/checkout.js';
   var loading = false;
   var modal;
-  var activeButton = null;
 
   function loadRazorpay() {
     if (window.Razorpay) return Promise.resolve();
@@ -94,8 +93,7 @@
     return modal;
   }
 
-  function openModal(button) {
-    activeButton = button;
+  function openModal() {
     ensureModal().classList.add('is-open');
     document.body.style.overflow = 'hidden';
     setTimeout(function () { modal.querySelector('#tmsName').focus(); }, 50);
@@ -121,12 +119,15 @@
 
   async function applyCoupon() {
     var code = modal.querySelector('#tmsCoupon').value.trim().toUpperCase();
+    var email = modal.querySelector('#tmsEmail').value.trim();
+    var mobile = modal.querySelector('#tmsMobile').value.trim();
     if (!code) { setCouponState(false, 9900, 0, 'Enter a coupon code.'); return; }
+    if (!email || !mobile) { setCouponState(false, 9900, 0, 'Enter your email and mobile number first so we can validate coupon eligibility.'); return; }
     var btn = modal.querySelector('#tmsApplyCoupon');
     btn.disabled = true;
     btn.textContent = 'Checking…';
     try {
-      var result = await postJson('/api/razorpay/coupon', { coupon: code });
+      var result = await postJson('/api/razorpay/coupon', { coupon: code, email: email, mobile: mobile });
       setCouponState(!!result.valid, result.amount || 9900, result.discount || 0, result.message || '');
       if (result.valid) modal.querySelector('#tmsCoupon').value = result.coupon || code;
     } catch (err) {
@@ -137,6 +138,15 @@
     }
   }
 
+  function checkoutSource() {
+    var params = new URLSearchParams(window.location.search);
+    var parts = [];
+    ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function (key) {
+      if (params.get(key)) parts.push(key + '=' + params.get(key));
+    });
+    return parts.length ? parts.join('&') : 'direct/website';
+  }
+
   function formPayload() {
     return {
       name: modal.querySelector('#tmsName').value.trim(),
@@ -144,7 +154,8 @@
       mobile: modal.querySelector('#tmsMobile').value.trim(),
       billing_address: modal.querySelector('#tmsAddress').value.trim(),
       linkedin_url: modal.querySelector('#tmsLinkedin').value.trim(),
-      coupon: modal.dataset.couponValid === '1' ? modal.querySelector('#tmsCoupon').value.trim().toUpperCase() : ''
+      coupon: modal.dataset.couponValid === '1' ? modal.querySelector('#tmsCoupon').value.trim().toUpperCase() : '',
+      source: checkoutSource()
     };
   }
 
@@ -227,7 +238,7 @@
       button.setAttribute('href', '#secure-checkout');
       button.addEventListener('click', function (event) {
         event.preventDefault();
-        openModal(button);
+        openModal();
       });
     }
   });
