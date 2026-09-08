@@ -69,6 +69,33 @@ async function razorpayRequest(apiPath, options = {}) {
   return data;
 }
 
+function trackerConfigured() {
+  return /^https:\/\//i.test(String(process.env.TMS_TRACKER_WEBHOOK_URL || ''));
+}
+
+async function trackerRequest(action, payload) {
+  const webhook = String(process.env.TMS_TRACKER_WEBHOOK_URL || '').trim();
+  if (!webhook) return null;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 8000);
+  try {
+    const response = await fetch(webhook, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(Object.assign({ action }, payload || {})),
+      signal: controller.signal,
+      redirect: 'follow'
+    });
+    const text = await response.text();
+    let data;
+    try { data = JSON.parse(text); } catch (_) { throw new Error('Tracker returned a non-JSON response'); }
+    if (!response.ok || !data || data.ok === false) throw new Error((data && data.error) || 'Tracker request failed');
+    return data;
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 function allowed(req) {
   const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
   const now = Date.now();
@@ -125,7 +152,23 @@ async function couponStatus(req, res) {
   try {
     const body = await readJson(req);
     const code = clean(body.coupon, 40).toUpperCase();
+    const email = normalizeEmail(body.email);
+    const mobile = normalizeMobile(body.mobile);
     if (!code) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'Enter a coupon code.' });
+
+    if (trackerConfigured()) {
+      const result = await trackerRequest('check_coupon', { coupon: code, email, mobile });
+      return json(res, 200, {
+        valid: !!result.valid,
+        coupon: result.valid ? code : '',
+        amount: Number(result.amount_paise || AMOUNT),
+        discount: Number(result.discount_paise || 0),
+        user_type: result.user_type || 'BUYER',
+        coupon_counted: result.coupon_counted === false ? false : true,
+        message: result.message || (result.valid ? 'Coupon applied.' : 'Coupon is not valid.')
+      });
+    }
+
     if (code !== TEST_COUPON) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'Coupon code is not valid.' });
     const existing = await findExistingCouponOrder();
     if (existing) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'TALENT98 has already been claimed.' });
@@ -138,18 +181,37 @@ async function couponStatus(req, res) {
 
 async function createOrder(req, res) {
   if (!allowed(req)) return json(res, 429, { error: 'Too many requests. Please try again shortly.' });
+  let reservationId = '';
   try {
     const body = await readJson(req);
     const validation = validateCustomer(body);
     if (validation.error) return json(res, 400, { error: validation.error });
     const customer = validation.customer;
     const code = clean(body.coupon, 40).toUpperCase();
+    const source = clean(body.source, 160) || 'iamarecruiter.in/ai-workflow';
     const { keyId } = getCredentials();
     let amount = AMOUNT;
     let discount = 0;
     let appliedCoupon = '';
+    let userType = 'BUYER';
+    let couponCounted = false;
 
-    if (code) {
+    if (code && trackerConfigured()) {
+      const reservation = await trackerRequest('reserve_coupon', {
+        coupon: code,
+        customer,
+        product: PRODUCT,
+        original_price_paise: AMOUNT,
+        source
+      });
+      if (!reservation.valid) return json(res, 409, { error: reservation.message || 'Coupon is not available.' });
+      reservationId = clean(reservation.reservation_id, 120);
+      amount = Number(reservation.amount_paise || AMOUNT);
+      discount = Number(reservation.discount_paise || 0);
+      appliedCoupon = code;
+      userType = reservation.user_type || 'BUYER';
+      couponCounted = reservation.coupon_counted === true;
+    } else if (code) {
       if (code !== TEST_COUPON) return json(res, 400, { error: 'Coupon code is not valid.' });
       const existing = await findExistingCouponOrder();
       if (existing) {
@@ -171,25 +233,56 @@ async function createOrder(req, res) {
       amount = TEST_COUPON_AMOUNT;
       discount = TEST_COUPON_DISCOUNT;
       appliedCoupon = TEST_COUPON;
+      couponCounted = true;
     }
 
-    const receipt = appliedCoupon ? 'tms_t98_' + Date.now() : 'tms_' + Date.now();
+    const receipt = appliedCoupon ? 'tms_coupon_' + Date.now() : 'tms_' + Date.now();
     const notes = {
       product: PRODUCT,
-      source: 'iamarecruiter.in/ai-workflow',
+      source,
       customer_name: customer.name,
       customer_email: customer.email,
       customer_mobile: customer.mobile,
       billing_address: customer.billing_address,
       linkedin_url: customer.linkedin_url || 'not-provided',
       coupon: appliedCoupon || 'none',
-      customer_key: customerKey(customer)
+      customer_key: customerKey(customer),
+      user_type: userType,
+      coupon_counted: couponCounted ? 'YES' : 'NO',
+      tracker_reservation_id: reservationId || 'none'
     };
-    const order = await razorpayRequest('/orders', {
-      method: 'POST',
-      body: { amount, currency: CURRENCY, receipt, notes }
-    });
-    if (appliedCoupon) couponOrderCache = order;
+
+    let order;
+    try {
+      order = await razorpayRequest('/orders', {
+        method: 'POST',
+        body: { amount, currency: CURRENCY, receipt, notes }
+      });
+    } catch (err) {
+      if (reservationId && trackerConfigured()) {
+        await trackerRequest('release_reservation', { reservation_id: reservationId }).catch((releaseErr) => console.error('Tracker reservation release failed:', releaseErr.message));
+      }
+      throw err;
+    }
+
+    if (appliedCoupon && !trackerConfigured()) couponOrderCache = order;
+
+    if (trackerConfigured()) {
+      await trackerRequest('order_created', {
+        reservation_id: reservationId,
+        customer,
+        product: PRODUCT,
+        original_price_paise: AMOUNT,
+        coupon: appliedCoupon,
+        discount_paise: discount,
+        final_amount_paise: order.amount,
+        user_type: userType,
+        coupon_counted: couponCounted,
+        razorpay_order_id: order.id,
+        source
+      }).catch((trackerErr) => console.error('Tracker order write failed:', trackerErr.message));
+    }
+
     return json(res, 200, {
       key_id: keyId,
       order_id: order.id,
@@ -198,11 +291,12 @@ async function createOrder(req, res) {
       product: PRODUCT,
       coupon: appliedCoupon,
       discount,
-      customer
+      customer,
+      user_type: userType
     });
   } catch (err) {
     console.error('Razorpay order creation failed:', err.message);
-    return json(res, 502, { error: 'Unable to start payment right now. Please try again.' });
+    return json(res, 502, { error: err.message && /coupon/i.test(err.message) ? err.message : 'Unable to start payment right now. Please try again.' });
   }
 }
 
@@ -233,10 +327,20 @@ async function verifyPayment(req, res) {
     ]);
 
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
-    const expectedAmount = coupon === TEST_COUPON ? TEST_COUPON_AMOUNT : AMOUNT;
-    const orderMatches = order && order.id === orderId && order.amount === expectedAmount && order.currency === CURRENCY;
+    const expectedAmount = Number(order && order.amount);
+    const orderMatches = order && order.id === orderId && expectedAmount > 0 && order.currency === CURRENCY;
     const paymentMatches = payment && payment.id === paymentId && payment.order_id === orderId && payment.amount === expectedAmount && payment.currency === CURRENCY && payment.status === 'captured';
     if (!orderMatches || !paymentMatches) return json(res, 400, { error: 'Payment could not be confirmed as captured.' });
+
+    if (trackerConfigured()) {
+      await trackerRequest('payment_verified', {
+        razorpay_order_id: orderId,
+        razorpay_payment_id: paymentId,
+        amount_paise: expectedAmount,
+        coupon: coupon === 'none' ? '' : coupon,
+        payment_status: 'CAPTURED'
+      }).catch((trackerErr) => console.error('Tracker payment write failed:', trackerErr.message));
+    }
 
     return json(res, 200, {
       verified: true,
@@ -245,7 +349,7 @@ async function verifyPayment(req, res) {
       product: PRODUCT,
       amount: expectedAmount,
       currency: CURRENCY,
-      coupon: coupon === TEST_COUPON ? TEST_COUPON : ''
+      coupon: coupon === 'none' ? '' : coupon
     });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
