@@ -1,4 +1,6 @@
 const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
 const express = require('express');
 
 const originalStatic = express.static;
@@ -43,9 +45,9 @@ function basicAuth(keyId, keySecret) {
   return 'Basic ' + Buffer.from(keyId + ':' + keySecret).toString('base64');
 }
 
-async function razorpayRequest(path, options = {}) {
+async function razorpayRequest(apiPath, options = {}) {
   const { keyId, keySecret } = getCredentials();
-  const response = await fetch('https://api.razorpay.com/v1' + path, {
+  const response = await fetch('https://api.razorpay.com/v1' + apiPath, {
     method: options.method || 'GET',
     headers: {
       Authorization: basicAuth(keyId, keySecret),
@@ -137,13 +139,40 @@ async function verifyPayment(req, res) {
   }
 }
 
+function serveCheckoutPage(res) {
+  try {
+    const filePath = path.join(process.cwd(), 'public', 'ai-workflow.html');
+    let html = fs.readFileSync(filePath, 'utf8');
+    html = html
+      .replace('The founding beta is currently handled manually, so the purchase conversation starts on WhatsApp. You will receive the payment and access steps there.', 'Payment is completed securely through Razorpay. After payment, the site verifies the transaction before confirming your purchase.')
+      .replace('Start the ₹99 purchase conversation', 'Start secure ₹99 checkout')
+      .replace('Tap the CTA and message us on WhatsApp.', 'Tap any ₹99 CTA to open Razorpay Secure Checkout.')
+      .replace('Receive the payment/access path', 'Complete payment securely')
+      .replace('The founding-beta payment and access details are shared manually.', 'Complete the ₹99 payment using the payment methods available in Razorpay Checkout.')
+      .replace('Payment and access are currently handled manually during the founding beta. Starting the WhatsApp conversation does not itself charge you.', '₹99 payment is processed securely through Razorpay. Your purchase is confirmed only after server-side payment verification.')
+      .replace('</body>', '<script src="/js/talent-snapshot-checkout.js"></script>\n</body>');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.end(html);
+  } catch (err) {
+    console.error('Failed to serve checkout-enabled page:', err.message);
+    res.statusCode = 500;
+    res.end('Unable to load the page.');
+  }
+}
+
 express.static = function patchedStatic(...args) {
   const staticMiddleware = originalStatic.apply(express, args);
   return function paymentAwareStatic(req, res, next) {
-    if (req.method === 'POST' && req.url.split('?')[0] === '/api/razorpay/order') {
+    const requestPath = req.url.split('?')[0];
+    if (req.method === 'GET' && (requestPath === '/ai-workflow.html' || requestPath === '/ai-workflow')) {
+      return serveCheckoutPage(res);
+    }
+    if (req.method === 'POST' && requestPath === '/api/razorpay/order') {
       return readJson(req).then(() => createOrder(req, res)).catch((err) => json(res, 400, { error: err.message }));
     }
-    if (req.method === 'POST' && req.url.split('?')[0] === '/api/razorpay/verify') {
+    if (req.method === 'POST' && requestPath === '/api/razorpay/verify') {
       return verifyPayment(req, res);
     }
     return staticMiddleware(req, res, next);
