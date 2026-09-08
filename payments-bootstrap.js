@@ -7,7 +7,11 @@ const originalStatic = express.static;
 const PRODUCT = 'Talent Market Snapshot Challenge';
 const AMOUNT = 9900;
 const CURRENCY = 'INR';
+const TEST_COUPON = 'TALENT98';
+const TEST_COUPON_DISCOUNT = 9800;
+const TEST_COUPON_AMOUNT = AMOUNT - TEST_COUPON_DISCOUNT;
 const rateBuckets = new Map();
+let couponOrderCache = null;
 
 function json(res, status, payload) {
   res.statusCode = status;
@@ -21,7 +25,7 @@ function readJson(req) {
     let body = '';
     req.on('data', (chunk) => {
       body += chunk;
-      if (body.length > 20000) {
+      if (body.length > 30000) {
         reject(new Error('Request body too large'));
         req.destroy();
       }
@@ -75,26 +79,126 @@ function allowed(req) {
   return bucket.count <= 30;
 }
 
+function clean(value, max) {
+  return String(value || '').trim().slice(0, max || 256);
+}
+
+function normalizeMobile(value) {
+  return clean(value, 20).replace(/[^0-9+]/g, '');
+}
+
+function normalizeEmail(value) {
+  return clean(value, 160).toLowerCase();
+}
+
+function validateCustomer(body) {
+  const customer = {
+    name: clean(body.name, 120),
+    email: normalizeEmail(body.email),
+    mobile: normalizeMobile(body.mobile),
+    billing_address: clean(body.billing_address, 240),
+    linkedin_url: clean(body.linkedin_url, 240)
+  };
+  if (customer.name.length < 2) return { error: 'Please enter your full name.' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(customer.email)) return { error: 'Please enter a valid email address.' };
+  if (!/^\+?[0-9]{10,15}$/.test(customer.mobile)) return { error: 'Please enter a valid mobile number.' };
+  if (customer.billing_address.length < 8) return { error: 'Please enter your billing address.' };
+  if (customer.linkedin_url && !/^https?:\/\/(www\.)?linkedin\.com\//i.test(customer.linkedin_url)) return { error: 'Please enter a valid LinkedIn profile URL.' };
+  return { customer };
+}
+
+function customerKey(customer) {
+  return crypto.createHash('sha256').update(customer.email + '|' + customer.mobile).digest('hex').slice(0, 24);
+}
+
+async function findExistingCouponOrder() {
+  if (couponOrderCache) return couponOrderCache;
+  const data = await razorpayRequest('/orders?count=100');
+  const items = Array.isArray(data.items) ? data.items : [];
+  const found = items.find((order) => order && order.notes && String(order.notes.coupon || '').toUpperCase() === TEST_COUPON);
+  if (found) couponOrderCache = found;
+  return found || null;
+}
+
+async function couponStatus(req, res) {
+  if (!allowed(req)) return json(res, 429, { error: 'Too many requests. Please try again shortly.' });
+  try {
+    const body = await readJson(req);
+    const code = clean(body.coupon, 40).toUpperCase();
+    if (!code) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'Enter a coupon code.' });
+    if (code !== TEST_COUPON) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'Coupon code is not valid.' });
+    const existing = await findExistingCouponOrder();
+    if (existing) return json(res, 200, { valid: false, amount: AMOUNT, discount: 0, message: 'TALENT98 has already been claimed.' });
+    return json(res, 200, { valid: true, coupon: TEST_COUPON, amount: TEST_COUPON_AMOUNT, discount: TEST_COUPON_DISCOUNT, message: 'TALENT98 applied. ₹98 discount.' });
+  } catch (err) {
+    console.error('Coupon check failed:', err.message);
+    return json(res, 502, { error: 'Unable to validate coupon right now.' });
+  }
+}
+
 async function createOrder(req, res) {
   if (!allowed(req)) return json(res, 429, { error: 'Too many requests. Please try again shortly.' });
   try {
+    const body = await readJson(req);
+    const validation = validateCustomer(body);
+    if (validation.error) return json(res, 400, { error: validation.error });
+    const customer = validation.customer;
+    const code = clean(body.coupon, 40).toUpperCase();
     const { keyId } = getCredentials();
-    const receipt = 'tms_' + Date.now();
+    let amount = AMOUNT;
+    let discount = 0;
+    let appliedCoupon = '';
+
+    if (code) {
+      if (code !== TEST_COUPON) return json(res, 400, { error: 'Coupon code is not valid.' });
+      const existing = await findExistingCouponOrder();
+      if (existing) {
+        const existingKey = existing.notes && existing.notes.customer_key ? String(existing.notes.customer_key) : '';
+        if (existingKey === customerKey(customer) && existing.status === 'created' && existing.amount === TEST_COUPON_AMOUNT) {
+          return json(res, 200, {
+            key_id: keyId,
+            order_id: existing.id,
+            amount: existing.amount,
+            currency: existing.currency,
+            product: PRODUCT,
+            coupon: TEST_COUPON,
+            discount: TEST_COUPON_DISCOUNT,
+            customer
+          });
+        }
+        return json(res, 409, { error: 'TALENT98 has already been claimed by another user.' });
+      }
+      amount = TEST_COUPON_AMOUNT;
+      discount = TEST_COUPON_DISCOUNT;
+      appliedCoupon = TEST_COUPON;
+    }
+
+    const receipt = appliedCoupon ? 'tms_t98_' + Date.now() : 'tms_' + Date.now();
+    const notes = {
+      product: PRODUCT,
+      source: 'iamarecruiter.in/ai-workflow',
+      customer_name: customer.name,
+      customer_email: customer.email,
+      customer_mobile: customer.mobile,
+      billing_address: customer.billing_address,
+      linkedin_url: customer.linkedin_url || 'not-provided',
+      coupon: appliedCoupon || 'none',
+      customer_key: customerKey(customer)
+    };
     const order = await razorpayRequest('/orders', {
       method: 'POST',
-      body: {
-        amount: AMOUNT,
-        currency: CURRENCY,
-        receipt,
-        notes: { product: PRODUCT, source: 'iamarecruiter.in/ai-workflow' }
-      }
+      body: { amount, currency: CURRENCY, receipt, notes }
     });
+    if (appliedCoupon) couponOrderCache = order;
     return json(res, 200, {
       key_id: keyId,
       order_id: order.id,
       amount: order.amount,
       currency: order.currency,
-      product: PRODUCT
+      product: PRODUCT,
+      coupon: appliedCoupon,
+      discount,
+      customer
     });
   } catch (err) {
     console.error('Razorpay order creation failed:', err.message);
@@ -128,11 +232,21 @@ async function verifyPayment(req, res) {
       razorpayRequest('/payments/' + encodeURIComponent(paymentId))
     ]);
 
-    const orderMatches = order && order.id === orderId && order.amount === AMOUNT && order.currency === CURRENCY;
-    const paymentMatches = payment && payment.id === paymentId && payment.order_id === orderId && payment.amount === AMOUNT && payment.currency === CURRENCY && payment.status === 'captured';
+    const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
+    const expectedAmount = coupon === TEST_COUPON ? TEST_COUPON_AMOUNT : AMOUNT;
+    const orderMatches = order && order.id === orderId && order.amount === expectedAmount && order.currency === CURRENCY;
+    const paymentMatches = payment && payment.id === paymentId && payment.order_id === orderId && payment.amount === expectedAmount && payment.currency === CURRENCY && payment.status === 'captured';
     if (!orderMatches || !paymentMatches) return json(res, 400, { error: 'Payment could not be confirmed as captured.' });
 
-    return json(res, 200, { verified: true, payment_id: paymentId, order_id: orderId, product: PRODUCT, amount: AMOUNT, currency: CURRENCY });
+    return json(res, 200, {
+      verified: true,
+      payment_id: paymentId,
+      order_id: orderId,
+      product: PRODUCT,
+      amount: expectedAmount,
+      currency: CURRENCY,
+      coupon: coupon === TEST_COUPON ? TEST_COUPON : ''
+    });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
     return json(res, 502, { error: 'Unable to verify payment right now. Please contact support with your payment ID.' });
@@ -144,12 +258,12 @@ function serveCheckoutPage(res) {
     const filePath = path.join(process.cwd(), 'public', 'ai-workflow.html');
     let html = fs.readFileSync(filePath, 'utf8');
     html = html
-      .replace('The founding beta is currently handled manually, so the purchase conversation starts on WhatsApp. You will receive the payment and access steps there.', 'Payment is completed securely through Razorpay. After payment, the site verifies the transaction before confirming your purchase.')
-      .replace('Start the ₹99 purchase conversation', 'Start secure ₹99 checkout')
-      .replace('Tap the CTA and message us on WhatsApp.', 'Tap any ₹99 CTA to open Razorpay Secure Checkout.')
-      .replace('Receive the payment/access path', 'Complete payment securely')
-      .replace('The founding-beta payment and access details are shared manually.', 'Complete the ₹99 payment using the payment methods available in Razorpay Checkout.')
-      .replace('Payment and access are currently handled manually during the founding beta. Starting the WhatsApp conversation does not itself charge you.', '₹99 payment is processed securely through Razorpay. Your purchase is confirmed only after server-side payment verification.')
+      .replace('The founding beta is currently handled manually, so the purchase conversation starts on WhatsApp. You will receive the payment and access steps there.', 'Payment is completed securely through Razorpay. Add your details first, then continue to secure payment.')
+      .replace('Start the ₹99 purchase conversation', 'Complete your checkout details')
+      .replace('Tap the CTA and message us on WhatsApp.', 'Enter your details and any coupon code before opening Razorpay Secure Checkout.')
+      .replace('Receive the payment/access path', 'Continue to secure payment')
+      .replace('The founding-beta payment and access details are shared manually.', 'Your verified details and final payable amount are passed into the secure Razorpay payment step.')
+      .replace('Payment and access are currently handled manually during the founding beta. Starting the WhatsApp conversation does not itself charge you.', 'Payment is processed securely through Razorpay after your checkout details and final payable amount are confirmed.')
       .replace('</body>', '<script src="/js/talent-snapshot-checkout.js"></script>\n</body>');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
@@ -169,8 +283,11 @@ express.static = function patchedStatic(...args) {
     if (req.method === 'GET' && (requestPath === '/ai-workflow.html' || requestPath === '/ai-workflow')) {
       return serveCheckoutPage(res);
     }
+    if (req.method === 'POST' && requestPath === '/api/razorpay/coupon') {
+      return couponStatus(req, res);
+    }
     if (req.method === 'POST' && requestPath === '/api/razorpay/order') {
-      return readJson(req).then(() => createOrder(req, res)).catch((err) => json(res, 400, { error: err.message }));
+      return createOrder(req, res);
     }
     if (req.method === 'POST' && requestPath === '/api/razorpay/verify') {
       return verifyPayment(req, res);
