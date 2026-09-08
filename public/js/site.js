@@ -1,8 +1,8 @@
 (function () {
   // -----------------------------------------------------------------
   // Canonical site navigation
-  // Preserve the original site pages and add the commercial offers
-  // without removing Join, Event or Videos.
+  // Keep the primary header intentionally simple. Commercial offers
+  // live in the footer so the main navigation stays community-first.
   // -----------------------------------------------------------------
   var nav = document.querySelector('.site-nav');
   if (nav) {
@@ -22,22 +22,18 @@
       links.innerHTML = [
         '<a href="/index.html" data-page="index.html">Home</a>',
         '<a href="/join.html" data-page="join.html">Join</a>',
-        '<a href="/fractional-ta.html" data-page="fractional-ta.html">Fractional TA</a>',
-        '<a href="/ai-workflow.html" data-page="ai-workflow.html">₹99 AI Challenge</a>',
-        '<a href="/cohort.html" data-page="cohort.html">Cohort</a>',
-        '<a href="/premium-1-1.html" data-page="premium-1-1.html">Premium 1:1</a>',
         '<a href="/event.html" data-page="event.html">Event</a>',
         '<a href="/videos.html" data-page="videos.html">Videos</a>'
       ].join('');
     }
 
     // Sales landing pages previously hid the standard link rail.
-    // Keep the full navigation visible there as well.
+    // Keep the simplified navigation visible there as well.
     var navStyle = document.createElement('style');
     navStyle.textContent =
       '@media(min-width:761px){' +
-        '.site-nav .site-nav__links{gap:12px;font-size:10.6px;white-space:nowrap;}' +
-        '.site-nav .site-nav__inner{gap:12px;}' +
+        '.site-nav .site-nav__links{gap:24px;font-size:12px;white-space:nowrap;}' +
+        '.site-nav .site-nav__inner{gap:16px;}' +
         '.site-nav.sales-nav .site-nav__links{display:flex !important;}' +
       '}' +
       '@media(max-width:760px){' +
@@ -81,8 +77,16 @@
     }
   });
 
-  // Ensure core policy links are reachable from existing site footers.
+  // Ensure commercial offers live in every footer.
   var legalFooter = document.querySelector('.site-footer__legal');
+  if (legalFooter && !document.querySelector('.site-footer__offers')) {
+    var offerLinks = document.createElement('span');
+    offerLinks.className = 'site-footer__offers';
+    offerLinks.innerHTML = '<a href="/fractional-ta.html">Fractional TA</a> &nbsp;·&nbsp; <a href="/cohort.html">Cohort</a> &nbsp;·&nbsp; <a href="/premium-1-1.html">Premium 1:1</a> &nbsp;·&nbsp; <a href="/ai-workflow.html">₹99 Talent Intelligence</a>';
+    legalFooter.appendChild(offerLinks);
+  }
+
+  // Ensure core policy links are reachable from existing site footers.
   var alreadyHasPolicyLinks = document.querySelector('footer a[href="/privacy.html"]');
   if (legalFooter && !alreadyHasPolicyLinks) {
     var policyLinks = document.createElement('span');
@@ -173,13 +177,7 @@
   }
 
   // Premium 1:1 conversion framing.
-  // Keep the working form/backend intact; reduce first-step friction by
-  // framing the existing application as a Senior Interview Conversion Check.
   if (path === 'premium-1-1.html' || document.getElementById('premiumForm')) {
-    // The current live Premium backend already stores UTM Source, Medium and Campaign.
-    // Preserve exact content attribution immediately by folding utm_content into the
-    // campaign value before the page's form script reads the query parameters.
-    // Example: premium_sep04__content_final_round_conversion
     var premiumUrl = new URL(window.location.href);
     var premiumContent = premiumUrl.searchParams.get('utm_content');
     if (premiumContent) {
