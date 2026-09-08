@@ -63,7 +63,7 @@
     directory.innerHTML =
       '<div class="site-footer__col"><div class="site-footer__label">Explore</div><a href="/index.html">Home</a><a href="/join.html">Join the Community</a><a href="/event.html">Events</a><a href="/videos.html">Videos</a></div>' +
       '<div class="site-footer__col"><div class="site-footer__label">Services</div><a href="/fractional-ta.html">Fractional TA</a><a href="/premium-1-1.html">Premium 1:1</a></div>' +
-      '<div class="site-footer__col"><div class="site-footer__label">Learn & Grow</div><a href="/ai-workflow.html">₹99 Talent Intelligence</a><a href="/cohort.html">Recruiter Cohort</a><a href="/diagnostic.html">Strategic Recruiter Diagnostic</a></div>' +
+      '<div class="site-footer__col"><div class="site-footer__label">Learn & Grow</div><a href="/ai-workflow.html">Talent Intelligence Challenge</a><a href="/cohort.html">Recruiter Cohort</a><a href="/diagnostic.html">Strategic Recruiter Diagnostic</a></div>' +
       '<div class="site-footer__col"><div class="site-footer__label">Company</div><a href="/contact.html">Contact</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/cancellation.html">Cancellation &amp; Refunds</a></div>';
     legalFooter.parentNode.insertBefore(directory, legalFooter);
     legalFooter.innerHTML = '<span>© 2026 I AM A RECRUITER™</span>';
