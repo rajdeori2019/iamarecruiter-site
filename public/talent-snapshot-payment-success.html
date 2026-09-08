@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment Confirmed | Talent Market Snapshot Challenge</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/site.css">
+<style>
+.confirm{min-height:78vh;display:flex;align-items:center;padding:72px 0}.confirm-card{max-width:820px;border:2px solid var(--ink);padding:42px;background:var(--paper);box-shadow:8px 8px 0 var(--accent)}.confirm-card h1{font-size:clamp(2.5rem,7vw,5rem);line-height:.95}.confirm-card p{margin-top:18px;color:var(--text-muted);font-size:1.02rem}.confirm-meta{margin-top:28px;border-top:1px solid var(--border);padding-top:20px;font-family:var(--font-mono);font-size:11px;line-height:1.8}.confirm-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.status{display:inline-block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:7px 10px;background:var(--accent);color:var(--on-accent);margin-bottom:18px}.hidden{display:none}
+</style>
+</head>
+<body>
+<nav class="site-nav"><div class="site-nav__inner"><a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a></div></nav>
+<main class="confirm"><div class="container"><div class="confirm-card">
+  <div id="verifiedState" class="hidden">
+    <span class="status">Payment verified</span>
+    <h1>YOU'RE IN.</h1>
+    <p>Your ₹99 payment for the <strong>Talent Market Snapshot Challenge</strong> has been verified successfully.</p>
+    <p>Keep your payment ID for reference. The next build step is the post-payment challenge experience itself; this payment page is now ready for that handoff.</p>
+    <div class="confirm-meta">Payment ID: <strong id="paymentId"></strong><br>Order ID: <strong id="orderId"></strong></div>
+    <div class="confirm-actions"><a class="btn btn--accent" href="/ai-workflow.html">Back to Challenge Page</a><a class="btn btn--ghost" href="mailto:hello@iamarecruiter.in">Need Help?</a></div>
+  </div>
+  <div id="unverifiedState" class="hidden">
+    <span class="status">Payment confirmation</span>
+    <h1>WE COULDN'T VERIFY THIS SESSION.</h1>
+    <p>If you completed a Razorpay payment, please keep your payment ID and contact <strong>hello@iamarecruiter.in</strong>. Do not pay again until the payment status is checked.</p>
+    <div class="confirm-actions"><a class="btn btn--accent" href="mailto:hello@iamarecruiter.in">Contact Support</a><a class="btn btn--ghost" href="/ai-workflow.html">Return to Challenge</a></div>
+  </div>
+</div></div></main>
+<footer class="site-footer"><div class="container"><div class="site-footer__legal"><span>© 2026 I AM A RECRUITER™</span></div></div></footer>
+<script>
+(function(){
+  var raw = sessionStorage.getItem('tms_payment_verified');
+  var verified = null;
+  try { verified = raw ? JSON.parse(raw) : null; } catch (_) {}
+  if (verified && verified.payment_id && verified.order_id) {
+    document.getElementById('paymentId').textContent = verified.payment_id;
+    document.getElementById('orderId').textContent = verified.order_id;
+    document.getElementById('verifiedState').classList.remove('hidden');
+  } else {
+    document.getElementById('unverifiedState').classList.remove('hidden');
+  }
+})();
+</script>
+<script src="/js/site.js"></script>
+</body>
+</html>
