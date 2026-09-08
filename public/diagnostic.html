@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Strategic Recruiter Readiness Diagnostic — I AM A RECRUITER</title>
-<meta name="description" content="Take the free 5-minute Strategic Recruiter Readiness Diagnostic. Answer 16 real-world hiring scenarios and discover your strengths, readiness level and top strategic recruiting gaps.">
+<meta name="description" content="Take the free Strategic Recruiter Readiness Diagnostic. Answer 16 real-world hiring scenarios, review your capability pattern and identify priority development areas for the next 5–6 months.">
 <link rel="canonical" href="https://www.iamarecruiter.in/diagnostic.html">
 <meta property="og:title" content="Strategic Recruiter Readiness Diagnostic — I AM A RECRUITER">
-<meta property="og:description" content="Are you operating as a recruiter or a Strategic Talent Advisor? Take the free 5-minute diagnostic and get your personalized capability breakdown.">
+<meta property="og:description" content="Are you operating as a recruiter or a Strategic Talent Advisor? Take the free directional diagnostic and identify your relative strengths and priority development areas.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.iamarecruiter.in/diagnostic.html">
 <link rel="icon" type="image/png" href="/assets/favicon-32.png">
@@ -17,6 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/css/site.css">
 <link rel="stylesheet" href="/css/diagnostic.css">
+<style>.diag-disclaimer{margin-top:18px;padding:14px 16px;border-left:3px solid var(--accent);background:var(--surface);font-size:.86rem;color:var(--text-muted)}.lead-form textarea{width:100%;min-height:96px;padding:13px 14px;border:2px solid var(--border);background:var(--paper);color:var(--text);font:inherit;resize:vertical}.lead-form textarea:focus{border-color:var(--ink);outline:none}</style>
 </head>
 <body>
 <nav class="site-nav diag-nav" id="diagNav">
@@ -33,27 +34,28 @@
 <section class="diag-hero">
   <div class="bg-grid"></div>
   <div class="container diag-hero__inner">
-    <span class="eyebrow">Free · 5-Minute Diagnostic</span>
+    <span class="eyebrow">Free · 5–7 Minute Diagnostic</span>
     <h1>ARE YOU OPERATING AS A RECRUITER — OR A <span class="accent">STRATEGIC TALENT ADVISOR?</span></h1>
-    <p class="diag-hero__lede">Answer 16 real-world hiring scenarios and discover your Strategic Recruiter Readiness Score, strongest capability and top development gaps.</p>
+    <p class="diag-hero__lede">Answer 16 real-world hiring scenarios, review your Strategic Recruiter Readiness Score and capability pattern, then identify what you want to upskill in over the next 5–6 months.</p>
     <div class="diag-hero__actions">
       <button class="btn btn--accent" type="button" id="heroStart">Start My Free Diagnostic →</button>
-      <span class="diag-fine">5 minutes · Instant personalized result · No preparation required</span>
+      <span class="diag-fine">16 scenarios · Instant personalized result · Short development survey</span>
     </div>
     <div class="preview-card" aria-label="Preview of your diagnostic result">
       <div class="preview-card__top"><span>Your Strategic Recruiter Profile</span><span>Personalized after completion</span></div>
       <div class="preview-card__body">
         <div class="preview-score"><span>Readiness score</span><strong>72</strong><div class="diag-fine">/ 100</div></div>
-        <div class="preview-gaps"><span>Your strongest capability + top 3 gaps</span><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div></div>
+        <div class="preview-gaps"><span>Your relative strengths + priority development areas</span><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div><div class="lock-row"></div></div>
       </div>
     </div>
+    <div class="diag-disclaimer">This is a directional self-assessment designed to support reflection and conversation. It is not a validated professional certification or definitive benchmark of TA capability.</div>
   </div>
 </section>
 <section class="section section--tight">
   <div class="container"><div class="grid-3">
     <div class="cell"><span class="eyebrow">16 scenarios</span><h3>REAL HIRING DECISIONS</h3><p class="text-muted">No theory quiz. Choose what you would actually do in realistic recruiting situations.</p></div>
     <div class="cell"><span class="eyebrow">8 capabilities</span><h3>STRATEGIC TA BREAKDOWN</h3><p class="text-muted">Talent intelligence, diagnosis, advisory, sourcing, assessment, analytics and responsible AI.</p></div>
-    <div class="cell"><span class="eyebrow">Instant result</span><h3>YOUR NEXT DEVELOPMENT PRIORITY</h3><p class="text-muted">See where you are strong and where execution is still limiting your strategic value.</p></div>
+    <div class="cell"><span class="eyebrow">Development view</span><h3>WHAT SHOULD YOU BUILD NEXT?</h3><p class="text-muted">Combine the capability pattern with your own career goals instead of treating one score as absolute truth.</p></div>
   </div></div>
 </section>
 </main>
@@ -69,11 +71,11 @@
 <div class="result-wrap" id="resultWrap">
 <section class="result-hero"><div class="container"><div class="result-grid">
   <div class="score-box"><div class="score-box__eyebrow">Strategic Recruiter Readiness Score</div><div class="score-number"><span id="resultScore">0</span><small>/100</small></div><div class="score-level" id="resultLevel"></div><p class="score-copy" id="resultSummary"></p></div>
-  <div class="result-lead"><span class="eyebrow">Your Personalized Result</span><h1 id="resultHeadline"></h1><p id="resultCareer"></p><div class="mini-pair"><div class="mini-card"><span>Your Strategic Strength</span><strong id="strengthName"></strong><b id="strengthScore"></b></div><div class="mini-card"><span>#1 Development Priority</span><strong id="priorityName"></strong><b id="priorityScore"></b></div></div></div>
+  <div class="result-lead"><span class="eyebrow">Your Personalized Result</span><h1 id="resultHeadline"></h1><p id="resultCareer"></p><div class="mini-pair"><div class="mini-card"><span>Your Relative Strategic Strength</span><strong id="strengthName"></strong><b id="strengthScore"></b></div><div class="mini-card"><span>#1 Priority Development Area</span><strong id="priorityName"></strong><b id="priorityScore"></b></div></div></div>
 </div></div></section>
-<section class="result-section"><div class="container"><div class="section-head"><span class="eyebrow">All 8 capabilities</span><h2>Your Strategic TA Capability Map</h2><p class="lede">Your total score is useful. The capability pattern below is more useful because it shows where your recruiting behaviour becomes strategic — and where it still breaks.</p></div><div class="cap-list" id="capabilityList"></div></div></section>
-<section class="result-section section--surface"><div class="container"><div class="section-head"><span class="eyebrow">Development priorities</span><h2>Your Top 3 Capability Gaps</h2></div><div class="gap-list" id="gapList"></div></div></section>
-<section class="result-section"><div class="container"><div class="cta-panel"><span class="eyebrow">Next step</span><h2 id="sessionHeadline">Your diagnostic showed you where the gaps are. Now learn how to close them.</h2><p id="sessionCopy">Join the free Recruiter → Strategic Talent Advisor session to see how talent intelligence, hiring diagnosis, stakeholder advisory and AI change the way a recruiter operates.</p><div class="cta-row"><a class="btn btn--accent" id="sessionCta" href="#" aria-disabled="true">Free Session — Coming Next</a><a class="btn btn--ghost" href="/cohort.html?utm_source=diagnostic&utm_medium=result&utm_campaign=cohort_launch_sep26&utm_content=cohort_cta">Explore the Founding Cohort</a></div><div class="share-row"><button class="share-btn" type="button" id="shareWhatsApp">Share on WhatsApp</button><button class="share-btn" type="button" id="shareLinkedIn">Share on LinkedIn</button><button class="share-btn" type="button" id="copyLink">Copy Diagnostic Link</button></div></div></div></section>
+<section class="result-section"><div class="container"><div class="section-head"><span class="eyebrow">All 8 capabilities</span><h2>Your Strategic TA Capability Map</h2><p class="lede">The score is directional. The pattern below is more useful when combined with your actual role, evidence of performance and what you want to strengthen next.</p></div><div class="cap-list" id="capabilityList"></div><div class="diag-disclaimer">Important: the assessment is based on 16 self-reported scenario choices. It does not independently verify your work experience or replace a structured capability evaluation.</div></div></section>
+<section class="result-section section--surface"><div class="container"><div class="section-head"><span class="eyebrow">Development priorities</span><h2>Your Priority Development Areas</h2><p class="lede">These are the lowest-scoring areas after excluding your top-scoring relative strengths. If your scores are tightly clustered, do not treat a small difference as proof of a real weakness.</p></div><div class="gap-list" id="gapList"></div></div></section>
+<section class="result-section"><div class="container"><div class="cta-panel"><span class="eyebrow">Next step</span><h2 id="sessionHeadline">Use this result to choose what is worth building next.</h2><p id="sessionCopy">Your own development goal matters more than forcing an artificial gap.</p><div class="cta-row"><a class="btn btn--accent" id="sessionCta" href="#" aria-disabled="true">Free Session — Coming Next</a><a class="btn btn--ghost" href="/cohort.html?utm_source=diagnostic&utm_medium=result&utm_campaign=cohort_launch_oct26&utm_content=cohort_cta">Explore the Founding Cohort</a></div><div class="share-row"><button class="share-btn" type="button" id="shareWhatsApp">Share on WhatsApp</button><button class="share-btn" type="button" id="shareLinkedIn">Share on LinkedIn</button><button class="share-btn" type="button" id="copyLink">Copy Diagnostic Link</button></div></div></div></section>
 </div>
 
 <footer class="site-footer diag-footer"><div class="container"><div class="site-footer__legal"><span>© I AM A RECRUITER</span><span><a href="/privacy.html">Privacy</a> · <a href="/terms.html">Terms</a> · <a href="/cohort.html">Recruiter Cohort</a></span></div></div></footer>
@@ -83,43 +85,28 @@
   function enforceLinkedInProfile(){
     var input=document.getElementById('linkedin');
     if(!input || input.dataset.profileValidationBound==='true') return;
-
     input.dataset.profileValidationBound='true';
     input.required=true;
     input.setAttribute('aria-required','true');
     input.placeholder='https://www.linkedin.com/in/your-profile';
-
     var label=document.querySelector('label[for="linkedin"]');
     if(label) label.textContent='LinkedIn Profile *';
-
     function validateLinkedIn(){
       var value=input.value.trim();
-      if(!value){
-        input.setCustomValidity('Please enter your LinkedIn profile URL.');
-        return;
-      }
+      if(!value){input.setCustomValidity('Please enter your LinkedIn profile URL.');return;}
       try{
         var url=new URL(value);
         var host=url.hostname.toLowerCase().replace(/^www\./,'');
         var isLinkedIn=host==='linkedin.com'||host.endsWith('.linkedin.com');
         var isProfile=url.pathname.toLowerCase().indexOf('/in/')===0;
         input.setCustomValidity(isLinkedIn&&isProfile?'':'Please enter a valid LinkedIn personal profile URL, for example https://www.linkedin.com/in/your-name');
-      }catch(err){
-        input.setCustomValidity('Please enter a valid LinkedIn profile URL.');
-      }
+      }catch(err){input.setCustomValidity('Please enter a valid LinkedIn profile URL.');}
     }
-
     input.addEventListener('input',validateLinkedIn);
     input.addEventListener('blur',validateLinkedIn);
     validateLinkedIn();
   }
-
-  document.addEventListener('click',function(event){
-    if(event.target && event.target.closest && event.target.closest('#unlockBtn')){
-      setTimeout(enforceLinkedInProfile,0);
-    }
-  });
-
+  document.addEventListener('click',function(event){if(event.target&&event.target.closest&&event.target.closest('#unlockBtn'))setTimeout(enforceLinkedInProfile,0);});
   enforceLinkedInProfile();
 })();
 </script>
