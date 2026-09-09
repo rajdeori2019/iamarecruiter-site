@@ -312,6 +312,19 @@ function safeEqualHex(a, b) {
   } catch (_) { return false; }
 }
 
+async function capturedPurchase(orderId, paymentId) {
+  if (!orderId || !paymentId) throw new Error('Missing access details');
+  const [order, payment] = await Promise.all([
+    razorpayRequest('/orders/' + encodeURIComponent(orderId)),
+    razorpayRequest('/payments/' + encodeURIComponent(paymentId))
+  ]);
+  const amount = Number(order && order.amount);
+  const orderMatches = order && order.id === orderId && amount > 0 && order.currency === CURRENCY;
+  const paymentMatches = payment && payment.id === paymentId && payment.order_id === orderId && payment.amount === amount && payment.currency === CURRENCY && payment.status === 'captured';
+  if (!orderMatches || !paymentMatches) throw new Error('Payment is not captured');
+  return { order, payment, amount };
+}
+
 async function verifyPayment(req, res) {
   if (!allowed(req)) return json(res, 429, { error: 'Too many requests. Please try again shortly.' });
   try {
@@ -325,22 +338,15 @@ async function verifyPayment(req, res) {
     const expected = crypto.createHmac('sha256', keySecret).update(orderId + '|' + paymentId).digest('hex');
     if (!safeEqualHex(expected, signature)) return json(res, 400, { error: 'Payment signature verification failed.' });
 
-    const [order, payment] = await Promise.all([
-      razorpayRequest('/orders/' + encodeURIComponent(orderId)),
-      razorpayRequest('/payments/' + encodeURIComponent(paymentId))
-    ]);
-
+    const purchase = await capturedPurchase(orderId, paymentId);
+    const order = purchase.order;
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
-    const expectedAmount = Number(order && order.amount);
-    const orderMatches = order && order.id === orderId && expectedAmount > 0 && order.currency === CURRENCY;
-    const paymentMatches = payment && payment.id === paymentId && payment.order_id === orderId && payment.amount === expectedAmount && payment.currency === CURRENCY && payment.status === 'captured';
-    if (!orderMatches || !paymentMatches) return json(res, 400, { error: 'Payment could not be confirmed as captured.' });
 
     if (trackerConfigured()) {
       await trackerRequest('payment_verified', {
         razorpay_order_id: orderId,
         razorpay_payment_id: paymentId,
-        amount_paise: expectedAmount,
+        amount_paise: purchase.amount,
         coupon: coupon === 'none' ? '' : coupon,
         payment_status: 'CAPTURED'
       }).catch((trackerErr) => console.error('Tracker payment write failed:', trackerErr.message));
@@ -351,13 +357,73 @@ async function verifyPayment(req, res) {
       payment_id: paymentId,
       order_id: orderId,
       product: PRODUCT,
-      amount: expectedAmount,
+      amount: purchase.amount,
       currency: CURRENCY,
       coupon: coupon === 'none' ? '' : coupon
     });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
     return json(res, 502, { error: 'Unable to verify payment right now. Please contact support with your payment ID.' });
+  }
+}
+
+function parseAccess(req) {
+  const u = new URL(req.url, 'https://www.iamarecruiter.in');
+  return {
+    orderId: clean(u.searchParams.get('order_id'), 120),
+    paymentId: clean(u.searchParams.get('payment_id'), 120)
+  };
+}
+
+async function serveProtectedAsset(req, res, fileName) {
+  try {
+    const access = parseAccess(req);
+    await capturedPurchase(access.orderId, access.paymentId);
+    const filePath = path.join(process.cwd(), 'protected', fileName);
+    const html = fs.readFileSync(filePath, 'utf8');
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.end(html);
+  } catch (err) {
+    res.statusCode = 403;
+    res.setHeader('Content-Type', 'text/plain; charset=utf-8');
+    res.end('Verified payment required to access this resource.');
+  }
+}
+
+function escHtml(value) {
+  return String(value || '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+
+async function serveReceipt(req, res) {
+  try {
+    const access = parseAccess(req);
+    const purchase = await capturedPurchase(access.orderId, access.paymentId);
+    const order = purchase.order;
+    const payment = purchase.payment;
+    const notes = order.notes || {};
+    const paid = (purchase.amount / 100).toFixed((purchase.amount % 100) ? 2 : 0);
+    const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Payment Receipt</title><link rel="stylesheet" href="/css/site.css"><style>body{padding:48px}.receipt{max-width:760px;margin:auto;border:2px solid #111;padding:34px;box-shadow:8px 8px 0 #E8A400}.row{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #ddd;padding:12px 0}.row:first-of-type{margin-top:24px}.mono{font-family:monospace;font-size:12px}.actions{margin-top:28px}@media print{.actions{display:none}.receipt{box-shadow:none}}</style></head><body><div class="receipt"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER" style="max-width:190px"><h1>PAYMENT RECEIPT</h1><p>This confirms a captured payment for the Talent Market Snapshot Challenge.</p><div class="row"><strong>Buyer</strong><span>${escHtml(notes.customer_name || '')}</span></div><div class="row"><strong>Email</strong><span>${escHtml(notes.customer_email || '')}</span></div><div class="row"><strong>Amount paid</strong><span>₹${paid}</span></div><div class="row"><strong>Payment status</strong><span>CAPTURED</span></div><div class="row"><strong>Payment ID</strong><span class="mono">${escHtml(payment.id)}</span></div><div class="row"><strong>Order ID</strong><span class="mono">${escHtml(order.id)}</span></div><div class="row"><strong>Coupon</strong><span>${escHtml(notes.coupon === 'none' ? '' : notes.coupon)}</span></div><p style="margin-top:24px;font-size:12px">This is a payment receipt, not a GST/tax invoice. A tax invoice requires the applicable legal and tax details to be configured.</p><div class="actions"><button onclick="window.print()">Print / Save as PDF</button></div></div></body></html>`;
+    res.statusCode = 200;
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
+    res.setHeader('Cache-Control', 'no-store');
+    res.end(html);
+  } catch (err) {
+    res.statusCode = 403;
+    res.end('Verified payment required to view this receipt.');
+  }
+}
+
+async function accessConfig(req, res) {
+  try {
+    const access = parseAccess(req);
+    await capturedPurchase(access.orderId, access.paymentId);
+    return json(res, 200, {
+      whatsapp_group_url: /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || '')) ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim() : ''
+    });
+  } catch (_) {
+    return json(res, 403, { error: 'Verified payment required.' });
   }
 }
 
@@ -391,15 +457,14 @@ express.static = function patchedStatic(...args) {
     if (req.method === 'GET' && (requestPath === '/ai-workflow.html' || requestPath === '/ai-workflow')) {
       return serveCheckoutPage(res);
     }
-    if (req.method === 'POST' && requestPath === '/api/razorpay/coupon') {
-      return couponStatus(req, res);
-    }
-    if (req.method === 'POST' && requestPath === '/api/razorpay/order') {
-      return createOrder(req, res);
-    }
-    if (req.method === 'POST' && requestPath === '/api/razorpay/verify') {
-      return verifyPayment(req, res);
-    }
+    if (req.method === 'GET' && requestPath === '/tms/challenge') return serveProtectedAsset(req, res, 'tms-challenge.html');
+    if (req.method === 'GET' && requestPath === '/tms/ebook') return serveProtectedAsset(req, res, 'tms-ebook.html');
+    if (req.method === 'GET' && requestPath === '/tms/workbook') return serveProtectedAsset(req, res, 'tms-workbook.html');
+    if (req.method === 'GET' && requestPath === '/tms/receipt') return serveReceipt(req, res);
+    if (req.method === 'GET' && requestPath === '/api/tms/access-config') return accessConfig(req, res);
+    if (req.method === 'POST' && requestPath === '/api/razorpay/coupon') return couponStatus(req, res);
+    if (req.method === 'POST' && requestPath === '/api/razorpay/order') return createOrder(req, res);
+    if (req.method === 'POST' && requestPath === '/api/razorpay/verify') return verifyPayment(req, res);
     return staticMiddleware(req, res, next);
   };
 };
