@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Talent Market Snapshot Challenge V2 | I AM A RECRUITER</title>
+<link rel="stylesheet" href="/css/site.css">
+<style>
+:root{--ink:#0E0E10;--paper:#fff;--surface:#F4F3EE;--border:#DAD7CC;--accent:#E8A400;--muted:#666}
+*{box-sizing:border-box}body{margin:0;background:var(--surface);color:var(--ink);font-family:Arial,sans-serif}.shell{min-height:100vh;display:grid;grid-template-columns:280px 1fr}.side{background:var(--ink);color:#fff;padding:24px;position:sticky;top:0;height:100vh}.logo{width:170px;max-width:100%;margin-bottom:28px}.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#d7d7d7}.progress{margin:22px 0}.bar{height:8px;background:#343438;border-radius:999px;overflow:hidden}.bar>span{display:block;height:100%;width:10%;background:var(--accent);transition:width .25s}.step-list{margin:24px 0 0;padding:0;list-style:none}.step-list li{padding:12px 0;border-bottom:1px solid #2b2b2f;color:#aaa;font-size:14px}.step-list li.active{color:#fff;font-weight:700}.main{padding:42px;max-width:1180px;width:100%;margin:0 auto}.topline{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:22px}.badge{display:inline-block;background:#fff3c8;border:1px solid #e7c763;padding:7px 10px;border-radius:999px;font-size:12px;font-weight:700}.card{background:var(--paper);border:1px solid var(--border);padding:28px;border-radius:18px;box-shadow:0 8px 28px rgba(0,0,0,.04)}h1{font-size:clamp(34px,5vw,64px);line-height:.98;margin:10px 0 16px}h2{font-size:28px;margin:0 0 12px}.lead{font-size:18px;line-height:1.6;max-width:760px;color:#333}.artifact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}.artifact{border:1px solid var(--border);padding:18px;border-radius:14px;background:#faf9f5}.artifact strong{display:block;margin-bottom:6px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}.btn{appearance:none;border:0;background:var(--accent);color:#111;padding:14px 20px;font-weight:800;border-radius:10px;cursor:pointer;text-decoration:none}.btn.secondary{background:#fff;border:1px solid var(--border)}.screen{display:none}.screen.active{display:block}.field{margin:16px 0}.field label{display:block;font-weight:700;margin-bottom:7px}.field input,.field textarea,.field select{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font:inherit;background:#fff}.field textarea{min-height:140px;resize:vertical}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}.notice{margin-top:20px;padding:14px;border-left:4px solid var(--accent);background:#fff8dc}.placeholder{padding:36px;border:1px dashed #b8b4a8;border-radius:14px;background:#faf9f5;color:#555}.status{font-size:13px;color:var(--muted)}@media(max-width:850px){.shell{grid-template-columns:1fr}.side{position:relative;height:auto}.step-list{display:none}.main{padding:24px}.artifact-grid,.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="shell">
+<aside class="side">
+<img class="logo" src="/assets/logo_trimmed.png" alt="I AM A RECRUITER">
+<div class="eyebrow">Talent Market Snapshot Challenge V2</div>
+<div class="progress"><div class="bar"><span id="progressBar"></span></div><p id="progressText">Step 1 of 10</p></div>
+<ul class="step-list" id="stepList">
+<li class="active">1. Start</li><li>2. Live Role</li><li>3. Requirement Diagnostic</li><li>4. Talent Supply</li><li>5. Target Companies</li><li>6. Location</li><li>7. Compensation</li><li>8. Feasibility</li><li>9. HM Advisory</li><li>10. Final Outputs</li>
+</ul>
+</aside>
+<main class="main">
+<div class="topline"><span class="badge">V2 WORKING BUILD</span><span class="status" id="saveStatus">Progress saves on this device</span></div>
+
+<section class="screen active" data-screen="1">
+<div class="card">
+<div class="eyebrow">Challenge start</div>
+<h1>BRING ONE REAL ROLE.</h1>
+<p class="lead">Use one live hiring requirement to build three work-ready recruiter artifacts. The workflow keeps AI analysis separate from evidence, recruiter verification, and final decisions.</p>
+<div class="artifact-grid">
+<div class="artifact"><strong>1. Hiring Requirement Diagnostic</strong><span>Clarify what is confirmed, assumed, missing, and restrictive.</span></div>
+<div class="artifact"><strong>2. Talent Market Snapshot</strong><span>Build a structured view of talent supply, source companies, location, compensation, and feasibility.</span></div>
+<div class="artifact"><strong>3. HM Advisory Recommendation</strong><span>Turn evidence into business-facing recommendations and decisions.</span></div>
+</div>
+<div class="notice"><strong>Privacy:</strong> Do not paste confidential candidate data, personal data, or sensitive internal information unless your organisation permits it.</div>
+<div class="actions"><button class="btn" data-next>START MODULE 1</button></div>
+</div>
+</section>
+
+<section class="screen" data-screen="2">
+<div class="card">
+<div class="eyebrow">Module 1 · Input</div>
+<h2>Bring your live role</h2>
+<p class="lead">Add only what you genuinely know. Leave missing information as unknown rather than guessing.</p>
+<div class="grid2"><div class="field"><label>Role title *</label><input data-state="roleTitle" placeholder="Senior Backend Engineer"></div><div class="field"><label>Location *</label><input data-state="location" placeholder="Bangalore"></div></div>
+<div class="grid2"><div class="field"><label>Experience range *</label><input data-state="experience" placeholder="8–12 years"></div><div class="field"><label>Why is the role open?</label><select data-state="roleReason"><option value="Unknown">Unknown</option><option>New role</option><option>Replacement</option><option>Team expansion</option><option>Backfill</option></select></div></div>
+<div class="field"><label>Job description / hiring requirement *</label><textarea data-state="jobDescription" placeholder="Paste the live JD or hiring requirement"></textarea></div>
+<div class="grid2"><div class="field"><label>Must-have skills</label><textarea data-state="mustHaves" placeholder="One per line or comma-separated"></textarea></div><div class="field"><label>Nice-to-have skills</label><textarea data-state="niceToHaves"></textarea></div></div>
+<div class="grid2"><div class="field"><label>Compensation / budget</label><input data-state="budget" placeholder="Unknown is acceptable"></div><div class="field"><label>Notice-period expectation</label><input data-state="noticePeriod" placeholder="Unknown is acceptable"></div></div>
+<div class="field"><label>Non-negotiables / constraints</label><textarea data-state="constraints" placeholder="Bangalore only, fintech preferred, etc."></textarea></div>
+<div class="field"><label>What are you personally unsure about?</label><textarea data-state="unclear" placeholder="Example: I am not sure whether fintech is mandatory or preferred."></textarea></div>
+<div class="notice"><strong>Rule:</strong> Do not make up missing information just to complete the form.</div>
+<div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" id="saveRole">SAVE ROLE & CONTINUE</button></div>
+</div>
+</section>
+
+<section class="screen" data-screen="3"><div class="card"><div class="eyebrow">Module 1 · Diagnostic</div><h2>Requirement Diagnostic</h2><div class="placeholder">Next build: AI diagnostic output + Keep / Edit / Needs HM confirmation / Remove verification actions + “Lock My Diagnostic”.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>CONTINUE PREVIEW</button></div></div></section>
+<section class="screen" data-screen="4"><div class="card"><div class="eyebrow">Module 2</div><h2>Search Architecture & Talent Supply</h2><div class="placeholder">Next build: verified search architecture, evidence capture, and talent-supply interpretation.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="5"><div class="card"><h2>Target Company Mapping</h2><div class="placeholder">Tier 1 direct fit · Tier 2 adjacent fit · Tier 3 alternative pool.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="6"><div class="card"><h2>Location & Geography View</h2><div class="placeholder">Evidence-based location comparison; no unsupported talent-density claims.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="7"><div class="card"><h2>Compensation Evidence</h2><div class="placeholder">Budget vs verified compensation evidence, with source hierarchy and limitations.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="8"><div class="card"><h2>Hiring Feasibility Diagnosis</h2><div class="placeholder">Green / Amber / Red / Unknown by dimension; no arbitrary mathematical score.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="9"><div class="card"><h2>Hiring Manager Advisory Recommendation</h2><div class="placeholder">Evidence → implication → recommendation → HM decision, plus copy-paste advisory note.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" data-next>NEXT</button></div></div></section>
+<section class="screen" data-screen="10"><div class="card"><div class="eyebrow">Challenge complete</div><h1>YOUR TALENT MARKET SNAPSHOT IS READY.</h1><div class="artifact-grid"><div class="artifact"><strong>Hiring Requirement Diagnostic</strong></div><div class="artifact"><strong>Talent Market Snapshot</strong></div><div class="artifact"><strong>HM Advisory Recommendation</strong></div></div><div class="notice">This V2 shell currently stores working progress on this device only. Server-side persistent storage/export will be added after the core flow is implemented.</div><div class="actions"><button class="btn secondary" data-prev>BACK</button><button class="btn secondary" id="resetProgress">RESET PREVIEW</button></div></div></section>
+</main>
+</div>
+<script>
+(function(){
+const params=new URLSearchParams(location.search);const paymentId=params.get('payment_id')||'preview';const key='tms-v2:'+paymentId;let state={screen:1,role:{}};
+try{const saved=JSON.parse(localStorage.getItem(key)||'null');if(saved&&typeof saved==='object')state=Object.assign(state,saved)}catch(e){}
+const screens=[...document.querySelectorAll('.screen')],steps=[...document.querySelectorAll('#stepList li')];
+function save(){localStorage.setItem(key,JSON.stringify(state));const s=document.getElementById('saveStatus');s.textContent='Saved';setTimeout(()=>s.textContent='Progress saves on this device',900)}
+function render(){const n=Math.max(1,Math.min(10,Number(state.screen)||1));state.screen=n;screens.forEach(x=>x.classList.toggle('active',Number(x.dataset.screen)===n));steps.forEach((x,i)=>x.classList.toggle('active',i===n-1));document.getElementById('progressText').textContent='Step '+n+' of 10';document.getElementById('progressBar').style.width=(n*10)+'%';document.querySelectorAll('[data-state]').forEach(el=>{const k=el.dataset.state;if(document.activeElement!==el)el.value=state.role[k]||''});window.scrollTo({top:0,behavior:'smooth'});save()}
+function go(delta){state.screen=Math.max(1,Math.min(10,(Number(state.screen)||1)+delta));render()}
+document.addEventListener('click',e=>{if(e.target.matches('[data-next]'))go(1);if(e.target.matches('[data-prev]'))go(-1)});
+document.querySelectorAll('[data-state]').forEach(el=>el.addEventListener('input',()=>{state.role[el.dataset.state]=el.value;save()}));
+document.getElementById('saveRole').addEventListener('click',()=>{const req=['roleTitle','location','experience','jobDescription'];const missing=req.filter(k=>!String(state.role[k]||'').trim());if(missing.length){alert('Please complete Role title, Location, Experience range and Job Description before continuing.');return}go(1)});
+document.getElementById('resetProgress').addEventListener('click',()=>{if(confirm('Reset this V2 preview on this device?')){localStorage.removeItem(key);state={screen:1,role:{}};render()}});
+render();
+})();
+</script>
+</body>
+</html>
