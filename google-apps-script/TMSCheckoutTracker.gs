@@ -2,6 +2,9 @@ const SPREADSHEET_ID = '1P6bj6JUBqyFfUMh0AFrlbN1VYs580_Pp0QkaoNn3k74';
 const BUYERS_SHEET = 'TMS Buyers';
 const COUPONS_SHEET = 'TMS Coupons';
 const ADMINS_SHEET = 'TMS Admins';
+const DELIVERY_SENDER = 'hello@iamarecruiter.in';
+const DELIVERY_BRAND = 'I AM A RECRUITER';
+const DELIVERY_BASE_URL = 'https://www.iamarecruiter.in';
 
 function doPost(e) {
   try {
@@ -16,6 +19,7 @@ function doPost(e) {
     if (action === 'release_reservation') return out_(releaseReservation_(body));
     if (action === 'order_created') return out_(orderCreated_(body));
     if (action === 'payment_verified') return out_(paymentVerified_(body));
+    if (action === 'send_delivery_email') return out_(sendDeliveryEmail_(body));
     return out_({ ok: false, error: 'Unknown action' });
   } catch (err) {
     return out_({ ok: false, error: err.message || String(err) });
@@ -37,6 +41,19 @@ function normMobile_(v) { return String(v || '').replace(/[^0-9+]/g, ''); }
 function now_() { return new Date(); }
 function rupees_(paise) { return Number(paise || 0) / 100; }
 function uuid_() { return Utilities.getUuid(); }
+function html_(v) {
+  return String(v == null ? '' : v).replace(/[&<>"']/g, function(ch) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+  });
+}
+function validHttps_(v) {
+  const s = String(v || '').trim();
+  return /^https:\/\//i.test(s) ? s : '';
+}
+function money_(paise) {
+  const value = Number(paise || 0) / 100;
+  return '₹' + value.toFixed(Number.isInteger(value) ? 0 : 2);
+}
 
 function adminStatus_(email, mobile) {
   const sh = sheet_(ADMINS_SHEET);
@@ -226,4 +243,93 @@ function paymentVerified_(body) {
     return { ok: true, buyer_row: i + 1 };
   }
   return { ok: false, error: 'Buyer order was not found in tracker.' };
+}
+
+function buyerByOrder_(orderId) {
+  const sh = sheet_(BUYERS_SHEET);
+  const values = sh.getDataRange().getValues();
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][13] || '') === String(orderId || '')) return { sheet: sh, row: i + 1, values: values[i] };
+  }
+  return null;
+}
+
+function senderOptions_() {
+  const effective = normEmail_(Session.getEffectiveUser().getEmail());
+  const aliases = GmailApp.getAliases().map(normEmail_);
+  if (effective === DELIVERY_SENDER) {
+    return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER };
+  }
+  if (aliases.indexOf(DELIVERY_SENDER) >= 0) {
+    return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER, from: DELIVERY_SENDER };
+  }
+  throw new Error('Delivery email blocked: Apps Script must execute as hello@iamarecruiter.in or have hello@iamarecruiter.in configured as a Gmail send-as alias.');
+}
+
+function sendDeliveryEmail_(body) {
+  const orderId = String(body.razorpay_order_id || '').trim();
+  const paymentId = String(body.razorpay_payment_id || '').trim();
+  if (!orderId || !paymentId) return { ok: false, error: 'Missing order or payment ID.' };
+
+  const buyer = buyerByOrder_(orderId);
+  if (!buyer) return { ok: false, error: 'Buyer order was not found in tracker.' };
+
+  const row = buyer.values;
+  const trackedPaymentId = String(row[14] || '').trim();
+  const paymentStatus = String(row[15] || '').trim().toUpperCase();
+  if (trackedPaymentId !== paymentId || paymentStatus !== 'CAPTURED') {
+    return { ok: false, error: 'Tracker does not show a matching captured payment.' };
+  }
+
+  const name = String(row[1] || '').trim();
+  const email = normEmail_(row[2]);
+  if (!email) return { ok: false, error: 'Buyer email is missing.' };
+
+  const amountPaise = Number(body.amount_paise || Math.round(Number(row[11] || 0) * 100));
+  const q = '?order_id=' + encodeURIComponent(orderId) + '&payment_id=' + encodeURIComponent(paymentId);
+  const challengeUrl = DELIVERY_BASE_URL + '/tms/challenge' + q;
+  const ebookUrl = DELIVERY_BASE_URL + '/tms/ebook' + q;
+  const workbookUrl = DELIVERY_BASE_URL + '/tms/workbook' + q;
+  const receiptUrl = DELIVERY_BASE_URL + '/tms/receipt' + q;
+  const whatsappUrl = validHttps_(body.whatsapp_group_url || PropertiesService.getScriptProperties().getProperty('TMS_WHATSAPP_GROUP_URL'));
+
+  const greeting = name ? 'Hi ' + html_(name) + ',' : 'Hi,';
+  const waBlock = whatsappUrl
+    ? '<p style="margin:24px 0 8px"><strong>Challenge Support</strong></p><p>Join the private WhatsApp support group for questions and implementation support:</p><p><a href="' + html_(whatsappUrl) + '" style="display:inline-block;background:#0E0E10;color:#fff;text-decoration:none;padding:12px 18px;border-radius:4px">Join Challenge Support Group</a></p>'
+    : '';
+
+  const htmlBody = '<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#0E0E10;line-height:1.55">' +
+    '<div style="border-top:8px solid #E8A400;padding-top:24px">' +
+    '<p>' + greeting + '</p>' +
+    '<h2 style="margin:8px 0 12px">Your Talent Market Snapshot Challenge access is ready.</h2>' +
+    '<p>We have verified your payment of <strong>' + html_(money_(amountPaise)) + '</strong>. Use the links below to access everything included with your purchase.</p>' +
+    '<p style="margin:24px 0 8px"><strong>Your access</strong></p>' +
+    '<p><a href="' + html_(challengeUrl) + '">Start the Talent Market Snapshot Challenge</a><br>' +
+    '<a href="' + html_(ebookUrl) + '">Read: Know the Market Before You Advise the Business</a><br>' +
+    '<a href="' + html_(workbookUrl) + '">Open the Talent Market Snapshot Workbook</a><br>' +
+    '<a href="' + html_(receiptUrl) + '">View your Payment Receipt</a></p>' +
+    waBlock +
+    '<p style="margin:24px 0 8px"><strong>Payment reference</strong></p>' +
+    '<p style="font-family:monospace;font-size:12px">Payment ID: ' + html_(paymentId) + '<br>Order ID: ' + html_(orderId) + '</p>' +
+    '<p>If you need help, reply to this email or write to <a href="mailto:' + DELIVERY_SENDER + '">' + DELIVERY_SENDER + '</a>.</p>' +
+    '<p>Regards,<br><strong>I AM A RECRUITER</strong></p>' +
+    '<p style="font-size:11px;color:#666;border-top:1px solid #ddd;padding-top:14px">These access links are issued after verified payment. Please keep this email for your records. The payment receipt is not a GST/tax invoice.</p>' +
+    '</div></div>';
+
+  const textBody = (name ? 'Hi ' + name + ',\n\n' : 'Hi,\n\n') +
+    'Your Talent Market Snapshot Challenge access is ready.\n\n' +
+    'Payment verified: ' + money_(amountPaise) + '\n\n' +
+    'Start Challenge: ' + challengeUrl + '\n' +
+    'eBook: ' + ebookUrl + '\n' +
+    'Workbook: ' + workbookUrl + '\n' +
+    'Payment Receipt: ' + receiptUrl + '\n' +
+    (whatsappUrl ? 'Challenge Support Group: ' + whatsappUrl + '\n' : '') +
+    '\nPayment ID: ' + paymentId + '\nOrder ID: ' + orderId + '\n\n' +
+    'Need help? Reply to this email or write to ' + DELIVERY_SENDER + '.\n\n' +
+    'Regards,\nI AM A RECRUITER';
+
+  GmailApp.sendEmail(email, 'Your Talent Market Snapshot Challenge access', textBody, Object.assign(senderOptions_(), { htmlBody: htmlBody }));
+  buyer.sheet.getRange(buyer.row, 18).setValue('ACCESS SENT');
+
+  return { ok: true, email_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER };
 }
