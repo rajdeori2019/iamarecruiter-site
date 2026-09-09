@@ -75,11 +75,15 @@ function trackerConfigured() {
 
 async function trackerRequest(action, payload) {
   const webhook = String(process.env.TMS_TRACKER_WEBHOOK_URL || '').trim();
+  const trackerToken = String(process.env.TMS_TRACKER_TOKEN || '').trim();
   if (!webhook) return null;
+  if (!trackerToken) throw new Error('Tracker token is not configured');
+  const separator = webhook.includes('?') ? '&' : '?';
+  const authenticatedWebhook = webhook + separator + 'token=' + encodeURIComponent(trackerToken);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), 8000);
   try {
-    const response = await fetch(webhook, {
+    const response = await fetch(authenticatedWebhook, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain;charset=utf-8' },
       body: JSON.stringify(Object.assign({ action }, payload || {})),
