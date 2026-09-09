@@ -541,16 +541,266 @@ Company — Reason — Evidence
 
 # MODULE 3 — HIRING MANAGER ADVISORY RECOMMENDATION
 
-Status: **Not yet designed.**
+## Objective
 
-Target purpose:
-Convert the evidence from Modules 1 and 2 into a concise, evidence-backed recommendation the recruiter can take directly into the hiring-manager conversation.
+Convert the validated hiring requirement and talent-market evidence into a concise, evidence-backed business recommendation the recruiter can use directly with the hiring manager.
 
-Module 3 must also follow:
+### Input
+Validated outputs from Module 1 and Module 2.
 
-**INPUT → AI ANALYSIS → EVIDENCE → RECRUITER VERIFICATION → DECISION / RECOMMENDATION**
+### Final Artifact
+A **Hiring Manager Advisory Recommendation** containing:
+1. Executive summary
+2. Key constraints
+3. Evidence-backed recommendations
+4. Decisions required from the hiring manager
+5. Recommended sourcing plan
+6. Copy-paste hiring-manager advisory note
 
-and must pass the permanent 9/10 quality gate before implementation.
+Permanent usability test:
+> **Can the recruiter use this output in a real hiring-manager conversation without rewriting it from scratch?**
+
+If not, the module fails.
+
+## Recruiter Input
+
+- Role
+- Search lane
+- Confirmed must-haves
+- Nice-to-haves
+- Location
+- Experience range
+- Compensation / budget
+- Joining constraint
+- Talent supply evidence
+- Target-company evidence
+- Location evidence
+- Compensation evidence
+- Feasibility diagnosis
+- Known evidence gaps
+- Open hiring-manager decisions
+
+Rule:
+> The AI must use the provided evidence and must not manufacture market conclusions to make the recommendation sound stronger.
+
+## Step A — Executive Summary
+
+The executive summary must answer:
+> **What is the market evidence telling us about this search?**
+
+### Prompt 1 — Executive Summary Builder
+
+You are helping a recruiter prepare an evidence-based update for a hiring manager.
+
+Use only the hiring requirement and market evidence provided below.
+
+Produce a concise executive summary covering:
+1. What appears workable
+2. What appears restrictive
+3. What remains uncertain
+4. What decision is needed from the hiring manager
+
+Do not invent facts, candidate counts, salary ranges, company intelligence or market conclusions.
+
+If evidence is weak or incomplete, state that clearly.
+
+Keep the summary concise enough to use verbally in a hiring-manager conversation.
+
+Evidence:
+[PASTE MODULE 1 + MODULE 2 OUTPUT]
+
+Append the permanent **QUALITY CONTROL — MANDATORY** block.
+
+## Step B — Constraint Diagnosis
+
+Classify constraints into:
+- **Requirement constraint** — e.g. mandatory domain background
+- **Market constraint** — e.g. limited verified direct-fit supply
+- **Business constraint** — e.g. fixed budget
+- **Process constraint** — e.g. immediate joining expectation
+- **Evidence constraint** — e.g. insufficient compensation data
+
+Do not repeat every challenge. Identify the constraints that materially affect the hiring decision.
+
+## Step C — Recommendation Framework
+
+Every recommendation must follow:
+
+**Evidence → Implication → Recommendation → HM Decision**
+
+Example structure:
+
+**Evidence:** Verified direct-fit profiles are concentrated in the requested location and one adjacent hub.
+
+**Implication:** Restricting the role to one location may reduce the usable pool.
+
+**Recommendation:** Test the requested location plus the verified adjacent hub.
+
+**HM decision required:** Can the role consider candidates from the adjacent hub?
+
+Rule:
+> Recommendations must be traceable to evidence. Do not recommend a change solely because it sounds like standard recruiting advice.
+
+## Step D — Recommendation Categories
+
+Assess whether evidence supports a recommendation in each category:
+
+### A. Role requirements
+- remove unnecessary must-haves
+- clarify ambiguous criteria
+- split mixed profiles
+
+### B. Geography
+- keep location
+- expand location
+- test adjacent hubs
+- consider remote / hybrid
+
+### C. Compensation
+- maintain
+- calibrate
+- gather more evidence
+- escalate budget discussion
+
+### D. Experience / seniority
+- keep exact band
+- widen band
+- prioritise scope over years where supported
+
+### E. Target companies
+- stay direct-fit
+- add adjacent pools
+- expand industry / domain pool
+
+### F. Joining timeline
+- keep
+- relax
+- separate immediate joiners from longer-notice candidates
+
+### G. Sourcing model
+- volume search
+- precision sourcing
+- direct mapping
+- referral-led
+- multi-lane search
+
+The AI should recommend changes only where evidence supports them.
+
+## Step E — Hiring Manager Decision List
+
+The recruiter should leave with a short list of specific decisions the hiring manager needs to make.
+
+Examples:
+- Is the domain requirement mandatory or preferred?
+- Can the search include an adjacent location?
+- Is the compensation ceiling fixed?
+- Can longer notice-period candidates be considered?
+- Is the exact experience band required, or is scope more important?
+
+The actual questions must be role-specific and evidence-based.
+
+## Step F — Recommended Sourcing Plan
+
+The sourcing plan should state what the recruiter will do after alignment.
+
+Capture:
+- Search lane(s)
+- Target pools
+- Geography
+- Sourcing model
+- What should be validated before scaling
+- Which HM decisions must be closed first
+
+Do not hard-code arbitrary profile counts or activity targets unless explicitly defined as a test assumption.
+
+## Step G — Copy-Paste HM Advisory Note
+
+### Prompt 2 — HM Advisory Note Generator
+
+Convert the validated hiring requirement and market evidence into a concise advisory note for the hiring manager.
+
+The note must:
+- be factual
+- be concise
+- clearly separate evidence from interpretation
+- identify the main constraints
+- recommend specific actions
+- state the decisions required from the hiring manager
+- avoid hype
+- avoid unsupported market claims
+- avoid fake precision
+
+Use this structure:
+
+**Market view**
+[2–4 sentences]
+
+**What is constraining the search**
+[bullets]
+
+**My recommendation**
+[bullets]
+
+**Decisions I need from you**
+[bullets]
+
+**Next sourcing action**
+[1–3 bullets]
+
+Evidence:
+[PASTE VALIDATED MODULE 1 + MODULE 2 OUTPUT]
+
+Append the permanent **QUALITY CONTROL — MANDATORY** block.
+
+## Final Artifact Template — Hiring Manager Advisory Recommendation
+
+**Role:**
+**Date:**
+**Recruiter:**
+
+### 1. Executive Summary
+[ ]
+
+### 2. Key Constraints
+
+**Requirement:**
+[ ]
+
+**Market:**
+[ ]
+
+**Business:**
+[ ]
+
+**Process:**
+[ ]
+
+**Evidence gaps:**
+[ ]
+
+### 3. Evidence-Backed Recommendations
+
+| Evidence | Implication | Recommendation | HM Decision |
+|---|---|---|---|
+| | | | |
+
+### 4. Decisions Required from HM
+1.
+2.
+3.
+4.
+5.
+
+### 5. Recommended Sourcing Plan
+
+**Search lane(s):**
+**Target pools:**
+**Location:**
+**Sourcing model:**
+**Validation required before scaling:**
+
+### 6. Copy-Paste HM Advisory Note
+[ ]
 
 ---
 
@@ -558,17 +808,18 @@ and must pass the permanent 9/10 quality gate before implementation.
 
 1. Lock Module 1
 2. Lock Module 2
-3. Design and lock Module 3
-4. Build the V2 buyer experience around the three final artifacts
-5. Only then redesign:
+3. Lock Module 3
+4. Design the V2 buyer journey around the three final artifacts
+5. Build the V2 product experience
+6. Only then redesign:
    - Challenge UI
    - Workbook
    - eBook / support guide
    - Payment success page
    - Delivery email
    - Payment-confirmation speed / async delivery behavior
-6. Run end-to-end buyer test
-7. Do not launch until every critical section passes ≥9/10
+7. Run end-to-end buyer test
+8. Do not launch until every critical section passes ≥9/10
 
 ---
 
@@ -578,7 +829,9 @@ and must pass the permanent 9/10 quality gate before implementation.
 - V2 product definition: **Locked**
 - Module 1: **Designed — passed internal product-design gate**
 - Module 2: **Designed — passed internal product-design gate**
-- Module 3: **Pending**
+- Module 3: **Designed — passed internal product-design gate**
+- V2 product architecture: **Complete**
+- V2 buyer journey / UX: **Next**
 - Website implementation of V2: **Not started**
 - Buyer validation of V2: **Not yet proven**
 
