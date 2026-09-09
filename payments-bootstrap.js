@@ -341,6 +341,7 @@ async function verifyPayment(req, res) {
     const purchase = await capturedPurchase(orderId, paymentId);
     const order = purchase.order;
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
+    let deliveryEmailSent = false;
 
     if (trackerConfigured()) {
       await trackerRequest('payment_verified', {
@@ -350,6 +351,21 @@ async function verifyPayment(req, res) {
         coupon: coupon === 'none' ? '' : coupon,
         payment_status: 'CAPTURED'
       }).catch((trackerErr) => console.error('Tracker payment write failed:', trackerErr.message));
+
+      const whatsappGroupUrl = /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || ''))
+        ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim()
+        : '';
+
+      const delivery = await trackerRequest('send_delivery_email', {
+        razorpay_order_id: orderId,
+        razorpay_payment_id: paymentId,
+        amount_paise: purchase.amount,
+        whatsapp_group_url: whatsappGroupUrl
+      }).catch((deliveryErr) => {
+        console.error('Buyer delivery email failed:', deliveryErr.message);
+        return null;
+      });
+      deliveryEmailSent = !!(delivery && delivery.email_sent === true);
     }
 
     return json(res, 200, {
@@ -359,7 +375,8 @@ async function verifyPayment(req, res) {
       product: PRODUCT,
       amount: purchase.amount,
       currency: CURRENCY,
-      coupon: coupon === 'none' ? '' : coupon
+      coupon: coupon === 'none' ? '' : coupon,
+      delivery_email_sent: deliveryEmailSent
     });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
@@ -393,7 +410,7 @@ async function serveProtectedAsset(req, res, fileName) {
 }
 
 function escHtml(value) {
-  return String(value || '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  return String(value || '').replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot',"'":'&#39;'}[m]));
 }
 
 async function serveReceipt(req, res) {
