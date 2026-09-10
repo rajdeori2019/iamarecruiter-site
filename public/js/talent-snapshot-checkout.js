@@ -1,6 +1,8 @@
 (function () {
-  if (!/\/ai-workflow(?:\.html)?$/.test(window.location.pathname)) return;
+  if (!/\/(?:ai-workflow|talent-intelligence-starter)(?:\.html)?$/.test(window.location.pathname)) return;
 
+  var isStarter = /talent-intelligence-starter/.test(window.location.pathname);
+  var productName = isStarter ? 'Talent Intelligence Starter Pack' : 'Talent Market Snapshot Challenge';
   var checkoutUrl = 'https://checkout.razorpay.com/v1/checkout.js';
   var loading = false;
   var modal;
@@ -144,7 +146,8 @@
     ['utm_source','utm_medium','utm_campaign','utm_content','utm_term'].forEach(function (key) {
       if (params.get(key)) parts.push(key + '=' + params.get(key));
     });
-    return parts.length ? parts.join('&') : 'direct/website';
+    parts.push('landing=' + (isStarter ? 'starter-pack' : 'ai-workflow'));
+    return parts.join('&');
   }
 
   function formPayload() {
@@ -180,7 +183,7 @@
         amount: order.amount,
         currency: order.currency,
         name: 'I AM A RECRUITER',
-        description: 'Talent Market Snapshot Challenge',
+        description: productName,
         order_id: order.order_id,
         prefill: {
           name: order.customer && order.customer.name ? order.customer.name : payload.name,
@@ -195,6 +198,9 @@
               payment_id: result.payment_id,
               order_id: result.order_id,
               coupon: result.coupon || '',
+              amount: Number(result.amount || order.amount || 9900),
+              product: productName,
+              landing: isStarter ? 'starter-pack' : 'ai-workflow',
               verified_at: new Date().toISOString()
             }));
             window.location.assign('/talent-snapshot-payment-success.html');
@@ -210,7 +216,7 @@
             payButton.textContent = 'Continue to Secure Payment — ' + money(order.amount);
           }
         },
-        notes: { product: 'Talent Market Snapshot Challenge', coupon: order.coupon || 'none' }
+        notes: { product: productName, coupon: order.coupon || 'none' }
       };
       closeModal();
       var razorpay = new window.Razorpay(options);
@@ -232,7 +238,7 @@
   document.querySelectorAll('a.btn--accent').forEach(function (button) {
     var text = (button.textContent || '').trim();
     var href = button.getAttribute('href') || '';
-    if (text.indexOf('₹99') !== -1 || href.indexOf('wa.me/919742944825') !== -1) {
+    if (text.indexOf('₹99') !== -1 || href.indexOf('secure-checkout') !== -1 || href.indexOf('wa.me/919742944825') !== -1) {
       button.removeAttribute('target');
       button.removeAttribute('rel');
       button.setAttribute('href', '#secure-checkout');
