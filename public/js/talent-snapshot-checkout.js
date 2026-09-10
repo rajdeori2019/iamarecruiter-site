@@ -7,6 +7,37 @@
   var loading = false;
   var modal;
 
+  function initMetaPixel() {
+    if (!isStarter) return;
+    if (!window.fbq) {
+      !function(f,b,e,v,n,t,s)
+      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+    }
+    fbq('init', '1619647492829039');
+    fbq('track', 'PageView');
+    fbq('track', 'ViewContent', {
+      content_name: productName,
+      content_type: 'product',
+      value: 99,
+      currency: 'INR'
+    });
+  }
+
+  function metaTrack(eventName, params, standard) {
+    if (!isStarter || typeof window.fbq !== 'function') return;
+    try {
+      fbq(standard ? 'track' : 'trackCustom', eventName, params || {});
+    } catch (_) {}
+  }
+
+  initMetaPixel();
+
   function loadRazorpay() {
     if (window.Razorpay) return Promise.resolve();
     return new Promise(function (resolve, reject) {
@@ -95,7 +126,11 @@
     return modal;
   }
 
-  function openModal() {
+  function openModal(sourceLabel) {
+    metaTrack('StarterPackCTAClick', {
+      content_name: productName,
+      source_label: sourceLabel || 'Get Starter Pack'
+    }, false);
     ensureModal().classList.add('is-open');
     document.body.style.overflow = 'hidden';
     setTimeout(function () { modal.querySelector('#tmsName').focus(); }, 50);
@@ -167,6 +202,20 @@
     if (loading) return;
     var form = modal.querySelector('#tmsCheckoutForm');
     if (!form.reportValidity()) return;
+
+    var intendedAmount = Number(modal.dataset.amount || 9900) / 100;
+    metaTrack('CheckoutFormSubmitted', {
+      content_name: productName,
+      value: intendedAmount,
+      currency: 'INR'
+    }, false);
+    metaTrack('InitiateCheckout', {
+      content_name: productName,
+      content_type: 'product',
+      value: intendedAmount,
+      currency: 'INR'
+    }, true);
+
     loading = true;
     var payButton = modal.querySelector('#tmsPayButton');
     var errorBox = modal.querySelector('#tmsCheckoutError');
@@ -244,7 +293,7 @@
       button.setAttribute('href', '#secure-checkout');
       button.addEventListener('click', function (event) {
         event.preventDefault();
-        openModal();
+        openModal(text || 'Get Starter Pack');
       });
     }
   });
