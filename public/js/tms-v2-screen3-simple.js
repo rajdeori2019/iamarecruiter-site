@@ -4,7 +4,7 @@
   screen.innerHTML=`<div class="card standard-editorial screen3-simple">
     <div class="eyebrow">Module 1 · Requirement Diagnostic</div>
     <h2>CHECK WHAT NEEDS CLARIFYING BEFORE YOU SOURCE</h2>
-    <p class="lead standard-intro">Turn the role you entered into a recruiter-ready diagnostic: what is clear, what is missing, what may restrict the search, and what you should take back to the hiring manager.</p>
+    <p class="lead standard-intro">Use your role details to create a recruiter-ready diagnostic: what is clear, what is missing, what may restrict the search, and what to take back to the hiring manager.</p>
 
     <div class="outcome-strip standard-outcome">
       <div class="outcome-strip__label">YOU'LL GET</div>
@@ -14,19 +14,22 @@
 
     <div class="summary" id="roleSummary"></div>
 
+    <div class="screen3-flow"><b>3 simple steps:</b><span>1. Copy</span><i>→</i><span>2. Paste</span><i>→</i><span>3. Review & confirm</span></div>
+
     <section class="simple-step">
-      <div class="simple-step__head"><span>01</span><div><h3>Get the role analysis</h3><p>One click copies the analysis instructions. Paste them into ChatGPT or Claude, then bring the response back here.</p></div></div>
-      <div class="actions simple-step__actions"><button class="btn" id="makeDiag">COPY ROLE ANALYSIS INSTRUCTIONS</button><button class="btn secondary hidden" id="copyDiag">COPY AGAIN</button></div>
-      <details class="advanced-details"><summary>View analysis instructions</summary><div id="diagPromptWrap" class="hidden"><div class="prompt" id="diagPrompt"></div></div></details>
+      <div class="simple-step__head"><span>01</span><div><h3>Copy the analysis</h3><p>Click once, then paste the copied instructions into ChatGPT or Claude.</p></div></div>
+      <div class="actions simple-step__actions"><button class="btn" id="makeDiag">COPY ANALYSIS</button><button class="btn secondary hidden" id="copyDiag">COPY AGAIN</button></div>
+      <details class="advanced-details analysis-disclosure"><summary>Need the analysis instructions? View them →</summary><div id="diagPromptWrap" class="hidden"><div class="prompt" id="diagPrompt"></div></div></details>
     </section>
 
     <section class="simple-step">
-      <div class="simple-step__head"><span>02</span><div><h3>Paste the response</h3><p>Paste the AI response below. We will use its labelled sections to help structure the diagnostic. Nothing is accepted as fact until you review it.</p></div></div>
+      <div class="simple-step__head"><span>02</span><div><h3>Paste the response</h3><p>Copy ChatGPT/Claude's full response and paste it below. The diagnostic sections will be filled automatically where the headings are recognised.</p></div></div>
       <div class="field"><label>AI analysis response</label><textarea data-diag="raw" placeholder="Paste the full response here."></textarea></div>
+      <div class="paste-status" id="diagPasteStatus" aria-live="polite"></div>
     </section>
 
-    <section class="simple-step simple-step--review">
-      <div class="simple-step__head"><span>03</span><div><h3>Review what matters</h3><p>Keep the useful parts, edit anything inaccurate, and leave unsupported points as unknown rather than forcing a conclusion.</p></div></div>
+    <section class="simple-step simple-step--review" id="diagReviewSection">
+      <div class="simple-step__head"><span>03</span><div><h3>Review & confirm your diagnostic</h3><p>Check what was extracted, edit anything inaccurate, keep unknowns visible, then make your recruiter decision.</p></div></div>
 
       <div class="diagnostic-grid">
         <div class="field"><label>What is clear</label><textarea data-diag="confirmed" placeholder="Confirmed requirements supported by the JD or HM discussion."></textarea></div>
@@ -42,6 +45,6 @@
     </section>
 
     <div class="lock" id="diagLock"></div>
-    <div class="actions screen2-actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" id="lockDiag">CONFIRM MY DIAGNOSTIC</button><button class="btn hidden" id="toM2">BUILD MY TALENT MARKET SNAPSHOT →</button></div>
+    <div class="actions screen2-actions"><button class="btn secondary" data-prev>BACK</button><button class="btn" id="lockDiag">REVIEW & CONFIRM MY DIAGNOSTIC →</button><button class="btn hidden" id="toM2">BUILD MY TALENT MARKET SNAPSHOT →</button></div>
   </div>`;
 })();
