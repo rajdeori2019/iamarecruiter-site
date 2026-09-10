@@ -1,73 +1,15 @@
 <!doctype html>
 <html lang="en" data-theme="light">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Payment Confirmed | Talent Market Snapshot Challenge</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="icon" type="image/png" href="/assets/favicon-32.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css">
-<style>
-.confirm{min-height:78vh;display:flex;align-items:center;padding:72px 0}.confirm-card{max-width:900px;border:2px solid var(--ink);padding:42px;background:var(--paper);box-shadow:8px 8px 0 var(--accent)}.confirm-card h1{font-size:clamp(2.5rem,7vw,5rem);line-height:.95}.confirm-card p{margin-top:18px;color:var(--text-muted);font-size:1.02rem}.confirm-meta{margin-top:28px;border-top:1px solid var(--border);padding-top:20px;font-family:var(--font-mono);font-size:11px;line-height:1.8}.confirm-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.status{display:inline-block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:7px 10px;background:var(--accent);color:var(--on-accent);margin-bottom:18px}.hidden{display:none}.delivery{margin-top:24px;padding:18px;background:var(--surface);border-left:4px solid var(--accent)}
-</style>
-</head>
-<body>
-<nav class="site-nav"><div class="site-nav__inner"><a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a></div></nav>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment Confirmed | Talent Intelligence Starter Pack</title>
+<meta name="robots" content="noindex,nofollow"><link rel="icon" type="image/png" href="/assets/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet"><link rel="stylesheet" href="/css/site.css">
+<style>.confirm{min-height:78vh;display:flex;align-items:center;padding:72px 0}.confirm-card{max-width:920px;border:2px solid var(--ink);padding:42px;background:var(--paper);box-shadow:8px 8px 0 var(--accent)}.confirm-card h1{font-size:clamp(2.5rem,7vw,5rem);line-height:.95}.confirm-card p{margin-top:18px;color:var(--text-muted);font-size:1.02rem}.confirm-meta{margin-top:28px;border-top:1px solid var(--border);padding-top:20px;font-family:var(--font-mono);font-size:11px;line-height:1.8}.confirm-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.status{display:inline-block;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;padding:7px 10px;background:var(--accent);color:var(--on-accent);margin-bottom:18px}.hidden{display:none}.delivery{margin-top:24px;padding:18px;background:var(--surface);border-left:4px solid var(--accent)}.asset-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-top:24px}.asset{background:var(--paper);padding:18px}.asset span{font:600 9px var(--font-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--accent-ink)}.asset b{display:block;margin-top:5px}.asset p{font-size:.87rem;margin-top:7px}@media(max-width:760px){.asset-grid{grid-template-columns:1fr}.confirm-card{padding:28px 22px}}</style>
+</head><body><nav class="site-nav"><div class="site-nav__inner"><a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a></div></nav>
 <main class="confirm"><div class="container"><div class="confirm-card">
-  <div id="verifiedState" class="hidden">
-    <span class="status">Payment verified</span>
-    <h1>YOU'RE IN.</h1>
-    <p>Your <strong id="paidAmount"></strong> payment for the <strong>Talent Market Snapshot Challenge</strong> has been verified successfully.</p>
-    <div class="delivery"><strong>Your access is ready.</strong><br>Start the challenge now. The eBook, workbook and payment receipt are available below. Your buyer email will also contain the same access once email delivery is activated.</div>
-    <div class="confirm-meta">Payment ID: <strong id="paymentId"></strong><br>Order ID: <strong id="orderId"></strong></div>
-    <div class="confirm-actions">
-      <a id="challengeLink" class="btn btn--accent" href="#">Start the Challenge</a>
-      <a id="ebookLink" class="btn btn--ghost" href="#">Read eBook</a>
-      <a id="workbookLink" class="btn btn--ghost" href="#">Open Workbook</a>
-      <a id="receiptLink" class="btn btn--ghost" href="#">View Payment Receipt</a>
-      <a id="whatsappLink" class="btn btn--ghost hidden" href="#" target="_blank" rel="noopener">Join Closed WhatsApp Group</a>
-      <a class="btn btn--ghost" href="mailto:hello@iamarecruiter.in">Need Help?</a>
-    </div>
-  </div>
-  <div id="unverifiedState" class="hidden">
-    <span class="status">Payment confirmation</span>
-    <h1>WE COULDN'T VERIFY THIS SESSION.</h1>
-    <p>If you completed a Razorpay payment, please keep your payment ID and contact <strong>hello@iamarecruiter.in</strong>. Do not pay again until the payment status is checked.</p>
-    <div class="confirm-actions"><a class="btn btn--accent" href="mailto:hello@iamarecruiter.in">Contact Support</a><a class="btn btn--ghost" href="/ai-workflow.html">Return to Challenge</a></div>
-  </div>
-</div></div></main>
-<footer class="site-footer"><div class="container"><div class="site-footer__legal"><span>© 2026 I AM A RECRUITER™</span></div></div></footer>
-<script>
-(function(){
-  var raw = sessionStorage.getItem('tms_payment_verified');
-  var verified = null;
-  try { verified = raw ? JSON.parse(raw) : null; } catch (_) {}
-  if (verified && verified.payment_id && verified.order_id) {
-    var amount = Number(verified.amount || 0) / 100;
-    var q = '?order_id=' + encodeURIComponent(verified.order_id) + '&payment_id=' + encodeURIComponent(verified.payment_id);
-    document.getElementById('paymentId').textContent = verified.payment_id;
-    document.getElementById('orderId').textContent = verified.order_id;
-    document.getElementById('paidAmount').textContent = '₹' + amount.toFixed(amount % 1 ? 2 : 0);
-    document.getElementById('challengeLink').href = '/tms/challenge' + q;
-    document.getElementById('ebookLink').href = '/tms/ebook' + q;
-    document.getElementById('workbookLink').href = '/tms/workbook' + q;
-    document.getElementById('receiptLink').href = '/tms/receipt' + q;
-    fetch('/api/tms/access-config' + q, {cache:'no-store'}).then(function(r){return r.json();}).then(function(cfg){
-      if (cfg && cfg.whatsapp_group_url) {
-        var w = document.getElementById('whatsappLink');
-        w.href = cfg.whatsapp_group_url;
-        w.classList.remove('hidden');
-      }
-    }).catch(function(){});
-    document.getElementById('verifiedState').classList.remove('hidden');
-  } else {
-    document.getElementById('unverifiedState').classList.remove('hidden');
-  }
-})();
-</script>
-<script src="/js/site.js"></script>
-</body>
-</html>
+<div id="verifiedState" class="hidden"><span class="status">Payment verified</span><h1>YOU'RE IN.</h1><p>Your <strong id="paidAmount"></strong> payment has been verified successfully.</p><div class="delivery"><strong>Your Starter Pack is ready.</strong><br>Start with the short guide, keep the prompt sheet open, then use the live-role tool when you are ready to apply the method.</div><div class="asset-grid"><div class="asset"><span>01 · Learn</span><b>Talent Intelligence eBook</b><p>Understand the evidence-led workflow before sourcing.</p></div><div class="asset"><span>02 · Reuse</span><b>AI Prompt Sheet</b><p>Copy-ready prompts for the core recruiting workflows.</p></div><div class="asset"><span>03 · Apply</span><b>Talent Market Snapshot Beta</b><p>Use one real role to build the diagnostic and market view.</p></div></div><div class="confirm-meta">Payment ID: <strong id="paymentId"></strong><br>Order ID: <strong id="orderId"></strong></div><div class="confirm-actions"><a id="challengeLink" class="btn btn--accent" href="#">Open Talent Market Snapshot</a><a id="ebookLink" class="btn btn--ghost" href="/talent-intelligence-ebook.html">Read eBook</a><a id="promptLink" class="btn btn--ghost" href="/talent-intelligence-prompt-sheet.html">Open Prompt Sheet</a><a id="workbookLink" class="btn btn--ghost" href="#">Existing Workbook</a><a id="receiptLink" class="btn btn--ghost" href="#">Payment Receipt</a><a id="whatsappLink" class="btn btn--ghost hidden" href="#" target="_blank" rel="noopener">Join Closed WhatsApp Group</a><a class="btn btn--ghost" href="mailto:hello@iamarecruiter.in">Need Help?</a></div></div>
+<div id="unverifiedState" class="hidden"><span class="status">Payment confirmation</span><h1>WE COULDN'T VERIFY THIS SESSION.</h1><p>If you completed a Razorpay payment, please keep your payment ID and contact <strong>hello@iamarecruiter.in</strong>. Do not pay again until the payment status is checked.</p><div class="confirm-actions"><a class="btn btn--accent" href="mailto:hello@iamarecruiter.in">Contact Support</a><a class="btn btn--ghost" href="/talent-intelligence-starter.html">Return to Starter Pack</a></div></div>
+</div></div></main><footer class="site-footer"><div class="container"><div class="site-footer__legal"><span>© 2026 I AM A RECRUITER™</span></div></div></footer>
+<script>(function(){var raw=sessionStorage.getItem('tms_payment_verified');var verified=null;try{verified=raw?JSON.parse(raw):null}catch(_){}if(verified&&verified.payment_id&&verified.order_id){var amount=Number(verified.amount||0)/100;var q='?order_id='+encodeURIComponent(verified.order_id)+'&payment_id='+encodeURIComponent(verified.payment_id);document.getElementById('paymentId').textContent=verified.payment_id;document.getElementById('orderId').textContent=verified.order_id;document.getElementById('paidAmount').textContent=amount?'₹'+amount.toFixed(amount%1?2:0):'Verified';document.getElementById('challengeLink').href='/tms-v2.html'+q;document.getElementById('workbookLink').href='/tms/workbook'+q;document.getElementById('receiptLink').href='/tms/receipt'+q;fetch('/api/tms/access-config'+q,{cache:'no-store'}).then(function(r){return r.json()}).then(function(cfg){if(cfg&&cfg.whatsapp_group_url){var w=document.getElementById('whatsappLink');w.href=cfg.whatsapp_group_url;w.classList.remove('hidden')}}).catch(function(){});document.getElementById('verifiedState').classList.remove('hidden')}else{document.getElementById('unverifiedState').classList.remove('hidden')}})();</script><script src="/js/site.js"></script></body></html>
