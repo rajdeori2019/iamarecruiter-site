@@ -214,7 +214,7 @@ function buildEntitySchema(config) {
           '@type': 'PostalAddress',
           streetAddress: 'GM Infinite, A114, E Block, 1st Floor, Thirupalya Road, Electronic City Phase 1',
           addressLocality: 'Bangalore',
-          postalCode: '560100',
+          postalCode: '560099',
           addressRegion: 'Karnataka',
           addressCountry: 'IN'
         },
