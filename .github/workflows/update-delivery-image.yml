@@ -1,0 +1,49 @@
+name: Update post-purchase delivery image
+
+on:
+  push:
+    paths:
+      - '.github/workflows/update-delivery-image.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Switch post-purchase image only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('public/talent-snapshot-payment-success.html'): (
+                  '/assets/talent-intelligence-starter-pack-bundle-hq.png',
+                  '/assets/talent-intelligence-starter-pack-delivery.png'
+              ),
+              Path('google-apps-script/TMSCheckoutTracker.gs'): (
+                  "const PRODUCT_IMAGE_URL = DELIVERY_BASE_URL + '/assets/talent-intelligence-starter-pack-bundle-hq.png';",
+                  "const PRODUCT_IMAGE_URL = DELIVERY_BASE_URL + '/assets/talent-intelligence-starter-pack-delivery.png';"
+              ),
+          }
+
+          for path, (old, new) in replacements.items():
+              text = path.read_text()
+              if old not in text:
+                  raise SystemExit(f'Expected text not found in {path}; refusing to modify.')
+              path.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          rm .github/workflows/update-delivery-image.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Use delivery image after purchase"
+          git push
