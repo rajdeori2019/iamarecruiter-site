@@ -325,6 +325,32 @@ async function capturedPurchase(orderId, paymentId) {
   return { order, payment, amount };
 }
 
+function syncTrackerAfterPayment(orderId, paymentId, amount, coupon) {
+  if (!trackerConfigured()) return;
+  const whatsappGroupUrl = /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || ''))
+    ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim()
+    : '';
+
+  Promise.resolve()
+    .then(() => trackerRequest('payment_verified', {
+      razorpay_order_id: orderId,
+      razorpay_payment_id: paymentId,
+      amount_paise: amount,
+      coupon: coupon === 'none' ? '' : coupon,
+      payment_status: 'CAPTURED'
+    }))
+    .then(() => trackerRequest('send_delivery_email', {
+      razorpay_order_id: orderId,
+      razorpay_payment_id: paymentId,
+      amount_paise: amount,
+      whatsapp_group_url: whatsappGroupUrl
+    }))
+    .then((delivery) => {
+      if (!delivery || delivery.email_sent !== true) console.error('Buyer delivery email did not confirm success.');
+    })
+    .catch((err) => console.error('Post-payment tracker sync failed:', err.message));
+}
+
 async function verifyPayment(req, res) {
   if (!allowed(req)) return json(res, 429, { error: 'Too many requests. Please try again shortly.' });
   try {
@@ -341,32 +367,8 @@ async function verifyPayment(req, res) {
     const purchase = await capturedPurchase(orderId, paymentId);
     const order = purchase.order;
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
-    let deliveryEmailSent = false;
 
-    if (trackerConfigured()) {
-      await trackerRequest('payment_verified', {
-        razorpay_order_id: orderId,
-        razorpay_payment_id: paymentId,
-        amount_paise: purchase.amount,
-        coupon: coupon === 'none' ? '' : coupon,
-        payment_status: 'CAPTURED'
-      }).catch((trackerErr) => console.error('Tracker payment write failed:', trackerErr.message));
-
-      const whatsappGroupUrl = /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || ''))
-        ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim()
-        : '';
-
-      const delivery = await trackerRequest('send_delivery_email', {
-        razorpay_order_id: orderId,
-        razorpay_payment_id: paymentId,
-        amount_paise: purchase.amount,
-        whatsapp_group_url: whatsappGroupUrl
-      }).catch((deliveryErr) => {
-        console.error('Buyer delivery email failed:', deliveryErr.message);
-        return null;
-      });
-      deliveryEmailSent = !!(delivery && delivery.email_sent === true);
-    }
+    syncTrackerAfterPayment(orderId, paymentId, purchase.amount, coupon);
 
     return json(res, 200, {
       verified: true,
@@ -376,7 +378,7 @@ async function verifyPayment(req, res) {
       amount: purchase.amount,
       currency: CURRENCY,
       coupon: coupon === 'none' ? '' : coupon,
-      delivery_email_sent: deliveryEmailSent
+      delivery_status: trackerConfigured() ? 'processing' : 'not_configured'
     });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
@@ -471,9 +473,7 @@ express.static = function patchedStatic(...args) {
   const staticMiddleware = originalStatic.apply(express, args);
   return function paymentAwareStatic(req, res, next) {
     const requestPath = req.url.split('?')[0];
-    if (req.method === 'GET' && (requestPath === '/ai-workflow.html' || requestPath === '/ai-workflow')) {
-      return serveCheckoutPage(res);
-    }
+    if (req.method === 'GET' && (requestPath === '/ai-workflow.html' || requestPath === '/ai-workflow')) return serveCheckoutPage(res);
     if (req.method === 'GET' && requestPath === '/tms/challenge') return serveProtectedAsset(req, res, 'tms-challenge.html');
     if (req.method === 'GET' && requestPath === '/tms/ebook') return serveProtectedAsset(req, res, 'tms-ebook.html');
     if (req.method === 'GET' && requestPath === '/tms/workbook') return serveProtectedAsset(req, res, 'tms-workbook.html');
