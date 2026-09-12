@@ -5,6 +5,13 @@ const ADMINS_SHEET = 'TMS Admins';
 const DELIVERY_SENDER = 'hello@iamarecruiter.in';
 const DELIVERY_BRAND = 'I AM A RECRUITER';
 const DELIVERY_BASE_URL = 'https://www.iamarecruiter.in';
+const PRODUCT_NAME = 'Talent Intelligence Starter Pack';
+const BUYER_ASSETS = [
+  { label: 'Stop Sourcing Blind Playbook', fileId: '1W5YNcv0slqtslxLGwMVOeTrbQqVPN3hB' },
+  { label: 'Talent Intelligence Workbook', fileId: '1wmmBJhDHFQgvI406n98XeGmabSOy3jMM' },
+  { label: 'Recruiter AI Prompt Sheet — 8 reusable prompts', fileId: '1h4y-f2AgPGFIFIQ4sqKSjWz2s_WAhev-' },
+  { label: 'Worked Example — Stop Sourcing Blind', fileId: '1JVcPRIvJ5kITwQkANEXnkMHA-lTSYrDC' }
+];
 
 function doPost(e) {
   try {
@@ -53,6 +60,14 @@ function validHttps_(v) {
 function money_(paise) {
   const value = Number(paise || 0) / 100;
   return '₹' + value.toFixed(Number.isInteger(value) ? 0 : 2);
+}
+function assetUrl_(fileId) {
+  return 'https://drive.google.com/file/d/' + encodeURIComponent(fileId) + '/view';
+}
+function grantBuyerAssetAccess_(email) {
+  BUYER_ASSETS.forEach(function(asset) {
+    DriveApp.getFileById(asset.fileId).addViewer(email);
+  });
 }
 
 function adminStatus_(email, mobile) {
@@ -151,7 +166,7 @@ function reserveCoupon_(body) {
     const isAdmin = eligibility.user_type === 'ADMIN';
     const sh = sheet_(BUYERS_SHEET);
     const row = [
-      now_(), customer.name || '', normEmail_(customer.email), normMobile_(customer.mobile), customer.billing_address || '', customer.linkedin_url || '', eligibility.user_type, body.product || 'Talent Market Snapshot Challenge', rupees_(body.original_price_paise || 9900), code, rupees_(eligibility.discount_paise), rupees_(eligibility.amount_paise), eligibility.coupon_counted ? 'YES' : 'NO', '', '', 'COUPON_RESERVED', '', 'PENDING', 'NO', 'NO', 'NOT SHOWN', 'UNKNOWN', body.source || '', reservationId
+      now_(), customer.name || '', normEmail_(customer.email), normMobile_(customer.mobile), customer.billing_address || '', customer.linkedin_url || '', eligibility.user_type, body.product || PRODUCT_NAME, rupees_(body.original_price_paise || 9900), code, rupees_(eligibility.discount_paise), rupees_(eligibility.amount_paise), eligibility.coupon_counted ? 'YES' : 'NO', '', '', 'COUPON_RESERVED', '', 'PENDING', 'NO', 'NO', 'NOT SHOWN', 'UNKNOWN', body.source || '', reservationId
     ];
     sh.appendRow(row);
 
@@ -214,7 +229,7 @@ function orderCreated_(body) {
 
   const customer = body.customer || {};
   const row = [
-    now_(), customer.name || '', normEmail_(customer.email), normMobile_(customer.mobile), customer.billing_address || '', customer.linkedin_url || '', body.user_type || 'BUYER', body.product || 'Talent Market Snapshot Challenge', rupees_(body.original_price_paise || 9900), body.coupon || '', rupees_(body.discount_paise || 0), rupees_(body.final_amount_paise || 9900), body.coupon_counted ? 'YES' : 'NO', body.razorpay_order_id || '', '', 'ORDER_CREATED', '', 'PENDING', 'NO', 'NO', 'NOT SHOWN', 'UNKNOWN', body.source || '', reservationId || uuid_()
+    now_(), customer.name || '', normEmail_(customer.email), normMobile_(customer.mobile), customer.billing_address || '', customer.linkedin_url || '', body.user_type || 'BUYER', body.product || PRODUCT_NAME, rupees_(body.original_price_paise || 9900), body.coupon || '', rupees_(body.discount_paise || 0), rupees_(body.final_amount_paise || 9900), body.coupon_counted ? 'YES' : 'NO', body.razorpay_order_id || '', '', 'ORDER_CREATED', '', 'PENDING', 'NO', 'NO', 'NOT SHOWN', 'UNKNOWN', body.source || '', reservationId || uuid_()
   ];
   sh.appendRow(row);
   return { ok: true, buyer_row: sh.getLastRow() };
@@ -285,50 +300,56 @@ function sendDeliveryEmail_(body) {
   const email = normEmail_(row[2]);
   if (!email) return { ok: false, error: 'Buyer email is missing.' };
 
+  grantBuyerAssetAccess_(email);
+
   const amountPaise = Number(body.amount_paise || Math.round(Number(row[11] || 0) * 100));
   const q = '?order_id=' + encodeURIComponent(orderId) + '&payment_id=' + encodeURIComponent(paymentId);
-  const challengeUrl = DELIVERY_BASE_URL + '/tms/challenge' + q;
-  const ebookUrl = DELIVERY_BASE_URL + '/tms/ebook' + q;
-  const workbookUrl = DELIVERY_BASE_URL + '/tms/workbook' + q;
+  const toolUrl = DELIVERY_BASE_URL + '/tms-v2.html' + q;
   const receiptUrl = DELIVERY_BASE_URL + '/tms/receipt' + q;
   const whatsappUrl = validHttps_(body.whatsapp_group_url || PropertiesService.getScriptProperties().getProperty('TMS_WHATSAPP_GROUP_URL'));
+  const assetLinks = BUYER_ASSETS.map(function(asset) {
+    return '<a href="' + html_(assetUrl_(asset.fileId)) + '">' + html_(asset.label) + '</a>';
+  }).join('<br>');
+  const assetText = BUYER_ASSETS.map(function(asset, idx) {
+    return (idx + 1) + '. ' + asset.label + ': ' + assetUrl_(asset.fileId);
+  }).join('\n');
 
   const greeting = name ? 'Hi ' + html_(name) + ',' : 'Hi,';
   const waBlock = whatsappUrl
-    ? '<p style="margin:24px 0 8px"><strong>Challenge Support</strong></p><p>Join the private WhatsApp support group for questions and implementation support:</p><p><a href="' + html_(whatsappUrl) + '" style="display:inline-block;background:#0E0E10;color:#fff;text-decoration:none;padding:12px 18px;border-radius:4px">Join Challenge Support Group</a></p>'
+    ? '<p style="margin:24px 0 8px"><strong>Support</strong></p><p><a href="' + html_(whatsappUrl) + '" style="display:inline-block;background:#0E0E10;color:#fff;text-decoration:none;padding:12px 18px;border-radius:4px">Join Support Group</a></p>'
     : '';
 
   const htmlBody = '<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#0E0E10;line-height:1.55">' +
     '<div style="border-top:8px solid #E8A400;padding-top:24px">' +
     '<p>' + greeting + '</p>' +
-    '<h2 style="margin:8px 0 12px">Your Talent Market Snapshot Challenge access is ready.</h2>' +
-    '<p>We have verified your payment of <strong>' + html_(money_(amountPaise)) + '</strong>. Use the links below to access everything included with your purchase.</p>' +
-    '<p style="margin:24px 0 8px"><strong>Your access</strong></p>' +
-    '<p><a href="' + html_(challengeUrl) + '">Start the Talent Market Snapshot Challenge</a><br>' +
-    '<a href="' + html_(ebookUrl) + '">Read: Know the Market Before You Advise the Business</a><br>' +
-    '<a href="' + html_(workbookUrl) + '">Open the Talent Market Snapshot Workbook</a><br>' +
-    '<a href="' + html_(receiptUrl) + '">View your Payment Receipt</a></p>' +
+    '<h2 style="margin:8px 0 12px">Your Talent Intelligence Starter Pack is ready.</h2>' +
+    '<p>We have verified your payment of <strong>' + html_(money_(amountPaise)) + '</strong>. Your purchase includes four buyer PDFs plus the Talent Market Snapshot Tool.</p>' +
+    '<p style="margin:24px 0 8px"><strong>Your 4 buyer assets</strong></p>' +
+    '<p>' + assetLinks + '</p>' +
+    '<p style="margin:24px 0 8px"><strong>Bonus application tool</strong></p>' +
+    '<p><a href="' + html_(toolUrl) + '">Open the Talent Market Snapshot Tool</a><br><a href="' + html_(receiptUrl) + '">View your Payment Receipt</a></p>' +
+    '<p><strong>Recommended sequence:</strong> Playbook → Workbook → Prompt Sheet → Worked Example → apply the workflow to one live role in the Talent Market Snapshot Tool.</p>' +
     waBlock +
     '<p style="margin:24px 0 8px"><strong>Payment reference</strong></p>' +
     '<p style="font-family:monospace;font-size:12px">Payment ID: ' + html_(paymentId) + '<br>Order ID: ' + html_(orderId) + '</p>' +
     '<p>If you need help, reply to this email or write to <a href="mailto:' + DELIVERY_SENDER + '">' + DELIVERY_SENDER + '</a>.</p>' +
     '<p>Regards,<br><strong>I AM A RECRUITER</strong></p>' +
-    '<p style="font-size:11px;color:#666;border-top:1px solid #ddd;padding-top:14px">These access links are issued after verified payment. Please keep this email for your records. The payment receipt is not a GST/tax invoice.</p>' +
+    '<p style="font-size:11px;color:#666;border-top:1px solid #ddd;padding-top:14px">These buyer files are shared with the email used at checkout. Please keep this email for your records. The payment receipt is not a GST/tax invoice.</p>' +
     '</div></div>';
 
   const textBody = (name ? 'Hi ' + name + ',\n\n' : 'Hi,\n\n') +
-    'Your Talent Market Snapshot Challenge access is ready.\n\n' +
+    'Your Talent Intelligence Starter Pack is ready.\n\n' +
     'Payment verified: ' + money_(amountPaise) + '\n\n' +
-    'Start Challenge: ' + challengeUrl + '\n' +
-    'eBook: ' + ebookUrl + '\n' +
-    'Workbook: ' + workbookUrl + '\n' +
+    assetText + '\n\n' +
+    'Bonus — Talent Market Snapshot Tool: ' + toolUrl + '\n' +
     'Payment Receipt: ' + receiptUrl + '\n' +
-    (whatsappUrl ? 'Challenge Support Group: ' + whatsappUrl + '\n' : '') +
+    (whatsappUrl ? 'Support Group: ' + whatsappUrl + '\n' : '') +
+    '\nRecommended sequence: Playbook → Workbook → Prompt Sheet → Worked Example → Talent Market Snapshot Tool.\n' +
     '\nPayment ID: ' + paymentId + '\nOrder ID: ' + orderId + '\n\n' +
     'Need help? Reply to this email or write to ' + DELIVERY_SENDER + '.\n\n' +
     'Regards,\nI AM A RECRUITER';
 
-  GmailApp.sendEmail(email, 'Your Talent Market Snapshot Challenge access', textBody, Object.assign(senderOptions_(), { htmlBody: htmlBody }));
+  GmailApp.sendEmail(email, 'Your Talent Intelligence Starter Pack is ready', textBody, Object.assign(senderOptions_(), { htmlBody: htmlBody }));
   buyer.sheet.getRange(buyer.row, 18).setValue('ACCESS SENT');
 
   return { ok: true, email_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER };
