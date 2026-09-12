@@ -1,4 +1,9 @@
-const SPREADSHEET_ID = '1P6bj6JUBqyFfUMh0AFrlbN1VYs580_Pp0QkaoNn3k74';
+// SOURCE OF TRUTH
+// Active Apps Script: IAAR - TMS Checkout Tracker - HELLO OWNER
+// Owner / execution identity: hello@iamarecruiter.in
+// Active tracker sheet: I AM A RECRUITER - TMS Checkout Tracker
+// Old 3 CASH ENGINE TMS Apps Script is retired and must not be redeployed.
+const SPREADSHEET_ID = '1uH3tTTpXF3Bur5JaCR28FvtLsVvpAkb7tlbe8Zqp98M';
 const BUYERS_SHEET = 'TMS Buyers';
 const COUPONS_SHEET = 'TMS Coupons';
 const ADMINS_SHEET = 'TMS Admins';
@@ -346,7 +351,16 @@ function sendDeliveryEmail_(body) {
             '<div style="margin-top:14px"><a href="' + html_(toolUrl) + '" style="display:inline-block;background:#0e0e10;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;font-size:14px;padding:12px 17px;border-radius:3px">OPEN TOOL →</a></div>' +
           '</td></tr></table>' +
         '</td></tr>' +
-        (whatsappUrl ? '<tr><td style="padding:22px 34px 0 34px;font-family:Arial,sans-serif"><a href="' + html_(whatsappUrl) + '" style="display:inline-block;border:1px solid #0e0e10;color:#0e0e10;text-decoration:none;font-weight:700;font-size:14px;padding:11px 16px">JOIN CLOSED WHATSAPP GROUP</a></td></tr>' : '') +
+        (whatsappUrl ? '<tr><td style="padding:22px 34px 0 34px;font-family:Arial,sans-serif">' +
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f3fff7;border:1px solid #d8eadf">' +
+            '<tr><td style="padding:20px">' +
+              '<div style="font-size:11px;letter-spacing:1px;font-weight:700;color:#167a3f">IMPLEMENTATION SUPPORT</div>' +
+              '<div style="font-size:18px;line-height:1.4;font-weight:800;color:#0e0e10;margin-top:6px">Join the closed Talent Market Snapshot WhatsApp group</div>' +
+              '<p style="margin:8px 0 16px 0;font-size:14px;line-height:1.6;color:#444">Join for implementation help, challenge updates, questions and support while you work through the Starter Pack and Talent Market Snapshot Tool.</p>' +
+              '<a href="' + html_(whatsappUrl) + '" style="display:inline-block;background:#25D366;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 18px;border-radius:4px">JOIN WHATSAPP SUPPORT GROUP →</a>' +
+            '</td></tr>' +
+          '</table>' +
+        '</td></tr>' : '') +
         '<tr><td style="padding:26px 34px 12px 34px;font-family:Arial,sans-serif;color:#0e0e10">' +
           '<a href="' + html_(receiptUrl) + '" style="color:#0e0e10;text-decoration:underline;font-weight:700">View payment receipt</a>' +
           '<p style="margin:22px 0 0 0;font-family:monospace;font-size:11px;line-height:1.7;color:#555">Payment ID: ' + html_(paymentId) + '<br>Order ID: ' + html_(orderId) + '</p>' +
@@ -364,7 +378,7 @@ function sendDeliveryEmail_(body) {
     assetText + '\n\n' +
     'Bonus — Talent Market Snapshot Tool: ' + toolUrl + '\n' +
     'Payment Receipt: ' + receiptUrl + '\n' +
-    (whatsappUrl ? 'Closed WhatsApp Group: ' + whatsappUrl + '\n' : '') +
+    (whatsappUrl ? 'WhatsApp Support Group — get implementation help, challenge updates and support while using the Starter Pack: ' + whatsappUrl + '\n' : '') +
     '\nRecommended sequence: Playbook → Workbook → Prompt Sheet → Worked Example → Talent Market Snapshot Tool.\n' +
     '\nPayment ID: ' + paymentId + '\nOrder ID: ' + orderId + '\n\n' +
     'Need help? Reply to this email or write to ' + DELIVERY_SENDER + '.\n\n' +
