@@ -205,7 +205,7 @@ function buildEntitySchema(config) {
         '@type': 'Organization',
         '@id': 'https://www.iamarecruiter.in/#organization',
         name: 'I AM A RECRUITER',
-        legalName: 'Deori RecruiterHub OPC Solutions OPC Pvt Ltd',
+        legalName: 'Deori RecruiterHub Solutions (OPC) Private Limited',
         alternateName: 'I AM A RECRUITER™',
         url: 'https://www.iamarecruiter.in/',
         logo: 'https://www.iamarecruiter.in/assets/logo_trimmed.png',
