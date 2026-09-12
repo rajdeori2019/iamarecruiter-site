@@ -1,0 +1,43 @@
+name: Patch tracker delivery timeout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/patch-tracker-delivery-timeout.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extend delivery-only webhook timeout
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('payments-bootstrap.js')
+          text = p.read_text()
+          old = "  const timer = setTimeout(() => controller.abort(), 8000);"
+          new = "  const timeoutMs = action === 'send_delivery_email' ? 60000 : 8000;\n  const timer = setTimeout(() => controller.abort(), timeoutMs);"
+          if old not in text:
+              raise SystemExit('Expected timeout line not found; refusing to modify file.')
+          text = text.replace(old, new, 1)
+          p.write_text(text)
+          PY
+
+      - name: Commit patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add payments-bootstrap.js
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Allow delivery email webhook more time"
+          git push
