@@ -1,26 +1,20 @@
 const fs = require('fs');
 const path = require('path');
 
-const sourceDir = path.join(__dirname, '..', 'public', 'assets', 'talent-bundle-final');
+const sourceDir = path.join(__dirname, '..', 'public', 'assets', 'talent-bundle-hq');
 const outputPath = path.join(__dirname, '..', 'public', 'assets', 'talent-intelligence-starter-pack-bundle.webp');
-
-const parts = fs.readdirSync(sourceDir)
-  .filter((name) => /^p\d+\.b64$/.test(name))
-  .sort();
-
-if (!parts.length) {
-  throw new Error('Starter Pack image chunks were not found.');
-}
+const parts = ['hq0.b64', 'hq1.b64'];
 
 const base64 = parts
   .map((name) => fs.readFileSync(path.join(sourceDir, name), 'utf8').trim())
   .join('');
 
 const image = Buffer.from(base64, 'base64');
+const isWebP = image.subarray(0, 4).toString('ascii') === 'RIFF' && image.subarray(8, 12).toString('ascii') === 'WEBP';
 
-if (image.length < 50000 || image.subarray(0, 4).toString('ascii') !== 'RIFF' || image.subarray(8, 12).toString('ascii') !== 'WEBP') {
-  throw new Error(`Starter Pack image reconstruction failed validation (${image.length} bytes).`);
+if (!isWebP || image.length !== 105206) {
+  throw new Error(`Starter Pack HQ image reconstruction failed validation (${image.length} bytes, WebP=${isWebP}).`);
 }
 
 fs.writeFileSync(outputPath, image);
-console.log(`Starter Pack bundle rebuilt: ${parts.length} parts, ${image.length} bytes.`);
+console.log(`Starter Pack HQ image rebuilt: ${image.length} bytes from ${parts.length} chunks.`);
