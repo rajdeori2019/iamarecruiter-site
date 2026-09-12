@@ -6,7 +6,7 @@ const DELIVERY_SENDER = 'hello@iamarecruiter.in';
 const DELIVERY_BRAND = 'I AM A RECRUITER';
 const DELIVERY_BASE_URL = 'https://www.iamarecruiter.in';
 const PRODUCT_NAME = 'Talent Intelligence Starter Pack';
-const PRODUCT_IMAGE_URL = DELIVERY_BASE_URL + '/assets/talent-intelligence-starter-pack-bundle-hq.png';
+const PRODUCT_IMAGE_URL = DELIVERY_BASE_URL + '/assets/talent-intelligence-starter-pack-delivery.png';
 const BUYER_ASSETS = [
   { label: 'Stop Sourcing Blind Playbook', fileId: '1W5YNcv0slqtslxLGwMVOeTrbQqVPN3hB' },
   { label: 'Talent Intelligence Workbook', fileId: '1wmmBJhDHFQgvI406n98XeGmabSOy3jMM' },
