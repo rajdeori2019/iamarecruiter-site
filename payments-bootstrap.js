@@ -272,8 +272,11 @@ async function createOrder(req, res) {
 
     if (appliedCoupon && !trackerConfigured()) couponOrderCache = order;
 
-    if (trackerConfigured()) {
-      await trackerRequest('order_created', {
+    // Coupon orders already have a reservation row, so linking the Razorpay order
+    // can happen in the background. Non-coupon orders are created in the tracker
+    // after payment verification, avoiding an unnecessary checkout delay.
+    if (trackerConfigured() && reservationId) {
+      trackerRequest('order_created', {
         reservation_id: reservationId,
         customer,
         product: PRODUCT,
@@ -326,13 +329,45 @@ async function capturedPurchase(orderId, paymentId) {
   return { order, payment, amount };
 }
 
-function syncTrackerAfterPayment(orderId, paymentId, amount, coupon) {
+function trackerOrderPayload_(order) {
+  const notes = order && order.notes ? order.notes : {};
+  const coupon = String(notes.coupon || '');
+  const reservationRaw = String(notes.tracker_reservation_id || '');
+  const finalAmount = Number(order && order.amount || AMOUNT);
+  return {
+    reservation_id: reservationRaw === 'none' ? '' : clean(reservationRaw, 120),
+    customer: {
+      name: clean(notes.customer_name, 120),
+      email: normalizeEmail(notes.customer_email),
+      mobile: normalizeMobile(notes.customer_mobile),
+      billing_address: clean(notes.billing_address, 240),
+      linkedin_url: String(notes.linkedin_url || '') === 'not-provided' ? '' : clean(notes.linkedin_url, 240)
+    },
+    product: clean(notes.product, 160) || PRODUCT,
+    original_price_paise: AMOUNT,
+    coupon: coupon === 'none' ? '' : coupon,
+    discount_paise: Math.max(0, AMOUNT - finalAmount),
+    final_amount_paise: finalAmount,
+    user_type: clean(notes.user_type, 40) || 'BUYER',
+    coupon_counted: String(notes.coupon_counted || '').toUpperCase() === 'YES',
+    razorpay_order_id: String(order && order.id || ''),
+    source: clean(notes.source, 160)
+  };
+}
+
+function syncTrackerAfterPayment(order, paymentId, amount) {
   if (!trackerConfigured()) return;
+  const orderId = String(order && order.id || '');
+  const notes = order && order.notes ? order.notes : {};
+  const coupon = String(notes.coupon || '');
   const whatsappGroupUrl = /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || ''))
     ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim()
     : '';
 
+  // Ensure the order exists in the tracker before marking payment captured. This
+  // removes the race between a fast payment and the background order-link write.
   Promise.resolve()
+    .then(() => trackerRequest('order_created', trackerOrderPayload_(order)))
     .then(() => trackerRequest('payment_verified', {
       razorpay_order_id: orderId,
       razorpay_payment_id: paymentId,
@@ -369,7 +404,7 @@ async function verifyPayment(req, res) {
     const order = purchase.order;
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
 
-    syncTrackerAfterPayment(orderId, paymentId, purchase.amount, coupon);
+    syncTrackerAfterPayment(order, paymentId, purchase.amount);
 
     return json(res, 200, {
       verified: true,
@@ -458,7 +493,8 @@ function serveCheckoutPage(res) {
       .replace('Receive the payment/access path', 'Continue to secure payment')
       .replace('The founding-beta payment and access details are shared manually.', 'Your verified details and final payable amount are passed into the secure Razorpay payment step.')
       .replace('Payment and access are currently handled manually during the founding beta. Starting the WhatsApp conversation does not itself charge you.', 'Payment is processed securely through Razorpay after your checkout details and final payable amount are confirmed.')
-      .replace('</body>', '<script src="/js/talent-snapshot-checkout.js"></script>\n</body>');
+      .replace('</body>', '<script src="/js/talent-snapshot-checkout.js"></script>\
+</body>');
     res.statusCode = 200;
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache');
