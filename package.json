@@ -5,7 +5,7 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-    "start": "node scripts/build-starter-bundle.js && node server.js"
+    "start": "node server.js"
   },
   "engines": {
     "node": ">=18"
