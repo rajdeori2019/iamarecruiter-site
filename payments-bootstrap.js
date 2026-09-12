@@ -81,7 +81,8 @@ async function trackerRequest(action, payload) {
   const separator = webhook.includes('?') ? '&' : '?';
   const authenticatedWebhook = webhook + separator + 'token=' + encodeURIComponent(trackerToken);
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
+  const timeoutMs = action === 'send_delivery_email' ? 60000 : 8000;
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const response = await fetch(authenticatedWebhook, {
       method: 'POST',
