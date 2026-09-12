@@ -6,6 +6,7 @@ const DELIVERY_SENDER = 'hello@iamarecruiter.in';
 const DELIVERY_BRAND = 'I AM A RECRUITER';
 const DELIVERY_BASE_URL = 'https://www.iamarecruiter.in';
 const PRODUCT_NAME = 'Talent Intelligence Starter Pack';
+const PRODUCT_IMAGE_URL = DELIVERY_BASE_URL + '/assets/talent-intelligence-starter-pack-bundle-hq.png';
 const BUYER_ASSETS = [
   { label: 'Stop Sourcing Blind Playbook', fileId: '1W5YNcv0slqtslxLGwMVOeTrbQqVPN3hB' },
   { label: 'Talent Intelligence Workbook', fileId: '1wmmBJhDHFQgvI406n98XeGmabSOy3jMM' },
@@ -18,7 +19,6 @@ function doPost(e) {
     const expectedToken = PropertiesService.getScriptProperties().getProperty('TMS_TRACKER_TOKEN');
     const suppliedToken = String((e && e.parameter && e.parameter.token) || '');
     if (!expectedToken || suppliedToken !== expectedToken) return out_({ ok: false, error: 'Unauthorized' });
-
     const body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
     const action = String(body.action || '');
     if (action === 'check_coupon') return out_(checkCoupon_(body));
@@ -143,7 +143,9 @@ function checkCoupon_(body) {
     return { ok: true, valid: true, amount_paise: Math.round(finalPrice * 100), discount_paise: Math.round(discountValue * 100), user_type: 'BUYER', coupon_counted: true, message: code + ' is already reserved for this buyer.' };
   }
 
-  if (publicUses >= maxUses) return { ok: true, valid: false, amount_paise: Math.round(original * 100), discount_paise: 0, user_type: 'BUYER', coupon_counted: true, message: code + ' has already been used.' };
+  if (publicUses >= maxUses) {
+    return { ok: true, valid: false, amount_paise: Math.round(original * 100), discount_paise: 0, user_type: 'BUYER', coupon_counted: true, message: code + ' has already been used.' };
+  }
 
   return { ok: true, valid: true, amount_paise: Math.round(finalPrice * 100), discount_paise: Math.round(discountValue * 100), user_type: 'BUYER', coupon_counted: true, message: code + ' applied. ₹' + discountValue + ' discount.' };
 }
@@ -272,13 +274,22 @@ function buyerByOrder_(orderId) {
 function senderOptions_() {
   const effective = normEmail_(Session.getEffectiveUser().getEmail());
   const aliases = GmailApp.getAliases().map(normEmail_);
-  if (effective === DELIVERY_SENDER) {
-    return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER };
-  }
-  if (aliases.indexOf(DELIVERY_SENDER) >= 0) {
-    return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER, from: DELIVERY_SENDER };
-  }
+  if (effective === DELIVERY_SENDER) return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER };
+  if (aliases.indexOf(DELIVERY_SENDER) >= 0) return { name: DELIVERY_BRAND, replyTo: DELIVERY_SENDER, from: DELIVERY_SENDER };
   throw new Error('Delivery email blocked: Apps Script must execute as hello@iamarecruiter.in or have hello@iamarecruiter.in configured as a Gmail send-as alias.');
+}
+
+function assetButtonHtml_(asset, index) {
+  const step = ['LEARN','APPLY','STRUCTURE + VERIFY','SEE IT DONE'][index] || 'ASSET';
+  return '<tr><td style="padding:0 0 12px 0">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;border:1px solid #dedbd3;background:#ffffff">' +
+      '<tr><td style="padding:18px 20px">' +
+        '<div style="font-family:monospace;font-size:10px;letter-spacing:1px;color:#7b5a00;font-weight:700">0' + (index + 1) + ' · ' + step + '</div>' +
+        '<div style="font-family:Arial,sans-serif;font-size:18px;line-height:1.35;font-weight:700;color:#0e0e10;margin-top:7px">' + html_(asset.label) + '</div>' +
+        '<div style="margin-top:14px"><a href="' + html_(assetUrl_(asset.fileId)) + '" style="display:inline-block;background:#f4c400;color:#0e0e10;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;font-size:14px;padding:11px 16px;border-radius:3px">OPEN PDF →</a></div>' +
+      '</td></tr>' +
+    '</table>' +
+  '</td></tr>';
 }
 
 function sendDeliveryEmail_(body) {
@@ -307,35 +318,45 @@ function sendDeliveryEmail_(body) {
   const toolUrl = DELIVERY_BASE_URL + '/tms-v2.html' + q;
   const receiptUrl = DELIVERY_BASE_URL + '/tms/receipt' + q;
   const whatsappUrl = validHttps_(body.whatsapp_group_url || PropertiesService.getScriptProperties().getProperty('TMS_WHATSAPP_GROUP_URL'));
-  const assetLinks = BUYER_ASSETS.map(function(asset) {
-    return '<a href="' + html_(assetUrl_(asset.fileId)) + '">' + html_(asset.label) + '</a>';
-  }).join('<br>');
+  const greeting = name ? 'Hi ' + html_(name) + ',' : 'Hi,';
+  const assetsHtml = BUYER_ASSETS.map(assetButtonHtml_).join('');
   const assetText = BUYER_ASSETS.map(function(asset, idx) {
     return (idx + 1) + '. ' + asset.label + ': ' + assetUrl_(asset.fileId);
   }).join('\n');
 
-  const greeting = name ? 'Hi ' + html_(name) + ',' : 'Hi,';
-  const waBlock = whatsappUrl
-    ? '<p style="margin:24px 0 8px"><strong>Support</strong></p><p><a href="' + html_(whatsappUrl) + '" style="display:inline-block;background:#0E0E10;color:#fff;text-decoration:none;padding:12px 18px;border-radius:4px">Join Support Group</a></p>'
-    : '';
-
-  const htmlBody = '<div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#0E0E10;line-height:1.55">' +
-    '<div style="border-top:8px solid #E8A400;padding-top:24px">' +
-    '<p>' + greeting + '</p>' +
-    '<h2 style="margin:8px 0 12px">Your Talent Intelligence Starter Pack is ready.</h2>' +
-    '<p>We have verified your payment of <strong>' + html_(money_(amountPaise)) + '</strong>. Your purchase includes four buyer PDFs plus the Talent Market Snapshot Tool.</p>' +
-    '<p style="margin:24px 0 8px"><strong>Your 4 buyer assets</strong></p>' +
-    '<p>' + assetLinks + '</p>' +
-    '<p style="margin:24px 0 8px"><strong>Bonus application tool</strong></p>' +
-    '<p><a href="' + html_(toolUrl) + '">Open the Talent Market Snapshot Tool</a><br><a href="' + html_(receiptUrl) + '">View your Payment Receipt</a></p>' +
-    '<p><strong>Recommended sequence:</strong> Playbook → Workbook → Prompt Sheet → Worked Example → apply the workflow to one live role in the Talent Market Snapshot Tool.</p>' +
-    waBlock +
-    '<p style="margin:24px 0 8px"><strong>Payment reference</strong></p>' +
-    '<p style="font-family:monospace;font-size:12px">Payment ID: ' + html_(paymentId) + '<br>Order ID: ' + html_(orderId) + '</p>' +
-    '<p>If you need help, reply to this email or write to <a href="mailto:' + DELIVERY_SENDER + '">' + DELIVERY_SENDER + '</a>.</p>' +
-    '<p>Regards,<br><strong>I AM A RECRUITER</strong></p>' +
-    '<p style="font-size:11px;color:#666;border-top:1px solid #ddd;padding-top:14px">These buyer files are shared with the email used at checkout. Please keep this email for your records. The payment receipt is not a GST/tax invoice.</p>' +
-    '</div></div>';
+  const htmlBody = '<div style="margin:0;padding:0;background:#f5f3ee">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f5f3ee"><tr><td align="center" style="padding:28px 12px">' +
+      '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:760px;border-collapse:collapse;background:#ffffff">' +
+        '<tr><td style="padding:24px 28px 14px 28px;border-top:8px solid #f4c400">' +
+          '<img src="' + PRODUCT_IMAGE_URL + '" alt="Talent Intelligence Starter Pack" width="704" style="display:block;width:100%;max-width:704px;height:auto;border:0">' +
+        '</td></tr>' +
+        '<tr><td style="padding:10px 34px 8px 34px;font-family:Arial,sans-serif;color:#0e0e10">' +
+          '<p style="margin:0 0 14px 0;font-size:17px;line-height:1.6">' + greeting + '</p>' +
+          '<div style="background:#0e0e10;color:#ffffff;padding:18px 22px;border-left:6px solid #f4c400;font-size:27px;line-height:1.2;font-weight:800">Your Talent Intelligence Starter Pack is ready.</div>' +
+          '<p style="margin:20px 0 0 0;font-size:16px;line-height:1.65;color:#2c2c2f">Your payment of <strong>' + html_(money_(amountPaise)) + '</strong> has been verified. Your access now includes the four final buyer PDFs plus the Talent Market Snapshot Tool.</p>' +
+          '<p style="margin:12px 0 24px 0;font-size:14px;line-height:1.6;color:#666">Recommended sequence: <strong>Playbook → Workbook → Prompt Sheet → Worked Example → Talent Market Snapshot Tool.</strong></p>' +
+        '</td></tr>' +
+        '<tr><td style="padding:0 34px 4px 34px">' +
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse">' + assetsHtml + '</table>' +
+        '</td></tr>' +
+        '<tr><td style="padding:8px 34px 0 34px">' +
+          '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#fff8d6;border:2px solid #0e0e10"><tr><td style="padding:20px">' +
+            '<div style="font-family:monospace;font-size:10px;letter-spacing:1px;color:#7b5a00;font-weight:700">BONUS APPLICATION TOOL</div>' +
+            '<div style="font-family:Arial,sans-serif;font-size:20px;font-weight:800;color:#0e0e10;margin-top:6px">Talent Market Snapshot Tool</div>' +
+            '<div style="margin-top:14px"><a href="' + html_(toolUrl) + '" style="display:inline-block;background:#0e0e10;color:#ffffff;text-decoration:none;font-family:Arial,sans-serif;font-weight:700;font-size:14px;padding:12px 17px;border-radius:3px">OPEN TOOL →</a></div>' +
+          '</td></tr></table>' +
+        '</td></tr>' +
+        (whatsappUrl ? '<tr><td style="padding:22px 34px 0 34px;font-family:Arial,sans-serif"><a href="' + html_(whatsappUrl) + '" style="display:inline-block;border:1px solid #0e0e10;color:#0e0e10;text-decoration:none;font-weight:700;font-size:14px;padding:11px 16px">JOIN CLOSED WHATSAPP GROUP</a></td></tr>' : '') +
+        '<tr><td style="padding:26px 34px 12px 34px;font-family:Arial,sans-serif;color:#0e0e10">' +
+          '<a href="' + html_(receiptUrl) + '" style="color:#0e0e10;text-decoration:underline;font-weight:700">View payment receipt</a>' +
+          '<p style="margin:22px 0 0 0;font-family:monospace;font-size:11px;line-height:1.7;color:#555">Payment ID: ' + html_(paymentId) + '<br>Order ID: ' + html_(orderId) + '</p>' +
+          '<p style="margin:20px 0 0 0;font-size:14px;line-height:1.6;color:#333">Need help? Reply to this email or write to <a href="mailto:' + DELIVERY_SENDER + '" style="color:#0e0e10">' + DELIVERY_SENDER + '</a>.</p>' +
+          '<p style="margin:18px 0 0 0;font-size:14px;line-height:1.6">Regards,<br><strong>I AM A RECRUITER</strong></p>' +
+        '</td></tr>' +
+        '<tr><td style="padding:18px 34px 28px 34px;font-family:Arial,sans-serif;font-size:11px;line-height:1.55;color:#777;border-top:1px solid #e5e2da">These buyer files are shared with the email used at checkout. Please keep this email for your records. The payment receipt is not a GST/tax invoice.</td></tr>' +
+      '</table>' +
+    '</td></tr></table>' +
+  '</div>';
 
   const textBody = (name ? 'Hi ' + name + ',\n\n' : 'Hi,\n\n') +
     'Your Talent Intelligence Starter Pack is ready.\n\n' +
@@ -343,7 +364,7 @@ function sendDeliveryEmail_(body) {
     assetText + '\n\n' +
     'Bonus — Talent Market Snapshot Tool: ' + toolUrl + '\n' +
     'Payment Receipt: ' + receiptUrl + '\n' +
-    (whatsappUrl ? 'Support Group: ' + whatsappUrl + '\n' : '') +
+    (whatsappUrl ? 'Closed WhatsApp Group: ' + whatsappUrl + '\n' : '') +
     '\nRecommended sequence: Playbook → Workbook → Prompt Sheet → Worked Example → Talent Market Snapshot Tool.\n' +
     '\nPayment ID: ' + paymentId + '\nOrder ID: ' + orderId + '\n\n' +
     'Need help? Reply to this email or write to ' + DELIVERY_SENDER + '.\n\n' +
@@ -352,5 +373,11 @@ function sendDeliveryEmail_(body) {
   GmailApp.sendEmail(email, 'Your Talent Intelligence Starter Pack is ready', textBody, Object.assign(senderOptions_(), { htmlBody: htmlBody }));
   buyer.sheet.getRange(buyer.row, 18).setValue('ACCESS SENT');
 
-  return { ok: true, email_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER };
+  return { ok: true, email_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER, product: PRODUCT_NAME };
+}
+
+function testDeliverySender() {
+  Logger.log('Effective user: ' + Session.getEffectiveUser().getEmail());
+  Logger.log('Available aliases: ' + JSON.stringify(GmailApp.getAliases()));
+  Logger.log('Sender config: ' + JSON.stringify(senderOptions_()));
 }
