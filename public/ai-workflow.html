@@ -1,171 +1,21 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>₹99 Talent Market Snapshot Challenge | I AM A RECRUITER</title>
-<meta name="description" content="Bring one live hiring role and build a structured Talent Market Snapshot covering talent supply, target companies, locations, compensation evidence and hiring feasibility.">
-<link rel="canonical" href="https://www.iamarecruiter.in/ai-workflow.html">
-<meta property="og:title" content="Build a Talent Market Snapshot Before You Start Sourcing">
-<meta property="og:description" content="A ₹99 founding beta for working recruiters. Learn the method on a guided case, then apply it to one of your own hiring roles.">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://www.iamarecruiter.in/ai-workflow.html">
-<link rel="icon" type="image/png" href="/assets/favicon-32.png">
-<link rel="apple-touch-icon" href="/assets/favicon-180.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/css/site.css">
-<style>
-.sales-nav .site-nav__inner{justify-content:space-between}.sales-nav .site-nav__cta{margin-left:auto}.sales-nav .site-nav__cta{display:flex;gap:10px;align-items:center}
-.hero{padding:72px 0 40px;border-bottom:2px solid var(--ink);position:relative;overflow:hidden}.hero h1{font-size:clamp(2.8rem,7.4vw,6.2rem);line-height:.93;max-width:1100px;margin-top:10px}.hero__tag{margin-top:24px;font-size:1.16rem;max-width:820px;color:var(--text-muted)}.hero__punch{margin-top:20px;max-width:810px;padding-left:16px;border-left:3px solid var(--accent);font-weight:700}.hero__cta{display:flex;gap:13px;margin-top:31px;flex-wrap:wrap;align-items:center}.hero__fine{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}.hero__strip{margin-top:48px;border-top:2px solid var(--ink);display:grid;grid-template-columns:repeat(4,1fr)}.hero__strip div{padding:16px 18px;border-right:1px solid var(--border);font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted)}.hero__strip div:last-child{border-right:none}.hero__strip b{display:block;font-family:var(--font-body);font-weight:800;font-size:14px;color:var(--text);text-transform:none;letter-spacing:0;margin-top:5px}
-.section-head--wide{max-width:900px}.section-head--wide .lede{margin-top:16px}.cta-row{margin-top:28px;display:flex;gap:12px;flex-wrap:wrap}.micro{margin-top:10px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
-.problem-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:start}.question-list{border-top:2px solid var(--ink)}.question{padding:18px 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:34px 1fr;gap:12px}.question span{font-family:var(--font-mono);font-size:10px;color:var(--accent-ink);padding-top:3px}.question b{font-size:1rem}
-.snapshot-shell{border:2px solid var(--ink);background:var(--paper);box-shadow:8px 8px 0 var(--accent)}.snapshot-head{padding:26px 28px;border-bottom:2px solid var(--ink);display:flex;justify-content:space-between;gap:18px;align-items:end}.snapshot-head h3{font-size:clamp(1.7rem,3vw,2.6rem)}.snapshot-head span{font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:var(--text-muted)}.snapshot-grid{display:grid;grid-template-columns:repeat(2,1fr)}.snapshot-item{padding:24px 25px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);min-height:160px}.snapshot-item:nth-child(even){border-right:none}.snapshot-item:nth-last-child(-n+2){border-bottom:none}.snapshot-item .num{font-family:var(--font-mono);font-size:10px;color:var(--accent-ink);letter-spacing:.08em}.snapshot-item h4{font-size:1rem;margin-top:8px}.snapshot-item p{color:var(--text-muted);font-size:.91rem;margin-top:7px}
-.insight{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:start}.quote-big{font-family:var(--font-display);font-size:clamp(2rem,4.6vw,3.8rem);line-height:1.02;text-transform:uppercase}.quote-big span{color:var(--accent-ink)}.contrast{border:1px solid var(--border)}.contrast-row{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--border)}.contrast-row:last-child{border-bottom:none}.contrast-row div{padding:18px 20px}.contrast-row div:first-child{background:var(--surface)}.contrast-row b{font-size:.95rem}.contrast-row p{font-size:.87rem;color:var(--text-muted);margin-top:5px}
-.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--ink);border:2px solid var(--ink);margin-top:28px}.flow div{background:var(--paper);padding:18px 14px;text-align:center;font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.05em;font-weight:600}.flow div:nth-child(odd){background:var(--surface)}
-.pack{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}.pack__item{background:var(--paper);padding:26px 23px;min-height:205px}.pack__item span{font-family:var(--font-mono);font-size:10px;color:var(--accent-ink);letter-spacing:.08em;text-transform:uppercase}.pack__item h3{font-family:var(--font-body);font-weight:800;text-transform:none;letter-spacing:0;font-size:1.02rem;margin-top:9px}.pack__item p{color:var(--text-muted);font-size:.9rem;margin-top:8px}
-.timeline{border-top:2px solid var(--ink)}.timeline-row{display:grid;grid-template-columns:110px 1fr;gap:24px;padding:23px 0;border-bottom:1px solid var(--border)}.timeline-num{font-family:var(--font-display);font-size:2rem;color:var(--accent-ink)}.timeline-row h3{font-family:var(--font-body);text-transform:none;letter-spacing:0;font-weight:800;font-size:1.1rem}.timeline-row p{color:var(--text-muted);font-size:.93rem;margin-top:5px}
-.afterpay{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}.afterpay__item{background:var(--paper);padding:24px}.afterpay__item span{font-family:var(--font-mono);font-size:10px;color:var(--accent-ink);letter-spacing:.08em}.afterpay__item h3{font-size:1rem;margin-top:8px}.afterpay__item p{color:var(--text-muted);font-size:.9rem;margin-top:7px}
-.fit{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border)}.fit__col{background:var(--paper);padding:30px}.fit__col h3{font-size:1.35rem}.fit__col ul{margin:18px 0 0;padding-left:20px;display:grid;gap:10px;color:var(--text-muted)}
-.offer{display:grid;grid-template-columns:1.12fr .88fr;gap:1px;background:var(--border);border:1px solid var(--border)}.offer__main,.offer__side{background:var(--paper);padding:38px 32px}.offer__label{font-family:var(--font-mono);font-size:11px;color:var(--accent-ink);letter-spacing:.08em;text-transform:uppercase}.offer__price{font-family:var(--font-display);font-size:clamp(3.6rem,7vw,5.8rem);line-height:1;margin-top:10px}.offer__main h3{font-size:1.5rem;margin-top:14px}.offer__main p{color:var(--text-muted);margin-top:12px;max-width:650px}.offer__side dl{margin:10px 0 0}.offer__side div{padding:13px 0;border-bottom:1px solid var(--border)}.offer__side dt{font-family:var(--font-mono);font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.07em}.offer__side dd{margin:3px 0 0;font-weight:700}.purchase-note{margin-top:20px;padding:17px 19px;border-left:3px solid var(--accent);background:var(--surface)}.purchase-note p{color:var(--text-muted);font-size:.88rem;margin:0}
-.faq{border-top:1px solid var(--border)}details{border-bottom:1px solid var(--border);padding:20px 0}summary{cursor:pointer;list-style:none;font-weight:800;padding-right:40px;position:relative}summary::-webkit-details-marker{display:none}summary::after{content:'+';position:absolute;right:0;top:0;font-family:var(--font-mono);color:var(--accent-ink);font-size:20px}details[open] summary::after{content:'−'}details p{color:var(--text-muted);max-width:820px;margin-top:12px}
-.cta-band{text-align:center;padding:90px 24px}.cta-band h2{font-size:clamp(2.2rem,5vw,4.2rem);max-width:920px;margin:0 auto}.cta-band p{margin:18px auto 0;opacity:.74;max-width:700px}.cta-band .hero__cta{justify-content:center}.product-footer{border-top:2px solid var(--ink);padding:34px 0}.product-footer__name{font-family:var(--font-display);font-size:clamp(1.45rem,3vw,2.2rem);text-transform:uppercase}.product-footer__meta{font-family:var(--font-mono);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-top:8px}
-@media(max-width:960px){.problem-grid,.insight,.offer{grid-template-columns:1fr}.pack{grid-template-columns:1fr 1fr}.flow{grid-template-columns:1fr}.flow div{text-align:left}.snapshot-grid{grid-template-columns:1fr}.snapshot-item{border-right:none}.snapshot-item:nth-last-child(2){border-bottom:1px solid var(--border)}}
-@media(max-width:700px){.hero__strip{grid-template-columns:1fr 1fr}.hero__strip div{border-bottom:1px solid var(--border)}.fit,.afterpay,.contrast-row{grid-template-columns:1fr}.timeline-row{grid-template-columns:58px 1fr}.pack{grid-template-columns:1fr}.sales-nav .site-nav__cta .btn--ghost{display:none}}
-@media(max-width:520px){.hero{padding-top:54px}.hero h1{font-size:clamp(2.45rem,14.5vw,4.4rem)}.snapshot-head{align-items:start;flex-direction:column}.hero__strip{grid-template-columns:1fr}}
-</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"Product","name":"Talent Market Snapshot Challenge","description":"A practical founding-beta experience for working recruiters to build a Talent Market Snapshot for one live hiring role.","brand":{"@type":"Brand","name":"I AM A RECRUITER"},"offers":{"@type":"Offer","price":"99","priceCurrency":"INR","url":"https://www.iamarecruiter.in/ai-workflow.html#buy","availability":"https://schema.org/InStock"}}</script>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Talent Intelligence Starter Pack | I AM A RECRUITER</title>
+<meta name="robots" content="noindex,follow">
+<link rel="canonical" href="https://www.iamarecruiter.in/talent-intelligence-starter.html">
+<script>
+(function(){
+  var target = '/talent-intelligence-starter.html' + window.location.search + window.location.hash;
+  window.location.replace(target);
+})();
+</script>
+<noscript><meta http-equiv="refresh" content="0;url=/talent-intelligence-starter.html"></noscript>
 </head>
 <body>
-<nav class="site-nav sales-nav"><div class="site-nav__inner"><a class="site-nav__logo" href="/"><img src="/assets/logo_trimmed.png" alt="I AM A RECRUITER"></a><div class="site-nav__cta"><a class="btn btn--ghost" href="#snapshot">See What You’ll Build</a><a class="btn btn--accent" href="#buy">Build My Snapshot — ₹99</a></div></div></nav>
-<main>
-<section class="hero" id="hero"><div class="bg-grid"></div><div class="container">
-  <span class="kicker">₹99 Founding Beta · For Working Recruiters</span>
-  <h1>HIRING FOR A<br>DIFFICULT <span class="accent">ROLE?</span></h1>
-  <p class="hero__tag"><strong>Build a Talent Market Snapshot before you start sourcing.</strong> Bring one live hiring requirement and build a structured view of talent supply, target companies, locations, compensation evidence and hiring feasibility.</p>
-  <p class="hero__punch">First learn the method through a guided recruiting case. Then apply the same method to one of your own roles.</p>
-  <div class="hero__cta"><a class="btn btn--accent" href="#buy">Build My Talent Market Snapshot — ₹99</a><a class="btn btn--ghost" href="#snapshot">See What I’ll Build ↓</a></div>
-  <div class="micro">Practical challenge · reusable template · guided example · verification checklist</div>
-  <div class="hero__strip"><div>Bring<b>One live role</b></div><div>Research<b>Five market dimensions</b></div><div>Verify<b>Evidence vs assumptions</b></div><div>Build<b>Talent Market Snapshot</b></div></div>
-</div></section>
-
-<section class="section" id="problem"><div class="container problem-grid">
-  <div class="reveal"><div class="eyebrow">The recruiter problem</div><h2>A JD tells you what the business wants.</h2><p class="lede" style="margin-top:16px">It does not tell you whether the market can actually support it. If these questions are unclear, sourcing starts with assumptions.</p><div class="cta-row"><a class="btn btn--accent" href="#buy">Build My Snapshot Before I Start Sourcing — ₹99</a></div></div>
-  <div class="question-list reveal">
-    <div class="question"><span>01</span><b>Does enough relevant talent actually exist?</b></div>
-    <div class="question"><span>02</span><b>Where is that talent located?</b></div>
-    <div class="question"><span>03</span><b>Which companies employ similar people?</b></div>
-    <div class="question"><span>04</span><b>What compensation evidence can I find?</b></div>
-    <div class="question"><span>05</span><b>Is the requirement realistic as written?</b></div>
-    <div class="question"><span>06</span><b>What should I tell the hiring manager before sourcing begins?</b></div>
-  </div>
-</div></section>
-
-<section class="section section--surface" id="snapshot"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">What you will build</div><h2>Your Talent Market Snapshot.</h2><p class="lede">Not another AI prompt sheet. Not a generic eBook. You will build a structured recruiter-ready snapshot for one hiring requirement.</p></div>
-  <div class="snapshot-shell reveal"><div class="snapshot-head"><div><span>Reusable work output</span><h3>TALENT MARKET SNAPSHOT</h3></div><span>One hiring requirement · evidence-led</span></div><div class="snapshot-grid">
-    <div class="snapshot-item"><span class="num">01 · HIRING REQUIREMENT</span><h4>What are we actually trying to hire?</h4><p>Separate mandatory, preferred and unclear criteria before market research begins.</p></div>
-    <div class="snapshot-item"><span class="num">02 · TALENT SUPPLY</span><h4>What does visible talent availability look like?</h4><p>Record the observable talent pool, search logic and limitations.</p></div>
-    <div class="snapshot-item"><span class="num">03 · TARGET COMPANIES</span><h4>Where is relevant talent likely to sit?</h4><p>Map direct-fit and adjacent company pools based on relevant capability.</p></div>
-    <div class="snapshot-item"><span class="num">04 · LOCATION VIEW</span><h4>Which locations appear stronger or weaker?</h4><p>Compare visible talent pools and note the trade-offs created by location constraints.</p></div>
-    <div class="snapshot-item"><span class="num">05 · COMPENSATION EVIDENCE</span><h4>What credible compensation signals can be found?</h4><p>Separate observed evidence from estimates and label uncertainty.</p></div>
-    <div class="snapshot-item"><span class="num">06 · HIRING FEASIBILITY</span><h4>What is the market telling us?</h4><p>Assess whether the requirement appears realistic, difficult, narrow, misaligned or still unclear.</p></div>
-    <div class="snapshot-item"><span class="num">07 · RECRUITER RECOMMENDATION</span><h4>What should you advise?</h4><p>Turn the research into questions, trade-offs and a recruiter recommendation.</p></div>
-    <div class="snapshot-item"><span class="num">08 · EVIDENCE & UNKNOWNS</span><h4>What is verified and what is not?</h4><p>Keep sources, assumptions, limitations and missing information visible.</p></div>
-  </div></div>
-  <div class="cta-row reveal"><a class="btn btn--accent" href="#buy">Build My Talent Market Snapshot — ₹99</a></div>
-</div></section>
-
-<section class="section" id="why-it-matters"><div class="container insight">
-  <div class="quote-big reveal">STRONG RECRUITING STARTS WITH A BETTER <span>QUESTION.</span></div>
-  <div class="reveal"><div class="eyebrow">Before sourcing</div><h2>Do not only ask, “Where can I find candidates?”</h2><p class="lede" style="margin-top:15px">Also ask: <strong>“Is the market telling us this requirement is realistic?”</strong></p><p class="lede" style="margin-top:12px">The goal is not to become a market researcher. The goal is to make a better-informed recruiting recommendation before execution begins.</p></div>
-</div></section>
-
-<section class="section section--surface" id="why-not-ai"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">Why not just ask ChatGPT?</div><h2>AI can generate an answer. That does not automatically make it reliable market intelligence.</h2><p class="lede">A confident-looking answer still needs source quality, recency, role context, evidence checks and recruiter judgment.</p></div>
-  <div class="contrast reveal">
-    <div class="contrast-row"><div><b>AI says a talent pool is large.</b><p>The statement may sound convincing.</p></div><div><b>You verify what was actually searched.</b><p>Define the role, location, source and observable evidence.</p></div></div>
-    <div class="contrast-row"><div><b>AI gives a salary number.</b><p>The number may be an unsupported estimate.</p></div><div><b>You trace the compensation evidence.</b><p>Keep sources, assumptions and uncertainty visible.</p></div></div>
-    <div class="contrast-row"><div><b>AI recommends a hiring approach.</b><p>A recommendation can be generated without sufficient context.</p></div><div><b>You own the recruiter recommendation.</b><p>Use verified evidence and state what remains unknown.</p></div></div>
-  </div>
-  <div class="flow reveal"><div>Input</div><div>AI Analysis</div><div>Evidence</div><div>Recruiter Verification</div><div>Recommendation</div></div>
-  <div class="cta-row reveal"><a class="btn btn--accent" href="#buy">Use AI With a Verified Recruiting Workflow — ₹99</a></div>
-</div></section>
-
-<section class="section" id="package"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">The challenge kit</div><h2>Everything you need to build your first snapshot.</h2></div>
-  <div class="pack reveal">
-    <div class="pack__item"><span>01 · Template</span><h3>Talent Market Snapshot</h3><p>A reusable structure for organizing market evidence and recruiter recommendations.</p></div>
-    <div class="pack__item"><span>02 · Guided Example</span><h3>Recruiting Case</h3><p>Learn the method on a realistic example before using your own role.</p></div>
-    <div class="pack__item"><span>03 · Method</span><h3>AI Research Workflow</h3><p>A practical sequence for supply, companies, locations, compensation evidence and feasibility.</p></div>
-    <div class="pack__item"><span>04 · Guardrail</span><h3>Source Verification Checklist</h3><p>Check source quality, recency, assumptions, missing evidence and unsupported AI claims.</p></div>
-    <div class="pack__item"><span>05 · Framework</span><h3>Compensation Evidence</h3><p>Separate observed compensation evidence from general market estimates.</p></div>
-    <div class="pack__item"><span>06 · Framework</span><h3>Hiring Feasibility</h3><p>Structure whether a requirement appears realistic, difficult, narrow or still needs clarification.</p></div>
-    <div class="pack__item"><span>07 · Apply It</span><h3>Own-Role Worksheet</h3><p>Repeat the method on one of your current hiring requirements.</p></div>
-    <div class="pack__item"><span>08 · Bonus Guide</span><h3>Know the Market Before You Advise the Business</h3><p>A short reference guide to the Talent Intelligence method used in the challenge.</p></div>
-  </div>
-  <div class="cta-row reveal"><a class="btn btn--accent" href="#buy">Get the Full Challenge Kit — ₹99</a></div>
-</div></section>
-
-<section class="section section--surface" id="how"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">How it works</div><h2>Learn it once. Apply it to your own role.</h2></div>
-  <div class="timeline reveal">
-    <div class="timeline-row"><div class="timeline-num">01</div><div><h3>Start with the guided case</h3><p>Use a realistic hiring requirement so you can learn the workflow without exposing confidential information.</p></div></div>
-    <div class="timeline-row"><div class="timeline-num">02</div><div><h3>Research the market</h3><p>Work through talent supply, target companies, location options, compensation evidence and hiring feasibility.</p></div></div>
-    <div class="timeline-row"><div class="timeline-num">03</div><div><h3>Verify what AI gives you</h3><p>Separate evidence from inference and unknowns. Keep source links for factual market claims.</p></div></div>
-    <div class="timeline-row"><div class="timeline-num">04</div><div><h3>Build the first Talent Market Snapshot</h3><p>Turn the research into a structured recruiter view and recommendation.</p></div></div>
-    <div class="timeline-row"><div class="timeline-num">05</div><div><h3>Bring one of your own roles</h3><p>Repeat the method using a live hiring requirement you are authorized to work with.</p></div></div>
-    <div class="timeline-row"><div class="timeline-num">06</div><div><h3>Build your own snapshot</h3><p>Complete the same framework for your role and keep the template for future hiring conversations.</p></div></div>
-  </div>
-  <div class="cta-row reveal"><a class="btn btn--accent" href="#buy">Start the Talent Market Snapshot Challenge — ₹99</a></div>
-</div></section>
-
-<section class="section" id="after-payment"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">What happens after you join</div><h2>No confusion after checkout.</h2><p class="lede">The founding beta is currently handled manually, so the purchase conversation starts on WhatsApp. You will receive the payment and access steps there.</p></div>
-  <div class="afterpay reveal">
-    <div class="afterpay__item"><span>01</span><h3>Start the ₹99 purchase conversation</h3><p>Tap the CTA and message us on WhatsApp.</p></div>
-    <div class="afterpay__item"><span>02</span><h3>Receive the payment/access path</h3><p>The founding-beta payment and access details are shared manually.</p></div>
-    <div class="afterpay__item"><span>03</span><h3>Begin with the guided example</h3><p>Learn the workflow on the provided recruiting case.</p></div>
-    <div class="afterpay__item"><span>04</span><h3>Build the first snapshot</h3><p>Complete the Talent Market Snapshot structure using the guided case.</p></div>
-    <div class="afterpay__item"><span>05</span><h3>Use the reusable toolkit</h3><p>Keep the template, verification checklist and supporting frameworks.</p></div>
-    <div class="afterpay__item"><span>06</span><h3>Apply it to your own role</h3><p>Repeat the process on one current hiring requirement.</p></div>
-  </div>
-  <div class="cta-row reveal"><a class="btn btn--accent" href="#buy">Start Now — ₹99 Founding Beta</a></div>
-</div></section>
-
-<section class="section section--surface" id="fit"><div class="container fit reveal">
-  <div class="fit__col"><div class="eyebrow">This is for you if</div><h3>You want a practical work output.</h3><ul><li>You are a working recruiter or TA professional.</li><li>You work on live hiring requirements.</li><li>You regularly speak with hiring managers.</li><li>You want more evidence before sourcing.</li><li>You use AI, or want to use it with stronger verification.</li><li>You want a practical method rather than another generic course.</li></ul></div>
-  <div class="fit__col"><div class="eyebrow">This may not be for you if</div><h3>You only want shortcuts or guarantees.</h3><ul><li>You only want a collection of prompts.</li><li>You are looking for a full beginner recruitment course.</li><li>You expect AI to make hiring decisions for you.</li><li>You want guaranteed candidate availability or salary data.</li><li>You are not currently working with hiring requirements.</li></ul></div>
-</div></section>
-
-<section class="section" id="buy"><div class="container">
-  <div class="section-head section-head--wide reveal"><div class="eyebrow">Founding beta</div><h2>Bring one role. Build one useful market view.</h2><p class="lede">This first version is being tested with working recruiters to learn whether the workflow is genuinely useful in real recruiting work.</p></div>
-  <div class="offer reveal">
-    <div class="offer__main"><span class="offer__label">Founding beta price</span><div class="offer__price">₹99</div><h3>Talent Market Snapshot Challenge</h3><p>Learn the method on a guided case, verify the evidence, then apply the same workflow to one of your own hiring roles.</p><div class="hero__cta"><a class="btn btn--accent" href="https://wa.me/919742944825?text=Hi%20Prafulla%2C%20I%20want%20to%20build%20my%20Talent%20Market%20Snapshot%20and%20join%20the%20%E2%82%B999%20founding%20beta." target="_blank" rel="noopener">Build My Talent Market Snapshot — ₹99</a><a class="btn btn--ghost" href="#faq">Read FAQ</a></div><div class="purchase-note"><p>Payment and access are currently handled manually during the founding beta. Starting the WhatsApp conversation does not itself charge you.</p></div></div>
-    <div class="offer__side"><span class="offer__label">Included</span><dl><div><dt>Output</dt><dd>Talent Market Snapshot template</dd></div><div><dt>Learn</dt><dd>Guided recruiting case</dd></div><div><dt>Method</dt><dd>AI research workflow</dd></div><div><dt>Guardrail</dt><dd>Source verification checklist</dd></div><div><dt>Frameworks</dt><dd>Compensation + hiring feasibility</dd></div><div><dt>Apply</dt><dd>Own-role worksheet</dd></div><div><dt>Bonus</dt><dd>Practical reference guide</dd></div></dl></div>
-  </div>
-</div></section>
-
-<section class="section section--surface" id="why-99"><div class="container section-head section-head--wide reveal"><div class="eyebrow">Why ₹99?</div><h2>This is a paid validation, not a claim of proven outcomes.</h2><p class="lede">The purpose of the founding beta is to test whether working recruiters genuinely find the workflow useful in real recruiting work. We are not promising guaranteed hires, reduced time-to-fill, perfect market data, promotions or business results.</p><p class="lede" style="margin-top:12px">The practical question is simpler: <strong>Can this help a recruiter build a clearer, evidence-backed market view before sourcing?</strong></p><div class="cta-row"><a class="btn btn--accent" href="#buy">Join the Founding Beta — ₹99</a></div></div></section>
-
-<section class="section" id="faq"><div class="container container--narrow"><div class="section-head"><div class="eyebrow">FAQ</div><h2>Before you start</h2></div><div class="faq">
-  <details><summary>Is this an eBook?</summary><p>No. The guide is supporting material. The main experience is the guided Talent Market Snapshot Challenge and reusable toolkit.</p></details>
-  <details><summary>Do I need ChatGPT Plus?</summary><p>No specific paid AI plan is required for the concept itself. Use an AI tool available to you, subject to your employer’s policies and privacy requirements.</p></details>
-  <details><summary>Can I use a real hiring requirement?</summary><p>Yes. That is the purpose of the second part. Use only information you are authorized to work with, and avoid uploading confidential or personal data into public AI tools without appropriate permission.</p></details>
-  <details><summary>Will you give me a completed market report for my role?</summary><p>No. The challenge teaches you how to research, verify and structure the evidence. It does not promise a pre-built market report for every role.</p></details>
-  <details><summary>Is the market data guaranteed to be accurate?</summary><p>No. Market information changes, sources vary in quality, and AI can produce unsupported claims. Verification and clear limitations are part of the workflow.</p></details>
-  <details><summary>How is this different from free prompts?</summary><p>Prompts are only one input. The challenge focuses on the complete process: research → evidence → verification → feasibility → recruiter recommendation.</p></details>
-  <details><summary>Is this the full Recruiter Cohort?</summary><p>No. This is a small entry experience around AI-Powered Talent Intelligence. The cohort goes deeper into research, verification, stakeholder advisory and complete Talent Market Intelligence Reports.</p></details>
-  <details><summary>What happens after I finish?</summary><p>You can keep using the Talent Market Snapshot structure on future hiring requirements. The broader Strategic Recruiter Diagnostic and cohort remain separate next steps.</p></details>
-</div></div></section>
-
-<section class="cta-band section--ink"><div class="eyebrow" style="justify-content:center">Your next role</div><h2>BEFORE YOU SOURCE, KNOW THE MARKET.</h2><p>Bring one live hiring requirement. Research the market. Verify the evidence. Build your Talent Market Snapshot.</p><div class="hero__cta"><a class="btn btn--accent" href="#buy">Build My Talent Market Snapshot — ₹99</a></div><div class="micro" style="color:inherit;opacity:.6">For working recruiters · practical application · no hiring-outcome guarantee</div></section>
-</main>
-
-<footer class="product-footer"><div class="container"><div class="product-footer__name">Talent Market Snapshot Challenge</div><div class="product-footer__meta">₹99 Founding Beta · Practical Talent Intelligence Entry Experience · I AM A RECRUITER</div></div></footer>
-<footer class="site-footer"><div class="container"><div class="site-footer__legal"><span>&copy; <span id="year"></span> I AM A RECRUITER&trade;</span><span><a href="/privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="/terms.html">Terms</a> &nbsp;·&nbsp; <a href="/cancellation.html">Cancellation &amp; Refunds</a></span></div></div></footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
-<script src="/js/site.js"></script>
+<p>Redirecting to the Talent Intelligence Starter Pack…</p>
+<p><a href="/talent-intelligence-starter.html">Continue to the Starter Pack</a></p>
 </body>
 </html>
