@@ -1,5 +1,7 @@
 const core = require('./payment-notification-core');
 
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 (async () => {
   try {
     if (!core.smtpConfigured()) throw new Error('SMTP is not configured');
@@ -30,9 +32,11 @@ const core = require('./payment-notification-core');
     };
     const messageId = await core.sendInstantAlert(payment, order);
     console.log('PAYMENT_ALERT_SMOKE_TEST_SUCCESS message_id=' + String(messageId || ''));
+    await sleep(15000);
     process.exit(0);
   } catch (err) {
     console.error('PAYMENT_ALERT_SMOKE_TEST_FAILED ' + String(err && err.message || err));
+    await sleep(15000);
     process.exit(1);
   }
 })();
