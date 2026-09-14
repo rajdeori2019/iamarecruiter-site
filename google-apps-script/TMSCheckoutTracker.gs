@@ -224,6 +224,19 @@ function orderCreated_(body) {
   const sh = sheet_(BUYERS_SHEET);
   const reservationId = String(body.reservation_id || '');
   const values = sh.getDataRange().getValues();
+  const orderId = String(body.razorpay_order_id || '').trim();
+
+  // Idempotency: if this Razorpay order is already linked, never append a
+  // second buyer row. This makes retries safe after transient Apps Script or
+  // proxy failures where the write succeeded but the HTTP response was lost.
+  if (orderId) {
+    for (let i = 1; i < values.length; i++) {
+      if (String(values[i][13] || '').trim() === orderId) {
+        return { ok: true, buyer_row: i + 1, already_exists: true };
+      }
+    }
+  }
+
   if (reservationId) {
     for (let i = 1; i < values.length; i++) {
       if (String(values[i][23] || '') === reservationId) {
@@ -284,6 +297,18 @@ function senderOptions_() {
   throw new Error('Delivery email blocked: Apps Script must execute as hello@iamarecruiter.in or have hello@iamarecruiter.in configured as a Gmail send-as alias.');
 }
 
+function deliveryAlreadySent_(email, paymentId) {
+  // The payment ID is unique and is included in every delivery email body.
+  // Searching Sent Mail gives us a durable idempotency check even if Gmail
+  // sent successfully but Apps Script failed before writing ACCESS SENT.
+  const query = 'in:sent to:' + email + ' "' + paymentId + '" subject:"Your Talent Intelligence Starter Pack is ready"';
+  try {
+    return GmailApp.search(query, 0, 1).length > 0;
+  } catch (_) {
+    return false;
+  }
+}
+
 function assetButtonHtml_(asset, index) {
   const step = ['LEARN','APPLY','STRUCTURE + VERIFY','SEE IT DONE'][index] || 'ASSET';
   return '<tr><td style="padding:0 0 12px 0">' +
@@ -315,6 +340,19 @@ function sendDeliveryEmail_(body) {
   const name = String(row[1] || '').trim();
   const email = normEmail_(row[2]);
   if (!email) return { ok: false, error: 'Buyer email is missing.' };
+
+  const accessStatus = String(row[17] || '').trim().toUpperCase();
+  if (accessStatus === 'ACCESS SENT') {
+    return { ok: true, email_sent: true, already_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER, product: PRODUCT_NAME };
+  }
+
+  // If a previous invocation sent the email but died before updating the
+  // tracker, detect the unique payment ID in Sent Mail and repair the tracker
+  // without sending a duplicate.
+  if (deliveryAlreadySent_(email, paymentId)) {
+    buyer.sheet.getRange(buyer.row, 18).setValue('ACCESS SENT');
+    return { ok: true, email_sent: true, already_sent: true, buyer_row: buyer.row, recipient: email, sender: DELIVERY_SENDER, product: PRODUCT_NAME };
+  }
 
   grantBuyerAssetAccess_(email);
 
