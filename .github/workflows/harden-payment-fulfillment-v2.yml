@@ -8,11 +8,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: payment-fulfillment-hardening
+  cancel-in-progress: false
+
 jobs:
   patch:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Apply production hardening
         run: python3 scripts/harden-payment-fulfillment-v2.py
       - name: Validate Node syntax
@@ -33,4 +39,5 @@ jobs:
             exit 0
           fi
           git commit -m "Harden payment fulfillment with reconciliation and canonical recovery"
-          git push
+          git pull --rebase origin main
+          git push origin HEAD:main
