@@ -1,0 +1,36 @@
+name: Harden payment fulfillment v2
+
+on:
+  push:
+    paths:
+      - '.github/workflows/harden-payment-fulfillment-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Apply production hardening
+        run: python3 scripts/harden-payment-fulfillment-v2.py
+      - name: Validate Node syntax
+        run: node --check payments-bootstrap.js
+      - name: Guard against temporary probes
+        shell: bash
+        run: |
+          ! grep -q "TMS_STARTUP_PROBE" payments-bootstrap.js
+          ! grep -q "recovery-probe" payments-bootstrap.js
+      - name: Commit production hardening
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add payments-bootstrap.js google-apps-script/TMSCheckoutTracker.gs
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Harden payment fulfillment with reconciliation and canonical recovery"
+          git push
