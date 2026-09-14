@@ -261,6 +261,13 @@ function paymentVerified_(body) {
   const orderId = String(body.razorpay_order_id || '');
   for (let i = 1; i < values.length; i++) {
     if (String(values[i][13] || '') !== orderId) continue;
+    const incomingPaymentId = String(body.razorpay_payment_id || '').trim();
+    const existingPaymentId = String(values[i][14] || '').trim();
+    const existingPaymentStatus = String(values[i][15] || '').trim().toUpperCase();
+    const existingAccessStatus = String(values[i][17] || '').trim().toUpperCase();
+    if (incomingPaymentId && incomingPaymentId === existingPaymentId && existingPaymentStatus === 'CAPTURED' && existingAccessStatus === 'ACCESS SENT') {
+      return { ok: true, buyer_row: i + 1, already_verified: true, access_sent: true };
+    }
     sh.getRange(i + 1, 15).setValue(body.razorpay_payment_id || '');
     sh.getRange(i + 1, 16).setValue(body.payment_status || 'CAPTURED');
     sh.getRange(i + 1, 17).setValue(now_());
@@ -323,6 +330,16 @@ function assetButtonHtml_(asset, index) {
 }
 
 function sendDeliveryEmail_(body) {
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    return sendDeliveryEmailUnlocked_(body);
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function sendDeliveryEmailUnlocked_(body) {
   const orderId = String(body.razorpay_order_id || '').trim();
   const paymentId = String(body.razorpay_payment_id || '').trim();
   if (!orderId || !paymentId) return { ok: false, error: 'Missing order or payment ID.' };

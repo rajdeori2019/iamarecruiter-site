@@ -12,6 +12,11 @@ const TEST_COUPON_DISCOUNT = 9800;
 const TEST_COUPON_AMOUNT = AMOUNT - TEST_COUPON_DISCOUNT;
 const rateBuckets = new Map();
 let couponOrderCache = null;
+const fulfillmentLocks = new Map();
+const webhookEventIds = new Map();
+let reconciliationRunning = false;
+const RECONCILE_INTERVAL_MS = 5 * 60 * 1000;
+
 
 function json(res, status, payload) {
   res.statusCode = status;
@@ -93,8 +98,15 @@ async function trackerRequest(action, payload) {
     });
     const text = await response.text();
     let data;
-    try { data = JSON.parse(text); } catch (_) { throw new Error('Tracker returned a non-JSON response'); }
-    if (!response.ok || !data || data.ok === false) throw new Error((data && data.error) || 'Tracker request failed');
+    try {
+      data = JSON.parse(text);
+    } catch (_) {
+      const sample = String(text || '').replace(/\s+/g, ' ').trim().slice(0, 220);
+      throw new Error('Tracker ' + action + ' returned non-JSON (HTTP ' + response.status + ', ' + (response.headers.get('content-type') || 'unknown') + '): ' + (sample || '<empty body>'));
+    }
+    if (!response.ok || !data || data.ok === false) {
+      throw new Error('Tracker ' + action + ' failed (HTTP ' + response.status + '): ' + ((data && data.error) || 'unknown error'));
+    }
     return data;
   } finally {
     clearTimeout(timer);
@@ -402,14 +414,231 @@ async function syncTrackerAfterPayment(order, paymentId, amount) {
     await paymentVerifiedWithRetry_(paymentPayload);
   }
 
-  const delivery = await trackerRequest('send_delivery_email', {
-    razorpay_order_id: orderId,
-    razorpay_payment_id: paymentId,
-    amount_paise: amount,
-    whatsapp_group_url: whatsappGroupUrl
+  let delivery;
+  try {
+    delivery = await trackerRequest('send_delivery_email', {
+      razorpay_order_id: orderId,
+      razorpay_payment_id: paymentId,
+      amount_paise: amount,
+      whatsapp_group_url: whatsappGroupUrl
+    });
+  } catch (err) {
+    err.fulfillmentStage = 'delivery';
+    throw err;
+  }
+  if (!delivery || delivery.email_sent !== true) {
+    const err = new Error('Buyer delivery email did not confirm success.');
+    err.fulfillmentStage = 'delivery';
+    throw err;
+  }
+  return { tracked: true, delivery_status: delivery.already_sent ? 'already_sent' : 'sent' };
+}
+
+
+function paymentNotesObject_(payment) {
+  return payment && payment.notes && !Array.isArray(payment.notes) && typeof payment.notes === 'object' ? payment.notes : {};
+}
+
+async function updatePaymentNotes_(payment, patch) {
+  if (!payment || !payment.id) throw new Error('Cannot update fulfillment state without a Razorpay payment ID.');
+  const notes = Object.assign({}, paymentNotesObject_(payment), patch || {});
+  return razorpayRequest('/payments/' + encodeURIComponent(payment.id) + '/', {
+    method: 'PATCH',
+    body: { notes }
   });
-  if (!delivery || delivery.email_sent !== true) throw new Error('Buyer delivery email did not confirm success.');
-  return { tracked: true, delivery_status: 'sent' };
+}
+
+function isStarterPackOrder_(order) {
+  const notes = order && order.notes && !Array.isArray(order.notes) ? order.notes : {};
+  return String(notes.product || '').trim() === PRODUCT;
+}
+
+function fulfillmentState_(payment) {
+  return String(paymentNotesObject_(payment).iaar_fulfillment || '').trim().toLowerCase();
+}
+
+async function fulfillCapturedPayment_(orderId, paymentId, trigger, options = {}) {
+  const key = String(paymentId || '');
+  if (fulfillmentLocks.has(key)) return fulfillmentLocks.get(key);
+
+  const work = (async () => {
+    const purchase = await capturedPurchase(orderId, paymentId);
+    if (!isStarterPackOrder_(purchase.order)) throw new Error('Captured payment is not for the Talent Intelligence Starter Pack.');
+    if (!trackerConfigured()) throw new Error('TMS tracker is not configured.');
+
+    const state = fulfillmentState_(purchase.payment);
+    if (state === 'delivered') {
+      return { tracked: true, delivery_status: 'already_sent', idempotent: true };
+    }
+
+    const ambiguous = state === 'processing' || state === 'delivery_unknown';
+    const allowAmbiguousRetry = options.allowAmbiguousRetry === true || String(process.env.TMS_IDEMPOTENT_DELIVERY_CONFIRMED || '').toLowerCase() === 'true';
+    if (ambiguous && !allowAmbiguousRetry) {
+      console.warn('FULFILLMENT_REVIEW_REQUIRED payment=' + paymentId + ' state=' + state + ' trigger=' + trigger);
+      return { tracked: true, delivery_status: 'pending_review', idempotent: true };
+    }
+
+    let payment = await updatePaymentNotes_(purchase.payment, {
+      iaar_fulfillment: 'processing',
+      iaar_fulfill_trigger: clean(trigger, 80),
+      iaar_fulfill_started: String(Math.floor(Date.now() / 1000)),
+      iaar_last_error: ''
+    });
+
+    try {
+      const fulfillment = await syncTrackerAfterPayment(purchase.order, paymentId, purchase.amount);
+      payment = await updatePaymentNotes_(payment, {
+        iaar_fulfillment: 'delivered',
+        iaar_fulfilled_at: String(Math.floor(Date.now() / 1000)),
+        iaar_last_error: ''
+      });
+      console.log('FULFILLMENT_OK payment=' + paymentId + ' order=' + orderId + ' trigger=' + trigger + ' status=' + String(fulfillment.delivery_status || 'sent'));
+      return fulfillment;
+    } catch (err) {
+      const deliveryWasAttempted = err && err.fulfillmentStage === 'delivery';
+      const failureState = deliveryWasAttempted ? 'delivery_unknown' : 'retry_pending';
+      const errorText = clean(String(err && err.message || err), 220);
+      await updatePaymentNotes_(payment, {
+        iaar_fulfillment: failureState,
+        iaar_last_error: errorText
+      }).catch((noteErr) => console.error('FULFILLMENT_STATE_WRITE_FAILED payment=' + paymentId + ' error=' + String(noteErr && noteErr.message || noteErr)));
+      console.error('FULFILLMENT_FAILED payment=' + paymentId + ' order=' + orderId + ' trigger=' + trigger + ' state=' + failureState + ' error=' + errorText);
+      throw err;
+    }
+  })();
+
+  fulfillmentLocks.set(key, work);
+  try {
+    return await work;
+  } finally {
+    fulfillmentLocks.delete(key);
+  }
+}
+
+function readRawBody_(req, maxBytes = 250000) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let total = 0;
+    req.on('data', (chunk) => {
+      total += chunk.length;
+      if (total > maxBytes) {
+        reject(new Error('Webhook body too large'));
+        req.destroy();
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks)));
+    req.on('error', reject);
+  });
+}
+
+function rememberWebhookEvent_(eventId) {
+  if (!eventId) return false;
+  if (webhookEventIds.has(eventId)) return true;
+  webhookEventIds.set(eventId, Date.now());
+  if (webhookEventIds.size > 1000) {
+    const oldest = [...webhookEventIds.entries()].sort((a, b) => a[1] - b[1]).slice(0, 250);
+    oldest.forEach(([id]) => webhookEventIds.delete(id));
+  }
+  return false;
+}
+
+async function razorpayWebhook(req, res) {
+  const secret = String(process.env.RAZORPAY_WEBHOOK_SECRET || '');
+  if (!secret) return json(res, 503, { ok: false, error: 'Webhook is not configured.' });
+  try {
+    const raw = await readRawBody_(req);
+    const signature = String(req.headers['x-razorpay-signature'] || '');
+    const expected = crypto.createHmac('sha256', secret).update(raw).digest('hex');
+    if (!signature || !safeEqualHex(expected, signature)) return json(res, 400, { ok: false, error: 'Invalid webhook signature.' });
+
+    const eventId = String(req.headers['x-razorpay-event-id'] || '');
+    if (rememberWebhookEvent_(eventId)) return json(res, 200, { ok: true, duplicate: true });
+
+    const body = JSON.parse(raw.toString('utf8'));
+    const event = String(body.event || '');
+    if (event !== 'payment.captured' && event !== 'order.paid') return json(res, 200, { ok: true, ignored: true });
+
+    const payment = body && body.payload && body.payload.payment && body.payload.payment.entity;
+    const order = body && body.payload && body.payload.order && body.payload.order.entity;
+    const paymentId = String(payment && payment.id || '');
+    const orderId = String(payment && payment.order_id || order && order.id || '');
+    if (!paymentId || !orderId) return json(res, 200, { ok: true, ignored: true, reason: 'missing_payment_or_order' });
+
+    // Acknowledge quickly. Reconciliation is the durable fallback if this async attempt fails.
+    json(res, 202, { ok: true, accepted: true });
+    Promise.resolve()
+      .then(() => fulfillCapturedPayment_(orderId, paymentId, 'razorpay_webhook'))
+      .catch((err) => console.error('WEBHOOK_FULFILLMENT_FAILED payment=' + paymentId + ' error=' + String(err && err.message || err)));
+  } catch (err) {
+    console.error('RAZORPAY_WEBHOOK_ERROR ' + String(err && err.message || err));
+    if (!res.headersSent) return json(res, 400, { ok: false, error: 'Invalid webhook request.' });
+  }
+}
+
+async function capturedPaymentForOrder_(order) {
+  if (order && order.payments && Array.isArray(order.payments.items)) {
+    return order.payments.items.find((p) => p && p.status === 'captured') || null;
+  }
+  const payments = await razorpayRequest('/orders/' + encodeURIComponent(order.id) + '/payments');
+  const items = Array.isArray(payments && payments.items) ? payments.items : [];
+  return items.find((p) => p && p.status === 'captured') || null;
+}
+
+async function reconcileCapturedPayments_() {
+  if (reconciliationRunning || !trackerConfigured()) return;
+  const fromEpoch = Number(process.env.TMS_RECONCILE_FROM_EPOCH || 0);
+  if (!Number.isFinite(fromEpoch) || fromEpoch <= 0) return;
+  reconciliationRunning = true;
+  try {
+    const toEpoch = Math.floor(Date.now() / 1000);
+    let skip = 0;
+    while (skip < 500) {
+      const path = '/orders?from=' + encodeURIComponent(String(fromEpoch)) + '&to=' + encodeURIComponent(String(toEpoch)) + '&count=100&skip=' + skip;
+      const page = await razorpayRequest(path);
+      const orders = Array.isArray(page && page.items) ? page.items : [];
+      for (const order of orders) {
+        if (!order || order.status !== 'paid' || !isStarterPackOrder_(order)) continue;
+        try {
+          const payment = await capturedPaymentForOrder_(order);
+          if (!payment) continue;
+          const state = fulfillmentState_(payment);
+          if (state === 'delivered') continue;
+          const allowAmbiguous = String(process.env.TMS_IDEMPOTENT_DELIVERY_CONFIRMED || '').toLowerCase() === 'true';
+          if ((state === 'processing' || state === 'delivery_unknown') && !allowAmbiguous) {
+            console.warn('RECONCILE_REVIEW_REQUIRED payment=' + payment.id + ' state=' + state);
+            continue;
+          }
+          await fulfillCapturedPayment_(order.id, payment.id, 'razorpay_reconciliation', { allowAmbiguousRetry: allowAmbiguous });
+        } catch (err) {
+          console.error('RECONCILE_ORDER_FAILED order=' + String(order.id || '') + ' error=' + String(err && err.message || err));
+        }
+      }
+      if (orders.length < 100) break;
+      skip += 100;
+    }
+  } catch (err) {
+    console.error('RECONCILIATION_FAILED ' + String(err && err.message || err));
+  } finally {
+    reconciliationRunning = false;
+  }
+}
+
+async function recoverFulfillment(req, res) {
+  const expected = String(process.env.TMS_RECOVERY_TOKEN || '');
+  const supplied = String(req.headers['x-tms-recovery-token'] || '');
+  if (!expected || supplied !== expected) return json(res, 403, { ok: false, error: 'Forbidden' });
+  try {
+    const body = await readJson(req);
+    const orderId = clean(body.order_id || body.razorpay_order_id, 120);
+    const paymentId = clean(body.payment_id || body.razorpay_payment_id, 120);
+    if (!orderId || !paymentId) return json(res, 400, { ok: false, error: 'Missing order or payment ID.' });
+    const result = await fulfillCapturedPayment_(orderId, paymentId, 'canonical_recovery', { allowAmbiguousRetry: body.force_unknown_retry === true });
+    return json(res, 200, { ok: true, result });
+  } catch (err) {
+    return json(res, 500, { ok: false, error: String(err && err.message || err) });
+  }
 }
 
 async function verifyPayment(req, res) {
@@ -432,7 +661,7 @@ async function verifyPayment(req, res) {
 
     if (trackerConfigured()) {
       try {
-        const fulfillment = await syncTrackerAfterPayment(order, paymentId, purchase.amount);
+        const fulfillment = await fulfillCapturedPayment_(orderId, paymentId, 'checkout_handler');
         deliveryStatus = fulfillment && fulfillment.delivery_status ? fulfillment.delivery_status : 'pending';
       } catch (fulfillmentErr) {
         console.error('Post-payment fulfillment failed: ' + String(fulfillmentErr && fulfillmentErr.message || fulfillmentErr));
@@ -517,29 +746,6 @@ async function accessConfig(req, res) {
 }
 
 
-async function recoveryProbe(req, res) {
-  const u = new URL(req.url, 'https://www.iamarecruiter.in');
-  const expectedToken = String(process.env.TMS_RECOVERY_TOKEN || '');
-  const suppliedToken = clean(u.searchParams.get('token'), 160);
-  if (!expectedToken || suppliedToken !== expectedToken) return json(res, 403, { ok: false, error: 'Forbidden' });
-  const orderId = clean(u.searchParams.get('order_id'), 120);
-  const paymentId = clean(u.searchParams.get('payment_id'), 120);
-  if (!orderId || !paymentId) return json(res, 400, { ok: false, error: 'Missing order or payment ID.' });
-  try {
-    const purchase = await capturedPurchase(orderId, paymentId);
-    const delivery = await trackerRequest('send_delivery_email', {
-      razorpay_order_id: orderId,
-      razorpay_payment_id: paymentId,
-      amount_paise: purchase.amount,
-      whatsapp_group_url: /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || '')) ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim() : ''
-    });
-    return json(res, 200, { ok: true, delivery: delivery || null });
-  } catch (err) {
-    console.error('Temporary TMS recovery probe failed:', String(err && err.message || err));
-    return json(res, 500, { ok: false, error: String(err && err.message || err) });
-  }
-}
-
 function serveCheckoutPage(res) {
   try {
     const filePath = path.join(process.cwd(), 'public', 'ai-workflow.html');
@@ -573,8 +779,9 @@ express.static = function patchedStatic(...args) {
     if (req.method === 'GET' && requestPath === '/tms/ebook') return serveProtectedAsset(req, res, 'tms-ebook.html');
     if (req.method === 'GET' && requestPath === '/tms/workbook') return serveProtectedAsset(req, res, 'tms-workbook.html');
     if (req.method === 'GET' && requestPath === '/tms/receipt') return serveReceipt(req, res);
-    if (req.method === 'GET' && requestPath === '/api/tms/recovery-probe') return recoveryProbe(req, res);
     if (req.method === 'GET' && requestPath === '/api/tms/access-config') return accessConfig(req, res);
+    if (req.method === 'POST' && requestPath === '/api/razorpay/webhook') return razorpayWebhook(req, res);
+    if (req.method === 'POST' && requestPath === '/api/tms/recover') return recoverFulfillment(req, res);
     if (req.method === 'POST' && requestPath === '/api/razorpay/coupon') return couponStatus(req, res);
     if (req.method === 'POST' && requestPath === '/api/razorpay/order') return createOrder(req, res);
     if (req.method === 'POST' && requestPath === '/api/razorpay/verify') return verifyPayment(req, res);
@@ -583,26 +790,11 @@ express.static = function patchedStatic(...args) {
 };
 
 
-async function runStartupDeliveryProbe_() {
-  const orderId = String(process.env.TMS_STARTUP_PROBE_ORDER_ID || '').trim();
-  const paymentId = String(process.env.TMS_STARTUP_PROBE_PAYMENT_ID || '').trim();
-  if (!orderId || !paymentId) return;
-  try {
-    const purchase = await capturedPurchase(orderId, paymentId);
-    const delivery = await trackerRequest('send_delivery_email', {
-      razorpay_order_id: orderId,
-      razorpay_payment_id: paymentId,
-      amount_paise: purchase.amount,
-      whatsapp_group_url: /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || '')) ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim() : ''
-    });
-    console.log('TMS_STARTUP_PROBE_RESULT ' + JSON.stringify(delivery || null));
-  } catch (err) {
-    console.error('TMS_STARTUP_PROBE_ERROR ' + String(err && err.message || err));
-  }
-}
 
-if (process.env.TMS_STARTUP_PROBE_ORDER_ID && process.env.TMS_STARTUP_PROBE_PAYMENT_ID) {
-  setTimeout(runStartupDeliveryProbe_, 5000);
+if (Number(process.env.TMS_RECONCILE_FROM_EPOCH || 0) > 0) {
+  setTimeout(reconcileCapturedPayments_, 60 * 1000);
+  const reconciliationTimer = setInterval(reconcileCapturedPayments_, RECONCILE_INTERVAL_MS);
+  if (reconciliationTimer.unref) reconciliationTimer.unref();
 }
 
 console.log('Razorpay payment middleware bootstrap loaded.');
