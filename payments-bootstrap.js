@@ -355,36 +355,61 @@ function trackerOrderPayload_(order) {
   };
 }
 
-function syncTrackerAfterPayment(order, paymentId, amount) {
-  if (!trackerConfigured()) return;
+async function paymentVerifiedWithRetry_(payload, attempts = 3) {
+  let lastErr;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      return await trackerRequest('payment_verified', payload);
+    } catch (err) {
+      lastErr = err;
+      const message = String(err && err.message || err);
+      if (/Buyer order was not found in tracker/i.test(message)) throw err;
+      console.warn('Tracker payment verification attempt ' + attempt + ' failed: ' + message);
+      if (attempt < attempts) await new Promise((resolve) => setTimeout(resolve, 750 * attempt));
+    }
+  }
+  throw lastErr || new Error('Tracker payment verification failed');
+}
+
+async function syncTrackerAfterPayment(order, paymentId, amount) {
+  if (!trackerConfigured()) return { tracked: false, delivery_status: 'not_configured' };
   const orderId = String(order && order.id || '');
   const notes = order && order.notes ? order.notes : {};
   const coupon = String(notes.coupon || '');
   const whatsappGroupUrl = /^https:\/\//i.test(String(process.env.TMS_WHATSAPP_GROUP_URL || ''))
     ? String(process.env.TMS_WHATSAPP_GROUP_URL).trim()
     : '';
+  const paymentPayload = {
+    razorpay_order_id: orderId,
+    razorpay_payment_id: paymentId,
+    amount_paise: amount,
+    coupon: coupon === 'none' ? '' : coupon,
+    payment_status: 'CAPTURED'
+  };
 
-  // Ensure the order exists in the tracker before marking payment captured. This
-  // removes the race between a fast payment and the background order-link write.
-  Promise.resolve()
-    .then(() => trackerRequest('order_created', trackerOrderPayload_(order)))
-    .then(() => trackerRequest('payment_verified', {
-      razorpay_order_id: orderId,
-      razorpay_payment_id: paymentId,
-      amount_paise: amount,
-      coupon: coupon === 'none' ? '' : coupon,
-      payment_status: 'CAPTURED'
-    }))
-    .then(() => trackerRequest('send_delivery_email', {
-      razorpay_order_id: orderId,
-      razorpay_payment_id: paymentId,
-      amount_paise: amount,
-      whatsapp_group_url: whatsappGroupUrl
-    }))
-    .then((delivery) => {
-      if (!delivery || delivery.email_sent !== true) console.error('Buyer delivery email did not confirm success.');
-    })
-    .catch((err) => console.error('Post-payment tracker sync failed:', err.message));
+  try {
+    await paymentVerifiedWithRetry_(paymentPayload);
+  } catch (err) {
+    const message = String(err && err.message || err);
+    if (!/Buyer order was not found in tracker/i.test(message)) throw err;
+
+    try {
+      await trackerRequest('order_created', trackerOrderPayload_(order));
+    } catch (orderErr) {
+      console.warn('Tracker order write response was not confirmed: ' + String(orderErr && orderErr.message || orderErr));
+    }
+
+    await paymentVerifiedWithRetry_(paymentPayload);
+  }
+
+  const delivery = await trackerRequest('send_delivery_email', {
+    razorpay_order_id: orderId,
+    razorpay_payment_id: paymentId,
+    amount_paise: amount,
+    whatsapp_group_url: whatsappGroupUrl
+  });
+  if (!delivery || delivery.email_sent !== true) throw new Error('Buyer delivery email did not confirm success.');
+  return { tracked: true, delivery_status: 'sent' };
 }
 
 async function verifyPayment(req, res) {
@@ -403,8 +428,17 @@ async function verifyPayment(req, res) {
     const purchase = await capturedPurchase(orderId, paymentId);
     const order = purchase.order;
     const coupon = order && order.notes ? String(order.notes.coupon || '') : '';
+    let deliveryStatus = trackerConfigured() ? 'pending' : 'not_configured';
 
-    syncTrackerAfterPayment(order, paymentId, purchase.amount);
+    if (trackerConfigured()) {
+      try {
+        const fulfillment = await syncTrackerAfterPayment(order, paymentId, purchase.amount);
+        deliveryStatus = fulfillment && fulfillment.delivery_status ? fulfillment.delivery_status : 'pending';
+      } catch (fulfillmentErr) {
+        console.error('Post-payment fulfillment failed: ' + String(fulfillmentErr && fulfillmentErr.message || fulfillmentErr));
+        deliveryStatus = 'pending';
+      }
+    }
 
     return json(res, 200, {
       verified: true,
@@ -414,7 +448,7 @@ async function verifyPayment(req, res) {
       amount: purchase.amount,
       currency: CURRENCY,
       coupon: coupon === 'none' ? '' : coupon,
-      delivery_status: trackerConfigured() ? 'processing' : 'not_configured'
+      delivery_status: deliveryStatus
     });
   } catch (err) {
     console.error('Razorpay verification failed:', err.message);
