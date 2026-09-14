@@ -1,4 +1,4 @@
-name: Patch tracker payment fulfillment reliability
+name: Patch TMS tracker reliability source
 
 on:
   push:
@@ -13,19 +13,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Apply deterministic fulfillment patch
-        run: python3 scripts/harden-payment-fulfillment.py
-      - name: Validate JavaScript syntax
-        run: node --check payments-bootstrap.js
+      - name: Harden tracker source
+        run: python3 scripts/harden-tms-tracker.py
       - name: Commit patch
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add payments-bootstrap.js
+          git add google-apps-script/TMSCheckoutTracker.gs
           if git diff --cached --quiet; then
             echo "No changes to commit"
             exit 0
           fi
-          git commit -m "Harden post-payment tracking and delivery"
+          git commit -m "Make TMS tracker writes and email delivery idempotent"
           git push
