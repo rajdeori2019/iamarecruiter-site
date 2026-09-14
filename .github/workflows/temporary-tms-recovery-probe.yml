@@ -1,0 +1,31 @@
+name: Temporary TMS recovery probe
+
+on:
+  push:
+    paths:
+      - '.github/workflows/temporary-tms-recovery-probe.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add temporary probe
+        run: python3 scripts/add-temporary-tms-probe.py
+      - name: Validate Node syntax
+        run: node --check payments-bootstrap.js
+      - name: Commit probe
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add payments-bootstrap.js
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Add temporary TMS recovery probe"
+          git push
