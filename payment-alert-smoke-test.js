@@ -4,7 +4,7 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 (async () => {
   try {
-    if (!core.smtpConfigured()) throw new Error('SMTP is not configured');
+    if (!core.deliveryConfigured()) throw new Error('Resend delivery is not configured');
     const now = Math.floor(Date.now() / 1000);
     const payment = {
       id: 'test_payment_' + Date.now(),
