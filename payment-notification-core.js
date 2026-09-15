@@ -1,9 +1,8 @@
-const nodemailer = require('nodemailer');
-
 const PRODUCT = 'Talent Intelligence Starter Pack';
 const CURRENCY = 'INR';
 const DEFAULT_RECIPIENTS = 'prafulladeori@gmail.com,hello@iamarecruiter.in';
 const IST_OFFSET_SECONDS = 19800;
+const RESEND_API_URL = 'https://api.resend.com/emails';
 
 function clean(v, max = 500) { return String(v == null ? '' : v).trim().slice(0, max); }
 function money(paise) {
@@ -60,31 +59,49 @@ async function markPayment(payment, patch) {
     body: { notes: Object.assign({}, notes(payment), patch || {}) }
   });
 }
-function smtpConfigured() {
-  return !!(process.env.PAYMENT_SMTP_HOST && process.env.PAYMENT_SMTP_USER && process.env.PAYMENT_SMTP_PASSWORD);
+function deliveryConfigured() {
+  return !!clean(process.env.RESEND_API_KEY, 500);
 }
-let transporter;
-function mailer() {
-  if (transporter) return transporter;
-  if (!smtpConfigured()) throw new Error('Payment notification SMTP is not configured');
-  transporter = nodemailer.createTransport({
-    host: clean(process.env.PAYMENT_SMTP_HOST, 200),
-    port: Number(process.env.PAYMENT_SMTP_PORT || 465),
-    secure: String(process.env.PAYMENT_SMTP_SECURE || 'true').toLowerCase() !== 'false',
-    auth: { user: clean(process.env.PAYMENT_SMTP_USER, 200), pass: String(process.env.PAYMENT_SMTP_PASSWORD || '') }
-  });
-  return transporter;
+function smtpConfigured() {
+  return deliveryConfigured();
 }
 function recipients() {
   return clean(process.env.PAYMENT_ALERT_RECIPIENTS || DEFAULT_RECIPIENTS, 500);
 }
+function recipientList() {
+  return recipients().split(',').map(x => clean(x, 200)).filter(Boolean);
+}
 function sender() {
-  const address = clean(process.env.PAYMENT_ALERT_FROM || process.env.PAYMENT_SMTP_USER || 'hello@iamarecruiter.in', 200);
+  const address = clean(process.env.PAYMENT_ALERT_FROM || 'hello@iamarecruiter.in', 200);
   return 'I AM A RECRUITER Payments <' + address + '>';
 }
 async function sendMail(subject, html, text) {
-  const info = await mailer().sendMail({ from: sender(), to: recipients(), subject, text, html });
-  return info && info.messageId;
+  const apiKey = clean(process.env.RESEND_API_KEY, 500);
+  if (!apiKey) throw new Error('Resend API key is not configured');
+  const to = recipientList();
+  if (!to.length) throw new Error('Payment alert recipients are not configured');
+
+  const response = await fetch(RESEND_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      from: sender(),
+      to,
+      subject,
+      html,
+      text
+    })
+  });
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    const message = clean(data && (data.message || data.error || data.name), 500) || ('Resend HTTP ' + response.status);
+    throw new Error(message);
+  }
+  return data && data.id;
 }
 function istDateLabel(epochSeconds) {
   const d = new Date((Number(epochSeconds) + IST_OFFSET_SECONDS) * 1000);
@@ -166,4 +183,4 @@ async function sendDailySummary(nowMs = Date.now()) {
   return sendMail(subject, html, lines.join('\n'));
 }
 
-module.exports = { PRODUCT, razorpay, listPayments, getOrder, notes, isProductOrder, markPayment, smtpConfigured, sendInstantAlert, sendDailySummary, buildDailySummary, eventDetails, recipients, formatIst, istDayRange, istDateLabel };
+module.exports = { PRODUCT, razorpay, listPayments, getOrder, notes, isProductOrder, markPayment, deliveryConfigured, smtpConfigured, sendInstantAlert, sendDailySummary, buildDailySummary, eventDetails, recipients, formatIst, istDayRange, istDateLabel };
